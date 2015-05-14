@@ -1,5 +1,5 @@
 # ProvenanceMatrix
-ProvenanceMatrix presents an interactive visual representations of two Euler/X-aligned classifications; showing spatially aggregated concept pairs that are ambiguously articulated and are logically ?responsible? for the possible world alignments. 
+ProvenanceMatrix presents an interactive visual representations of two Euler/X-aligned classifications; showing spatially aggregated concept pairs that are ambiguously articulated and are logically responsible for the possible world alignments. 
 
 ProvenanceMatrix supports interactive capabilities to help users in exploring very large alignment of two taxonomies. The ability to order by articulations arranges similar concepts so that they appear together in the visualization. Smooth lensing allows the viewer to focus on a particular a group of concepts that is of interest. Finally, brushing and linking capacity allow viewer to navigate over the hierarchical structure and highlight related concepts in the associated taxonomy.
 
