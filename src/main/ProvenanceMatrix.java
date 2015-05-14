@@ -393,16 +393,15 @@ public class ProvenanceMatrix extends PApplet {
 			this.textAlign(PApplet.CENTER);
 			this.text(taxomX, 500, 40);
 		}
-		if (bY<0 || trgOntology.size()>bY){
 			this.textSize(13);
 			this.textAlign(PApplet.CENTER);
 			float al = -PApplet.PI/2;
-			this.translate(50,320);
+			this.translate(60,300);
 			this.rotate(al);
 			this.text(taxomY, 0,0); // text for each column @Amruta
 			this.rotate(-al);
-			this.translate(-(50), -(320));
-		}
+			this.translate(-(60), -(300));
+	
 		
 		// Hierarchy
 		float arcRate = 0.7f;
