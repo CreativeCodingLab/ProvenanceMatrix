@@ -1,0 +1,11 @@
+OWLThing,1982-Minyomerus,1982-Piscatopus,#end
+1982-Minyomerus,1982-Minyomerus-caseyi,1982-Minyomerus-conicollis,1982-Minyomerus-constrictus,1982-Minyomerus-innocuus,1982-Minyomerus-languidus,1982-Minyomerus-laticeps,1982-Minyomerus-microps,#end
+1982-Minyomerus-caseyi,#end
+1982-Minyomerus-conicollis,#end
+1982-Minyomerus-constrictus,#end
+1982-Minyomerus-innocuus,#end
+1982-Minyomerus-languidus,#end
+1982-Minyomerus-laticeps,#end
+1982-Minyomerus-microps,#end
+1982-Piscatopus,1982-Piscatopus-griseus,#end
+1982-Piscatopus-griseus,#end
