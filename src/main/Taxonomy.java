@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -14,19 +13,14 @@ import java.util.TreeMap;
 
 import processing.core.PApplet;
 
-import static main.ProvenanceMatrix.pairs;
 import static main.ProvenanceMatrix.srcTaxonomy;
-import static main.ProvenanceMatrix.trgOntology;
+import static main.ProvenanceMatrix.trgTaxonomy;
 
 import static main.ProvenanceMatrix.articulations;
-import static edu.uic.ncdm.venn.Venn_Overview.numMinerContainData;
-import static edu.uic.ncdm.venn.Venn_Overview.minerGlobalIDof;;
 
 
 public class Taxonomy {
 	// For a gene, we have the count number of each type of relations
-	public static Hashtable<String, int[]> hGenes = new Hashtable<String,int[]>();
-	public static int maxRelationOfGenes = -1;
 	public String name = "????";
 	public Integrator iX, iY, iH,iW;
 	public int order;
@@ -41,26 +35,6 @@ public class Taxonomy {
 		order = order_;
 	}
 	
-	public static void compute(){
-		 hGenes = new Hashtable<String,int[]>();
-		 for (int i=0; i<main.ProvenanceMatrix.srcTaxonomy.size();i++){
-			 hGenes.put(main.ProvenanceMatrix.srcTaxonomy.get(i).name, new int[numMinerContainData]);
-		 }
-		 maxRelationOfGenes = -1;
-		 for (int j=0; j<numMinerContainData;j++){
-			 int m =  minerGlobalIDof[j];
-			 for (int p=0; p<pairs[m].size();p++){
-				 String g = pairs[m].get(p).split("\t")[0];
-				 int[] list =  hGenes.get(g);
-				 if (list==null) continue;
-				 list[j]++;
-				 // compute max number of relationships
-				 if (list[j]>maxRelationOfGenes)
-					 maxRelationOfGenes = list[j];
-				 hGenes.put(g, list);
-			 }
-		}
-	}
 	
 	// Order genes by random
 	public static void orderByRandom(PApplet p){	
@@ -74,12 +48,12 @@ public class Taxonomy {
 			a.remove(num);
 		}
 		a = new ArrayList<Integer>();
-		for (int i=0;i<trgOntology.size();i++){
+		for (int i=0;i<trgTaxonomy.size();i++){
 			a.add(i);
 		}
 		while (a.size()>0){
 			int num = (int) p.random(a.size());
-			trgOntology.get(a.size()-1).order = a.get(num);
+			trgTaxonomy.get(a.size()-1).order = a.get(num);
 			a.remove(num);
 		}
 	}
@@ -90,8 +64,8 @@ public class Taxonomy {
 		for (int i=0;i<srcTaxonomy.size();i++){
 			srcTaxonomy.get(i).order =  i;
 		}
-		for (int i=0;i<trgOntology.size();i++){
-			trgOntology.get(i).order =  i;
+		for (int i=0;i<trgTaxonomy.size();i++){
+			trgTaxonomy.get(i).order =  i;
 		}
 	}
 		
@@ -110,14 +84,14 @@ public class Taxonomy {
 		}
 		
 		Map<String, Integer> unsortMap2 = new HashMap<String, Integer>();
-		for (int i=0;i<trgOntology.size();i++){
-			unsortMap2.put(trgOntology.get(i).name, i);
+		for (int i=0;i<trgTaxonomy.size();i++){
+			unsortMap2.put(trgTaxonomy.get(i).name, i);
 		}
 		Map<String, Integer> treeMap2 = new TreeMap<String, Integer>(unsortMap2);
 		int count2=0;
 		for (Map.Entry<String, Integer> entry : treeMap2.entrySet()) {
 			int inputOrder = entry.getValue();
-			trgOntology.get(inputOrder).order = count2;
+			trgTaxonomy.get(inputOrder).order = count2;
 			count2++;
 		}
 	}
@@ -168,13 +142,13 @@ public class Taxonomy {
 		
 		ArrayList<Integer> processedProteins2 =  new ArrayList<Integer>();
 		int curIndex2 = 0;
-		trgOntology.get(curIndex2).order=curIndex2;
+		trgTaxonomy.get(curIndex2).order=curIndex2;
 		processedProteins2.add(curIndex2);
 		int order2 = 1;
-		for (int i=0;i<trgOntology.size();i++){
+		for (int i=0;i<trgTaxonomy.size();i++){
 			int similarIndex =  getSimilarGene2(processedProteins2);
 			if (similarIndex<0) break;  // can not find more small molecules
-			trgOntology.get(similarIndex).order=order2;
+			trgTaxonomy.get(similarIndex).order=order2;
 			order2++;
 			processedProteins2.add(similarIndex);
 		}
@@ -183,13 +157,13 @@ public class Taxonomy {
 	public static void orderBySimilarity2(){	
 		ArrayList<Integer> processedProteins =  new ArrayList<Integer>();
 		int curIndex = 0;
-		trgOntology.get(curIndex).order=curIndex;
+		trgTaxonomy.get(curIndex).order=curIndex;
 		processedProteins.add(curIndex);
 		int order = 1;
-		for (int i=0;i<trgOntology.size();i++){
+		for (int i=0;i<trgTaxonomy.size();i++){
 			int similarIndex =  getSimilarGene2(processedProteins);
 			if (similarIndex<0) break;  // can not find more small molecules
-			trgOntology.get(similarIndex).order=order;
+			trgTaxonomy.get(similarIndex).order=order;
 			order++;
 			processedProteins.add(similarIndex);
 		}
@@ -218,7 +192,7 @@ public class Taxonomy {
 	public static int getSimilarGene2(ArrayList<Integer> a){
 		float minDis = Float.POSITIVE_INFINITY;
 		int minIndex = -1;
-		for (int i=0;i<trgOntology.size();i++){
+		for (int i=0;i<trgTaxonomy.size();i++){
 			int index1 = i;
 			if (a.contains(index1)) continue;
 			int index2 = a.get(0);
@@ -239,7 +213,7 @@ public class Taxonomy {
 	@SuppressWarnings("unchecked")
 	public static float computeDis(int orderReading1, int orderReading2, float val){
 		float dis = 0;
-		for (int i=0;i<trgOntology.size();i++){
+		for (int i=0;i<trgTaxonomy.size();i++){
 			dis += computeDisOfArrayList(articulations[orderReading1][i],articulations[orderReading2][i],val);
 		}
 		return dis;
@@ -293,7 +267,7 @@ public class Taxonomy {
 		
 		for (int i=0;i<childrenList2.size();i++){
 			int index2 = childrenList2.get(i);
-			trgOntology.get(index2).order=main.PopupOrder.countBFS2;
+			trgTaxonomy.get(index2).order=main.PopupOrder.countBFS2;
 			main.PopupOrder.countBFS2++;
 		}
 		for (int i=0;i<childrenList2.size();i++){
@@ -378,7 +352,7 @@ public class Taxonomy {
 	}
 	
 	public static void DFS2(int index){
-		trgOntology.get(index).order=main.PopupOrder.countDFS2;
+		trgTaxonomy.get(index).order=main.PopupOrder.countDFS2;
 		main.PopupOrder.countDFS2++;
 		if (main.ProvenanceMatrix.a2[index]==null) return;
 		for (int i=0;i<main.ProvenanceMatrix.a2[index].size();i++){

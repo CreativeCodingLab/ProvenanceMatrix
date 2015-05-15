@@ -1,6 +1,6 @@
 package main;
 import static main.ProvenanceMatrix.srcTaxonomy;
-import static main.ProvenanceMatrix.trgOntology;
+import static main.ProvenanceMatrix.trgTaxonomy;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -43,12 +43,6 @@ public class PopupOrder{
 			parent.stroke(0,150);
 			parent.rect(x, y+23, w,h);
 			// Max number of relations
-			float max =-1;
-			for (int j=0;j<main.ProvenanceMatrix.pairs.length;j++){
-				float sqrt = PApplet.sqrt(main.ProvenanceMatrix.pairs[j].size());
-				if (sqrt>max)
-					max = sqrt;
-			}
 			for (int i=0;i<items.length;i++){
 				if (i==s){
 					parent.noStroke();
@@ -104,7 +98,7 @@ public class PopupOrder{
 				main.ProvenanceMatrix.check2.s =false;
 				
 				srcTaxonomy.get(0).order=0;
-				trgOntology.get(0).order=0;
+				trgTaxonomy.get(0).order=0;
 				countBFS1=1; 
 				countBFS2=1; 
 				Taxonomy.BFS1(0); // the first element is assumed as ROOT

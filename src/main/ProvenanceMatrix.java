@@ -2,7 +2,7 @@ package main;
 /*
  * DARPA project
  *
- * Copyright 2014 by Tuan Dang.
+ * Copyright 2015 by Tuan Dang.
  *
  * The contents of this file are subject to the Mozilla Public License Version 2.0 (the "License")
  * You may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 
 import edu.uic.ncdm.venn.Venn_Overview;
@@ -41,9 +40,8 @@ public class ProvenanceMatrix extends PApplet {
 	public static ArrayList<String>[] ontologyMappings; // equivalent to pairs
 
 	// Global data
-	public static String[] minerNames;
 	public static ArrayList<Taxonomy> srcTaxonomy = new ArrayList<Taxonomy>();
-	public static ArrayList<Taxonomy> trgOntology = new ArrayList<Taxonomy>();
+	public static ArrayList<Taxonomy> trgTaxonomy = new ArrayList<Taxonomy>();
 
 
 	//public static ArrayList<Integrator> iW;
@@ -100,7 +98,7 @@ public class ProvenanceMatrix extends PApplet {
 	public static HashMap<String,Integer> hash1;   	// Hash of taxo name-index in array
 	public static HashMap<String,Integer> hash2;	// Hash of taxo name-index in array
 	
-	String[] artStrings = {"Equals","Includes","is_included_in","Overlaps","Disjoint"}; 
+	public static String[] artStrings = {"Equals","Includes","is_included_in","Overlaps","Disjoint"}; 
 
 	public static void main(String args[]){
 		PApplet.main(new String[] { ProvenanceMatrix.class.getName() });
@@ -119,9 +117,6 @@ public class ProvenanceMatrix extends PApplet {
 		smooth();
 
 		
-
-		
-
 		//-----------------------------
 
 		mappingColorRelations =  new int[5];	
@@ -129,7 +124,7 @@ public class ProvenanceMatrix extends PApplet {
 		mappingColorRelations[1] = new Color(0,0,255).getRGB(); 
 		mappingColorRelations[2] = new Color(200,200,0).getRGB(); 
 		mappingColorRelations[3] = new Color(200,0,0).getRGB();		
-		mappingColorRelations[4] = new Color(0,0,0,60).getRGB();	
+		mappingColorRelations[4] = new Color(180,180,180).getRGB();	
 
 		//-----------------------------
 		buttonBrowse = new ButtonBrowse(this);
@@ -145,8 +140,6 @@ public class ProvenanceMatrix extends PApplet {
 			thread1=new Thread(loader1);
 			thread1.start();
 		}
-
-		
 		
 		// enable the mouse wheel, for zooming
 		addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -195,15 +188,24 @@ public class ProvenanceMatrix extends PApplet {
 					check2.draw(this.width-100, 50);
 					//	check3.draw(this.width-500, 48);
 					
-					drawMatrix();
+					if (srcTaxonomy==null || srcTaxonomy.size()==0)
+						return;
+					else{
+						int numColumns = srcTaxonomy.size(); 
+						int numRows = trgTaxonomy.size();
+						int num = Math.max(numRows, numColumns);
+						size = (this.height-marginY)/num;
+						if (size>100)
+							size=100;
+					}
+					drawGenes(200,150);
+					
 					this.textSize(12);
-
 					popupOrder.draw(this.width-198);
-
 				}
-
 			}
 			buttonBrowse.draw();
+			vennOverview.draw(this.width-400, 80);
 			//popupRelation.draw(this.width-304);
 		}
 		catch (Exception e){
@@ -214,19 +216,8 @@ public class ProvenanceMatrix extends PApplet {
 		}
 	}	
 
+	/*
 	public void drawMatrix() throws IOException {
-		if (srcTaxonomy==null || srcTaxonomy.size()==0)
-			return;
-		else{
-			int numColumns = srcTaxonomy.size(); 
-			int numRows = trgOntology.size();
-			int num = Math.max(numRows, numColumns);
-			size = (this.height-marginY)/num;
-			if (size>100)
-				size=100;
-		}
-		drawGenes(200,150);
-		
 		// Draw color legend
 		float y3 = 100;
 		float x3 = this.width-150;
@@ -242,7 +233,7 @@ public class ProvenanceMatrix extends PApplet {
 				this.fill(0,120);  // For disjoins
 			this.text(artStrings[i],x3+13,y3+4);
 		}
-	}
+	}*/
 
 	public void drawGenes(float mX, float mY) throws IOException {
 		// Compute lensing
@@ -301,29 +292,29 @@ public class ProvenanceMatrix extends PApplet {
 		
 		
 
-		for (int j=0;j<trgOntology.size();j++){
-			int order = trgOntology.get(j).order;
+		for (int j=0;j<trgTaxonomy.size();j++){
+			int order = trgTaxonomy.get(j).order;
 			if (bY-num<=order && order<=bY+num){
-				trgOntology.get(j).iH.target(lensingSize);
+				trgTaxonomy.get(j).iH.target(lensingSize);
 				int num2 = order-(bY-num);
 				if (bY-num>=0)
-					setValue(trgOntology.get(j).iY, mY +(bY-num)*size+num2*lensingSize);
+					setValue(trgTaxonomy.get(j).iY, mY +(bY-num)*size+num2*lensingSize);
 				else
-					setValue(trgOntology.get(j).iY, mY +order*lensingSize);
+					setValue(trgTaxonomy.get(j).iY, mY +order*lensingSize);
 			}	
 			else{
-				trgOntology.get(j).iH.target(size);
+				trgTaxonomy.get(j).iH.target(size);
 				if (order<bY-num)
-					setValue(trgOntology.get(j).iY, mY +order*size);
+					setValue(trgTaxonomy.get(j).iY, mY +order*size);
 				else if (order>bY+num){
 					if (bY-num>=0)
-						setValue(trgOntology.get(j).iY, mY +(order-(num*2+1))*size+(num*2+1)*lensingSize);
+						setValue(trgTaxonomy.get(j).iY, mY +(order-(num*2+1))*size+(num*2+1)*lensingSize);
 					else{
 						int num3= bY+num+1;
 						if (num3>0)
-							setValue(trgOntology.get(j).iY, mY +(order-num3)*size+num3*lensingSize);
+							setValue(trgTaxonomy.get(j).iY, mY +(order-num3)*size+num3*lensingSize);
 						else
-							setValue(trgOntology.get(j).iY, mY +order*size);
+							setValue(trgTaxonomy.get(j).iY, mY +order*size);
 					}	
 
 				}	
@@ -337,9 +328,9 @@ public class ProvenanceMatrix extends PApplet {
 			srcTaxonomy.get(i).iX.update();		
 		}
 
-		for (int i=0;i<trgOntology.size();i++){
-			trgOntology.get(i).iH.update();
-			trgOntology.get(i).iY.update();
+		for (int i=0;i<trgTaxonomy.size();i++){
+			trgTaxonomy.get(i).iH.update();
+			trgTaxonomy.get(i).iY.update();
 		}
 
 
@@ -378,14 +369,14 @@ public class ProvenanceMatrix extends PApplet {
 				this.translate(-(xx+ww/2+5), -(mY-15));
 			}
 		}
-		for (int i=0;i<trgOntology.size();i++){
-			float hh =trgOntology.get(i).iH.value;
-			float yy =  trgOntology.get(i).iY.value;
+		for (int i=0;i<trgTaxonomy.size();i++){
+			float hh =trgTaxonomy.get(i).iH.value;
+			float yy =  trgTaxonomy.get(i).iY.value;
 			this.fill(0,255);
 			if (hh>6){
 				this.textSize(11);
 				this.textAlign(PApplet.RIGHT);
-				this.text(trgOntology.get(i).name, mX-15, yy+hh/2+5); //text for each row @Amruta 
+				this.text(trgTaxonomy.get(i).name, mX-15, yy+hh/2+5); //text for each row @Amruta 
 			}
 		}
 		if (bX<0 || srcTaxonomy.size()>bX){
@@ -451,21 +442,21 @@ public class ProvenanceMatrix extends PApplet {
 			}
 		}
 		
-		for (int i=0;i<trgOntology.size();i++){
+		for (int i=0;i<trgTaxonomy.size();i++){
 			if (a2[i]==null) 
 				continue;
-			float h1 =  trgOntology.get(i).iH.value;
-			float y1 =  trgOntology.get(i).iY.value+h1*0.6f;
+			float h1 =  trgTaxonomy.get(i).iH.value;
+			float y1 =  trgTaxonomy.get(i).iY.value+h1*0.6f;
 			for (int j=0; j<a2[i].size();j++){
 				int indexChild = (Integer) a2[i].get(j);
-				float h2 =  trgOntology.get(indexChild).iH.value;
-				float y2 =  trgOntology.get(indexChild).iY.value+h2*0.5f;
+				float h2 =  trgTaxonomy.get(indexChild).iH.value;
+				float y2 =  trgTaxonomy.get(indexChild).iY.value+h2*0.5f;
 				
 				this.noFill();
 				this.stroke(0,0,0);
 				float r = PApplet.abs(y2-y1);
 				
-				if (0<=bY && bY<trgOntology.size()){
+				if (0<=bY && bY<trgTaxonomy.size()){
 					if (h1>6 || h2>6){
 						this.strokeWeight(0.6f);
 						this.arc(mX-10, (y1+y2)/2,r*arcRate,r, -PApplet.PI/2, PApplet.PI/2);
@@ -494,34 +485,33 @@ public class ProvenanceMatrix extends PApplet {
 		}
 			
 			
-		//Circular sectors
-		for (int i=0;i<trgOntology.size();i++){
+		// Circular sectors
+		int numberOfSector = 0;
+		for (int i=0; i<vennOverview.numArt;i++){
+			if (vennOverview.isActive[i])
+				numberOfSector++;
+		}	
+		float alpha = PApplet.PI*2/numberOfSector;
+		
+		for (int i=0;i<trgTaxonomy.size();i++){
 			// Check if this is grouping
-			float yy =  trgOntology.get(i).iY.value;
-			float hh = trgOntology.get(i).iH.value;
-			int count = 0;
-			int numberOfSector = 4;
-			if (check2.s)
-				numberOfSector =5;
+			float yy =  trgTaxonomy.get(i).iY.value;
+			float hh = trgTaxonomy.get(i).iH.value;
 			for (int j=0;j<srcTaxonomy.size();j++){
 				float xx =  srcTaxonomy.get(j).iX.value;
 				float ww =srcTaxonomy.get(j).iW.value;
 
 				if (articulations[j][i]==null) continue;
 				
+				int countArt=0;
 				for (int i2=0;i2<articulations[j][i].size();i2++){
-					int localRelationIndex = (Integer) articulations[j][i].get(i2);
-				//	System.out.println(i2+"	matcherValues[i2]="+matcherValues[i2]);
+					int indexArt = (Integer) articulations[j][i].get(i2);
 					this.noStroke();
-					this.fill(mappingColorRelations[localRelationIndex]);
-					//float alpha = PApplet.PI*2/matcherValues.length;
-					float alpha = PApplet.PI*2/numberOfSector;
-					if (localRelationIndex==4){
-						 if (check2.s)
-							this.arc(xx+ww/2,yy+hh/2,PApplet.min(ww,hh), PApplet.min(ww,hh), localRelationIndex*alpha, (localRelationIndex+1)*alpha);
-					}else	
-						this.arc(xx+ww/2,yy+hh/2,PApplet.min(ww,hh)+2, PApplet.min(ww,hh)+2, localRelationIndex*alpha, (localRelationIndex+1)*alpha);
-					count++;
+					this.fill(mappingColorRelations[indexArt]);
+					if (vennOverview.isActive[indexArt]){
+						this.arc(xx+ww/2,yy+hh/2,PApplet.min(ww,hh), PApplet.min(ww,hh), countArt*alpha, (countArt+1)*alpha);
+						countArt++;
+					}
 				}
 			}
 		}
@@ -667,6 +657,7 @@ public class ProvenanceMatrix extends PApplet {
 			int unUsedCollumnAtTheEnd = 1;*/
 			
 			// 160 possible worlds
+			
 			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2.txt");// hierarchy
 			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2_mir.csv");
 			int year1 = 2010;
@@ -728,8 +719,8 @@ public class ProvenanceMatrix extends PApplet {
 					String str = lines[i].replace("(", "").replace(")", "");
 					String[] ps = str.split(" ");
 					for (int j=0; j<ps.length;j++){
-						if (!isContained(trgOntology,ps[j]))
-							trgOntology.add(new Taxonomy(ps[j],trgOntology.size()));
+						if (!isContained(trgTaxonomy,ps[j]))
+							trgTaxonomy.add(new Taxonomy(ps[j],trgTaxonomy.size()));
 					}
 				}
 			}
@@ -738,8 +729,8 @@ public class ProvenanceMatrix extends PApplet {
 				hash1.put(srcTaxonomy.get(i).name, i);
 			}
 			hash2 = new HashMap<String,Integer>();
-			for (int i=0;i<trgOntology.size();i++){
-				hash2.put(trgOntology.get(i).name, i);
+			for (int i=0;i<trgTaxonomy.size();i++){
+				hash2.put(trgTaxonomy.get(i).name, i);
 			}
 			
 			// Read the structure of the 1st
@@ -747,7 +738,7 @@ public class ProvenanceMatrix extends PApplet {
 			count2=0;
 			count3=0;
 			a1 = new ArrayList[srcTaxonomy.size()];
-			a2 = new ArrayList[trgOntology.size()];
+			a2 = new ArrayList[trgTaxonomy.size()];
 			for (int i=0;i<lines.length;i++){
 				if (lines[i].contains("#"))
 					continue;
@@ -788,7 +779,7 @@ public class ProvenanceMatrix extends PApplet {
 				}
 			}
 			
-			articulations = new ArrayList[srcTaxonomy.size()][trgOntology.size()];
+			articulations = new ArrayList[srcTaxonomy.size()][trgTaxonomy.size()];
 			for (int i=0;i<lines2.length;i++){
 				String str = lines2[i].replace("{", "").replace("}", "").replace(" ", "")
 									.replace(year1+".", "").replace(year2+".", "");
@@ -813,8 +804,7 @@ public class ProvenanceMatrix extends PApplet {
 			
 			
 			System.out.println();
-		//	vennOverview.initialize();
-
+			
 			stateAnimation=0;
 			isAllowedDrawing =  true;  //******************* Start drawing **************
 
@@ -822,7 +812,7 @@ public class ProvenanceMatrix extends PApplet {
 			Taxonomy.orderByReading();
 			//write();
 
-			//vennOverview.compute();
+			vennOverview.compute();
 			check2.s  = false;
 		}
 	}

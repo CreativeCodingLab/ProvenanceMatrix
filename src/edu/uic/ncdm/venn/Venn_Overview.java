@@ -16,10 +16,14 @@ package edu.uic.ncdm.venn;
 import processing.core.*;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.uic.ncdm.venn.data.VennData;
-import static main.ProvenanceMatrix.minerNames;
+import static main.ProvenanceMatrix.srcTaxonomy;
+import static main.ProvenanceMatrix.trgTaxonomy;
+import static main.ProvenanceMatrix.articulations;
+
 
 public class Venn_Overview{
 	int count = 0;
@@ -36,95 +40,74 @@ public class Venn_Overview{
     public float bx=0;
     public float by=0;
     public float br=0;
-    
-    public ArrayList<String>[] pair2;
-	public boolean[] deactive;
+   public boolean[] isActive;
    
-	public static int numMinerContainData=-1;
-	public static int[] minerGlobalIDof;
 	public static float currentSize;
-	
+	public int numArt = 0;
 	
 	public Venn_Overview(PApplet pa) {
 		parent = pa;
 		centers = new double[0][0];	
 	}  
     
-	public void initialize() {
-		// Select the list of miner
-		numMinerContainData = 0;
-		/*
-		for (int i=0;i<minerList.size();i++){
-			if (main.ProvenanceMatrix.pairs[i].size()>0)
-				numMinerContainData++;
-		}	*/
-		if (numMinerContainData==0) return;
-			
-		//System.out.println(minerList.size()+" numMiner="+numMiner);
-		
-		pair2 = new ArrayList[numMinerContainData];
-		minerGlobalIDof = new int[numMinerContainData];
-		minerNames = new String[numMinerContainData];
-		int count =0;
-		/*
-		for (int i=0;i<minerList.size();i++){
-			if (main.ProvenanceMatrix.pairs[i].size()>0){
-				minerGlobalIDof[count] = i;
-				pair2[count] = main.ProvenanceMatrix.pairs[i];
-				minerNames[count] = ""+minerList.get(i);
-				count++;
-			}	           
-		}*/
-		deactive = new boolean[numMinerContainData];
-		
-	}
-		
 	public void compute() {
-		
+		numArt = main.ProvenanceMatrix.artStrings.length;
+		isActive = new boolean[numArt];
+		for (int i =0; i< numArt; i++){
+			isActive[i] = true;
+		}
+		isActive[4] = false;  // Disjoint
+			
+	
 		// Obtain relation of intersections
-		ArrayList<String> aData = new ArrayList<String>();
-		ArrayList<Integer> aAreas = new ArrayList<Integer>();
-		for (int i =0; i< numMinerContainData; i++){
-			for (int j =i+1; j< numMinerContainData; j++){
-				int countRelations=0;
-				// Pair 2 is a new array
-				for (int i2 =0; i2< pair2[i].size(); i2++){
-					for (int j2 =0; j2< pair2[j].size(); j2++){
-						if (pair2[i].get(i2).equals(pair2[j].get(j2))){
-							countRelations++;		
-						}
+		int[] count = new int[numArt];
+		HashMap<String, Integer> hash = new HashMap<String,Integer>();
+		for (int i =0; i< srcTaxonomy.size(); i++){
+			for (int j =0; j< trgTaxonomy.size(); j++){
+				if (articulations[i][j]==null) 	continue;
+				for (int k =0; k< articulations[i][j].size(); k++){
+					int art = (Integer) articulations[i][j].get(k);
+					count[art]++;
+				}
+				if (articulations[i][j].size()>1){
+					//if (articulations[i][j].size()>3) {
+					//	System.out.println(articulations[i][j]);
+					//	continue;
+					//}	
+					String str = main.ProvenanceMatrix.artStrings[(Integer) articulations[i][j].get(0)];
+					for (int k =1; k< articulations[i][j].size(); k++){
+						//if ((Integer) articulations[i][j].get(k)==4)
+						//	continue;
+						str += "&"+main.ProvenanceMatrix.artStrings[(Integer) articulations[i][j].get(k)];
+					}
+					if (hash.get(str)==null){
+						hash.put(str, 1);
+					}
+					else{
+						int num =hash.get(str);
+						hash.put(str, num+1);
 					}
 				}	
-				if (countRelations>0){
-					aData.add(minerNames[i]+"&"+minerNames[j]);
-					aAreas.add(countRelations);
-				}
 			}
+		}	
+		data = new String[numArt+hash.size()][1];
+		areas =  new double[numArt+hash.size()];		
+		for (int i =0; i< numArt; i++){
+			data[i][0] = main.ProvenanceMatrix.artStrings[i];
+			areas[i]=count[i];
 		}
 		
-		data = new String[numMinerContainData+aData.size()][1];
-		areas =  new double[numMinerContainData+aData.size()];		
-		for (int i =0; i< numMinerContainData; i++){
-			data[i][0] = minerNames[i];
-			areas[i]=pair2[i].size();
+		int k=0;
+		for (Map.Entry<String, Integer> entry : hash.entrySet()) {
+			data[numArt+k][0] = entry.getKey();
+			areas[numArt+k] = entry.getValue();
+			k++;
 		}
-		for (int i =0; i< aData.size(); i++){
-			data[i+numMinerContainData][0] = aData.get(i);
-			areas[i+numMinerContainData] = aAreas.get(i);
+		for (int i =0; i< data.length; i++){
+			System.out.println("	data[i][0]="+data[i][0]+"	"+areas[i]);
 		}
-			
-		
-		
-		/*
-		System.out.println();
-		System.out.println("****** PRINT Venn Overview   numMiner="+numMiner);
-		for (int i =0; i< areas.length; i++){
-			System.out.println("\t"+data[i][0]+"	"+areas[i]);
-		}
-		System.out.println();
-		*/
-			
-       VennData dv = new VennData(data, areas);
+				
+		VennData dv = new VennData(data, areas);
 	   VennAnalytic va = new VennAnalytic();
        VennDiagram venn = va.compute(dv);
      	
@@ -142,125 +125,51 @@ public class Venn_Overview{
        }
 	}
 	
-	public static int globalToLocal(int id) {
-		if (minerGlobalIDof==null) return -99;
-		for (int i=0;i<minerGlobalIDof.length;i++){
-			if (Venn_Overview.minerGlobalIDof[i]==id){
-				return i;
-			}	
-		}
-		return -100;
-	}
 	
-	/*
-	public static Color getMinerColor(int miner) {
-		Color color = Color.WHITE;
-		if (minerNames==null || miner>=minerNames.length || miner<0)
-			return Color.GRAY;
-		String name = minerNames[miner];
-		if (name==null)
-			return Color.WHITE;
-		if (name.equals("in-complex-with"))
-			color = Color.CYAN;
-		else if (name.equals("neighbor-of"))
-			color = Color.BLUE;
-		else if (name.equals("controls-state-change-of"))
-			color = Color.RED;
-		else if (name.equals("directed-relations"))
-			color = Color.GREEN;
-		else if (name.equals("chemical-affects-through-binding"))
-			color = Color.YELLOW;	
-		else if (name.equals("consumption-controlled-by"))
-			color = Color.MAGENTA;	
-		else if (name.equals("controls-transport-of"))
-			color = Color.PINK;	
-		return color;
-	}*/
 	
-	/*
-	public static Color getMinerColor(int miner) {
-		Color color = Color.ORANGE;
-		if (minerNames==null || miner>=minerNames.length || miner<0)
-			return Color.GRAY;
-		String name = minerNames[miner];
-		if (name==null)
-			return Color.BLACK;
-		if (name.equals("in-complex-with"))
-			color = new Color(0,200,200);
-		else if (name.equals("neighbor-of"))
-			color = Color.BLUE;
-		else if (name.equals("controls-state-change-of"))
-			color = new Color(220,0,0);
-		else if (name.equals("directed-relations"))
-			color = new Color(50,180,0); //color = Color.GREEN;
-		else if (name.equals("chemical-affects-through-binding"))
-			color = new Color(200,200,0); //color = Color.YELLOW;	
-		else if (name.equals("consumption-controlled-by"))
-			color = Color.MAGENTA.darker();	
-		else if (name.equals("controls-transport-of"))
-			color = Color.PINK.darker();	
-		else if (name.equals("use-to-produce"))
-			color = Color.PINK.darker();	
-		return color;
-	}
-	*/
 	
-	public void draw(float xPanelRight, float yy4, int numSongs) {
+	public void draw(float xPanelRight, float yy4) {
 		parent.noStroke();
 		parent.textAlign(PApplet.CENTER);
-		parent.textSize(12);
+		parent.textSize(11);
 		
 		brushing=-1;
 		size = 400;
-        for (int i = 0; i < centers.length; i++) {
+        for (int i = centers.length-1; i >=0; i--) {
             double xi = (centers[i][0] - mins) / (maxs - mins);
             double yi = (centers[i][1] - mins) / (maxs - mins);
-            double pi = diameters[i] / (maxs - mins);
-            int radius = (int) (pi * size);
+            double di = diameters[i] / (maxs - mins);
+
+            float radius = (float) (3+ (di * size));
             float x = xPanelRight+10+(int) (xi * size);
             float y = yy4 + (int) (yi * size);
-            Color color = new Color(main.ProvenanceMatrix.mappingColorRelations[minerGlobalIDof[i]]);  
             
-             // if (deactive[i])
-           // 	color = new Color(255,255,255,10);
-            
-            if (minerGlobalIDof[i]==main.ProvenanceMatrix.currentRelation){
-            	currentSize = radius;
-            }
-            
-            if (labels[i].contains("controls-production-of")){
-            	x=x-50;
-            }
-            else if (labels[i].contains("consumption-con")){
-            	x=x-60;
-            	y=y+60;
-            }
-            else if (labels[i].contains("used-to-produce")){
-            	x=x-20;
-            	y=y-50;
+            if (radius>0){
+            	Color color = new Color(main.ProvenanceMatrix.mappingColorRelations[i]);  
+                
             	
-            }
+            	if (isActive[i])
+            		parent.fill(color.getRed(),color.getGreen(),color.getBlue(),180);
+            	else
+            		parent.fill(color.getRed(),color.getGreen(),color.getBlue(),40);
            
             
-           if (radius>0){
-        	   	parent.fill(color.getRed(), color.getGreen(), color.getBlue(),180);
-        	   	if (PApplet.dist(x, y, parent.mouseX, parent.mouseY)<radius/2 && brushing<0){
-        	   		parent.fill(color.getRed(), color.getGreen(), color.getBlue(),255);
+            
+           
+            
+              	if (PApplet.dist(x, y, parent.mouseX, parent.mouseY)<radius/2 && brushing<0){
+        	   		parent.fill(color.getRed(),color.getGreen(),color.getBlue());
             	   	brushing=i;
                 }
               
         	   	parent.ellipse(x , y , radius, radius);
-        	   	parent.fill(0);
-        	   	//if (deactive[i])
-	            //	parent.fill(50,50,50,50);
-	            parent.text(labels[i], x , y+4);
+        	   	if (isActive[i])
+                	parent.fill(0,200);
+        	   	else 
+        	   		parent.fill(0,30);
+        	    parent.text(labels[i], x , y+4);
            }
         }
-        if (minerGlobalIDof!=null && brushing>=0)
-        	main.ProvenanceMatrix.currentRelation = minerGlobalIDof[brushing];
-        else
-        	main.ProvenanceMatrix.currentRelation = -1;
-        
         parent.fill(Color.GRAY.getRGB());
 		parent.textSize(14);
 		parent.textAlign(PApplet.LEFT);
@@ -286,9 +195,9 @@ public class Venn_Overview{
 	 
 	public boolean mouseClicked() {
 		if (brushing>=0){
-			main.ProvenanceMatrix.currentRelation = minerGlobalIDof[brushing];
-			deactive[brushing] =! deactive[brushing];
-			return true;
+			 main.ProvenanceMatrix.currentRelation = brushing;
+			 isActive[brushing] = !isActive[brushing];
+			 return true;
 		}
 		else{
 			main.ProvenanceMatrix.currentRelation = -2;
