@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,9 +31,16 @@ public class ProvenanceMatrix extends PApplet {
 	public int count = 0;
 	public static int currentRelation = -1;
 	public static int processing = 0;
-	public String currentFile = "./level3RAS/1_RAF-Cascade.owl"; //@Amruta
-
-
+	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/Lorisiformes-All.txt";
+	//public String currentFile = "./NicoData/minyomerus-underspecified.txt";
+	//public String currentFile = "./NicoData/large/prim-uc-entire.txt";  	//********* remember to change to length-1 instead of length -2
+	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/primates-large-alignment.txt";
+	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/weevils-merge-concepts.txt";
+	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/perelleschus-multiple-worlds.txt"; 	// small, nice Venn Diagram
+	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2015_1982_phylo.txt"; 		
+	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched.txt"; 
+	public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2.txt"; 		// 160 possible worlds
+	
 	public static ButtonBrowse buttonBrowse;
 
 	// Store the genes results
@@ -82,15 +90,12 @@ public class ProvenanceMatrix extends PApplet {
 	// Allow to draw 
 	public static boolean isAllowedDrawing = false;
 	public static int  ccc = 0; // count to draw progessing bar
-
 	public PFont metaBold = loadFont("Arial-BoldMT-18.vlw");
 
 
 	
 	public static ArrayList[][] articulations;
 	public HashMap<String,Integer> hashArticulations = new HashMap<String,Integer>();
-	public String[] lineX;
-	public String[] lineY;
 	public String taxomX;
 	public String taxomY;
 	public static ArrayList[] a1;    // ArrayList parent -> children
@@ -125,7 +130,19 @@ public class ProvenanceMatrix extends PApplet {
 		mappingColorRelations[2] = new Color(200,200,0).getRGB(); 
 		mappingColorRelations[3] = new Color(200,0,0).getRGB();		
 		mappingColorRelations[4] = new Color(180,180,180).getRGB();	
-
+		// Initialize articulation has
+		hashArticulations.put("=",0);
+		hashArticulations.put(">",1);
+		hashArticulations.put("<",2);
+		hashArticulations.put("><",3);
+		hashArticulations.put("!",4);
+		hashArticulations.put("|",4);
+		hashArticulations.put("equals",0);
+		hashArticulations.put("includes",1);
+		hashArticulations.put("is_included_in",2);
+		hashArticulations.put("overlaps",3);
+		hashArticulations.put("disjoint",4);
+		
 		//-----------------------------
 		buttonBrowse = new ButtonBrowse(this);
 		popupOrder  = new PopupOrder(this);
@@ -136,10 +153,9 @@ public class ProvenanceMatrix extends PApplet {
 
 		//VEN DIAGRAM
 		vennOverview = new Venn_Overview(this);
-		if (!currentFile.equals("")){
-			thread1=new Thread(loader1);
-			thread1.start();
-		}
+		thread1=new Thread(loader1);
+		thread1.start();
+	
 		
 		// enable the mouse wheel, for zooming
 		addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -155,20 +171,6 @@ public class ProvenanceMatrix extends PApplet {
 		// Draw 
 		try{
 			// Print message
-			if (processing<mappingColorRelations.length){
-				ccc+=1;
-				if (ccc>10000) ccc=0;
-				this.fill(mappingColorRelations[processing],100+(ccc*10)%155);
-				this.noStroke();
-				this.arc(marginX,this.height-20, 30, 30, 0, PApplet.PI*2*(processing+1)/5);
-
-
-				this.fill(mappingColorRelations[processing]);
-				this.textSize(14);
-				this.textAlign(PApplet.LEFT);
-				this.text(message, marginX+20,this.height-14);
-			}
-
 			if (isAllowedDrawing){
 				if (currentFile.equals("")){
 					int ccc = this.frameCount*6%255;
@@ -207,33 +209,20 @@ public class ProvenanceMatrix extends PApplet {
 			buttonBrowse.draw();
 			vennOverview.draw(this.width-400, 80);
 			//popupRelation.draw(this.width-304);
+			
+			this.textSize(13);
+			this.fill(0);
+			this.textAlign(PApplet.LEFT);
+			this.text(message, 30, this.height-10);
 		}
 		catch (Exception e){
 			System.out.println();
 			System.out.println("*******************Catch ERROR*******************");
+			message = e.getMessage();
 			e.printStackTrace();
 			return;
 		}
 	}	
-
-	/*
-	public void drawMatrix() throws IOException {
-		// Draw color legend
-		float y3 = 100;
-		float x3 = this.width-150;
-		
-		this.textAlign(PApplet.LEFT);
-		this.textSize(13);
-		for (int i=0;i<artStrings.length;i++){
-			y3 +=20;
-			this.fill(mappingColorRelations[i]);
-			this.noStroke();
-			this.ellipse(x3,y3,17,17);
-			if (i==4)
-				this.fill(0,120);  // For disjoins
-			this.text(artStrings[i],x3+13,y3+4);
-		}
-	}*/
 
 	public void drawGenes(float mX, float mY) throws IOException {
 		// Compute lensing
@@ -290,8 +279,6 @@ public class ProvenanceMatrix extends PApplet {
 			}	
 		}
 		
-		
-
 		for (int j=0;j<trgTaxonomy.size();j++){
 			int order = trgTaxonomy.get(j).order;
 			if (bY-num<=order && order<=bY+num){
@@ -509,7 +496,7 @@ public class ProvenanceMatrix extends PApplet {
 					this.noStroke();
 					this.fill(mappingColorRelations[indexArt]);
 					if (vennOverview.isActive[indexArt]){
-						this.arc(xx+ww/2,yy+hh/2,PApplet.min(ww,hh), PApplet.min(ww,hh), countArt*alpha, (countArt+1)*alpha);
+						this.arc(xx+ww/2,yy+hh/2,PApplet.min(ww,hh)+2, PApplet.min(ww,hh)+2, countArt*alpha, (countArt+1)*alpha);
 						countArt++;
 					}
 				}
@@ -569,15 +556,6 @@ public class ProvenanceMatrix extends PApplet {
 	}
 
 
-	public String loadFile (Frame f, String title, String defDir, String fileType) {
-		FileDialog fd = new FileDialog(f, title, FileDialog.LOAD);
-		fd.setFile(fileType);
-		fd.setDirectory(defDir);
-		fd.setLocation(50, 50);
-		fd.show();
-		String path = fd.getDirectory()+fd.getFile();
-		return path;
-	}
 
 
 	public void keyPressed() {
@@ -594,226 +572,145 @@ public class ProvenanceMatrix extends PApplet {
 
 		@SuppressWarnings("unchecked")
 		public void run() {
-			// Initialize articulation has
-			hashArticulations.put("=",0);
-			hashArticulations.put(">",1);
-			hashArticulations.put("<",2);
-			hashArticulations.put("><",3);
-			hashArticulations.put("!",4);
-			hashArticulations.put("|",4);
-			hashArticulations.put("equals",0);
-			hashArticulations.put("includes",1);
-			hashArticulations.put("is_included_in",2);
-			hashArticulations.put("overlaps",3);
-			hashArticulations.put("disjoint",4);
-			
-			
-			lineX = parent.loadStrings("./NicoData/converted/srcChild_min2015.txt");
-			lineY = parent.loadStrings("./NicoData/converted/trgChild_min1982.txt");
-			
-			/// Taxom mappings
-			/*
-			String[] lines = parent.loadStrings("./NicoData/minyomerus-underspecified.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/minyomerus-underspecified_mir.csv");  // Articulation
-			int year1 = 2015;
-			int year2 = 1982;
-			int unUsedCollumnAtTheEnd = 1;*/
-			
-			
-			/*
-			String[] lines = parent.loadStrings("./NicoData/large/prim-uc-entire.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/large/primates-all-mir.csv");
-			int year1 = 2005;
-			int year2 = 1993;
-			int unUsedCollumnAtTheEnd = 0;*/
-			
-			/*
-			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/primates-large-alignment.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/primates-large-alignment_mir.csv");
-			int year1 = 2005;
-			int year2 = 1993;
-			int unUsedCollumnAtTheEnd = 1;*/
-			
-			/*
-			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/weevils-merge-concepts.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/weevils-merge-concepts_mir.csv");
-			int year1 = 2000;
-			int year2 = 1995;
-			int unUsedCollumnAtTheEnd = 1;*/
-			
-			/*
-			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/perelleschus-multiple-worlds.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/perelleschus-multiple-worlds_mir.csv");
-			int year1 = 1954;
-			int year2 = 1936;
-			int unUsedCollumnAtTheEnd = 1;*/
-			
-			
-			/*
-			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched_mir.csv");
-			int year1 = 2010;
-			int year2 = 1968;
-			int unUsedCollumnAtTheEnd = 1;*/
-			
-			// 160 possible worlds
-			
-			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2_mir.csv");
-			int year1 = 2010;
-			int year2 = 1968;
-			int unUsedCollumnAtTheEnd = 1;
-			
-			/* 
-			// 20x10 maxtrix
-			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/2015_1982_phylo.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/2015_1982_phylo_mir.csv");
-			int year1 = 2015;
-			int year2 = 1982;
-			int unUsedCollumnAtTheEnd = 1;
-			*/
-			
-			// 30x20 
-			/*
-			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/Lorisiformes-All.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/Lorisiformes-All_mir.csv");
-			int year1 = 2005;
-			int year2 = 1993;
-			int unUsedCollumnAtTheEnd = 1;
-			*/
-			/*
-			String[] lines = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/Lorisiformes-All.txt");// hierarchy
-			String[] lines2 = parent.loadStrings("./NicoData/relargeandlargestmonkeyalignments/Lorisiformes-All_mir.csv");
-			int year1 = 2005;
-			int year2 = 1993;
-			int unUsedCollumnAtTheEnd = 1;*/
-			
-			int count=0;
-			int count2=0;
-			int count3=0;
-			
-			for (int i=0;i<lines.length;i++){
-				if (lines[i].contains("#"))
-					continue;
-				if (lines[i].trim().equals("")){
-					count++;
-					continue;
-				}	
-				if (count==0 && count2==0){
-					taxomX = lines[i]; 
-					count2++;
-				}
-				else if (count==0 && count2>0){
-					String str = lines[i].replace("(", "").replace(")", "");
-					String[] ps = str.split(" ");
-					for (int j=0; j<ps.length;j++){
-						if (!isContained(srcTaxonomy,ps[j]))
-							srcTaxonomy.add(new Taxonomy(ps[j],srcTaxonomy.size()));
-					}
-				}
-				else if (count==1 && count3==0){
-					taxomY = lines[i]; 
-					count3++;
-				}
-				else if (count==1 && count3>0){
-					String str = lines[i].replace("(", "").replace(")", "");
-					String[] ps = str.split(" ");
-					for (int j=0; j<ps.length;j++){
-						if (!isContained(trgTaxonomy,ps[j]))
-							trgTaxonomy.add(new Taxonomy(ps[j],trgTaxonomy.size()));
-					}
-				}
-			}
-			hash1 = new HashMap<String,Integer>();
-			for (int i=0;i<srcTaxonomy.size();i++){
-				hash1.put(srcTaxonomy.get(i).name, i);
-			}
-			hash2 = new HashMap<String,Integer>();
-			for (int i=0;i<trgTaxonomy.size();i++){
-				hash2.put(trgTaxonomy.get(i).name, i);
-			}
-			
-			// Read the structure of the 1st
-			count=0;
-			count2=0;
-			count3=0;
-			a1 = new ArrayList[srcTaxonomy.size()];
-			a2 = new ArrayList[trgTaxonomy.size()];
-			for (int i=0;i<lines.length;i++){
-				if (lines[i].contains("#"))
-					continue;
-				if (lines[i].trim().equals("")){
-					count++;
-					continue;
-				}	
-				if (count==0 && count2==0){
-					count2++;
-				}
-				else if (count==0 && count2>0){
-					String str = lines[i].replace("(", "").replace(")", "");
-					String[] ps = str.split(" ");
-					int indexParent = hash1.get(ps[0]);
-					
-					for (int j=1; j<ps.length;j++){
-						int indexChild = hash1.get(ps[j]);
-						//System.out.println(indexChild+ "     "+srcOntology.get(indexChild).name);
-						if (a1[indexParent]==null)
-							a1[indexParent] =  new ArrayList<Integer>();
-						a1[indexParent].add(indexChild);
-						srcTaxonomy.get(indexChild).parentIndex = indexParent;
-					}
-				}
-				else if (count==1 && count3==0){
-					count3++;
-				}
-				else if (count==1 && count3>0){
-					String str = lines[i].replace("(", "").replace(")", "");
-					String[] ps = str.split(" ");
-					int indexParent = hash2.get(ps[0]);
-					for (int j=1; j<ps.length;j++){
-						int indexChild = hash2.get(ps[j]);
-						if (a2[indexParent]==null)
-							a2[indexParent] =  new ArrayList<Integer>();
-						a2[indexParent].add(indexChild);
-					}
-				}
-			}
-			
-			articulations = new ArrayList[srcTaxonomy.size()][trgTaxonomy.size()];
-			for (int i=0;i<lines2.length;i++){
-				String str = lines2[i].replace("{", "").replace("}", "").replace(" ", "")
-									.replace(year1+".", "").replace(year2+".", "");
-				String[] ps = str.split(",");
-				String s1 = ps[0];
-				String s2 = ps[ps.length-1-unUsedCollumnAtTheEnd];
-				//System.out.println(str);
-				for (int j=1; j<ps.length-1-unUsedCollumnAtTheEnd;j++){
-					int art = hashArticulations.get(ps[j]);
-					int index1 = hash1.get(s1);
-					int index2 = hash2.get(s2);
-					if (articulations[index1][index2]==null)
-						articulations[index1][index2] = new ArrayList<Integer>();
-					if (art>=5) continue; // Skip disjoint
-					articulations[index1][index2].add(art);
-				}
-			}
-			
-			isAllowedDrawing =  false;
-
+			try{
 				
-			
-			
-			System.out.println();
-			
-			stateAnimation=0;
-			isAllowedDrawing =  true;  //******************* Start drawing **************
-
-			// Compute the summary for each Gene
-			Taxonomy.orderByReading();
-			//write();
-
-			vennOverview.compute();
-			check2.s  = false;
+				srcTaxonomy = new ArrayList<Taxonomy>();
+				trgTaxonomy = new ArrayList<Taxonomy>();
+				/// Taxom mappings
+				String[] lines = parent.loadStrings(currentFile);// hierarchy
+				String[] lines2 = parent.loadStrings(currentFile.replace(".txt", "_mir.csv"));
+				
+				int count=0;
+				int count2=0;
+				int count3=0;
+				for (int i=0;i<lines.length;i++){
+					System.out.println(lines[i]);
+					if (lines[i].contains("#"))
+						continue;
+					if (lines[i].trim().equals("")){
+						count++;
+						continue;
+					}	
+					if (count==0 && count2==0){
+						taxomX = lines[i]; 
+						count2++;
+					}
+					else if (count==0 && count2>0){
+						String str = lines[i].replace("(", "").replace(")", "");
+						String[] ps = str.split(" ");
+						for (int j=0; j<ps.length;j++){
+							if (!isContained(srcTaxonomy,ps[j]))
+								srcTaxonomy.add(new Taxonomy(ps[j],srcTaxonomy.size()));
+						}
+					}
+					else if (count==1 && count3==0){
+						taxomY = lines[i]; 
+						count3++;
+					}
+					else if (count==1 && count3>0){
+						String str = lines[i].replace("(", "").replace(")", "");
+						String[] ps = str.split(" ");
+						for (int j=0; j<ps.length;j++){
+							if (!isContained(trgTaxonomy,ps[j]))
+								trgTaxonomy.add(new Taxonomy(ps[j],trgTaxonomy.size()));
+						}
+					}
+				}
+				hash1 = new HashMap<String,Integer>();
+				for (int i=0;i<srcTaxonomy.size();i++){
+					hash1.put(srcTaxonomy.get(i).name, i);
+				}
+				hash2 = new HashMap<String,Integer>();
+				for (int i=0;i<trgTaxonomy.size();i++){
+					hash2.put(trgTaxonomy.get(i).name, i);
+				}
+				
+				// Read the structure of the 1st
+				count=0;
+				count2=0;
+				count3=0;
+				a1 = new ArrayList[srcTaxonomy.size()];
+				a2 = new ArrayList[trgTaxonomy.size()];
+				for (int i=0;i<lines.length;i++){
+					if (lines[i].contains("#"))
+						continue;
+					if (lines[i].trim().equals("")){
+						count++;
+						continue;
+					}	
+					if (count==0 && count2==0){
+						count2++;
+					}
+					else if (count==0 && count2>0){
+						String str = lines[i].replace("(", "").replace(")", "");
+						String[] ps = str.split(" ");
+						int indexParent = hash1.get(ps[0]);
+						
+						for (int j=1; j<ps.length;j++){
+							int indexChild = hash1.get(ps[j]);
+							//System.out.println(indexChild+ "     "+srcOntology.get(indexChild).name);
+							if (a1[indexParent]==null)
+								a1[indexParent] =  new ArrayList<Integer>();
+							a1[indexParent].add(indexChild);
+							srcTaxonomy.get(indexChild).parentIndex = indexParent;
+						}
+					}
+					else if (count==1 && count3==0){
+						count3++;
+					}
+					else if (count==1 && count3>0){
+						String str = lines[i].replace("(", "").replace(")", "");
+						String[] ps = str.split(" ");
+						int indexParent = hash2.get(ps[0]);
+						for (int j=1; j<ps.length;j++){
+							int indexChild = hash2.get(ps[j]);
+							if (a2[indexParent]==null)
+								a2[indexParent] =  new ArrayList<Integer>();
+							a2[indexParent].add(indexChild);
+						}
+					}
+				}
+				
+				articulations = new ArrayList[srcTaxonomy.size()][trgTaxonomy.size()];
+				String[] p = lines2[0].split(",");
+				String year1 = p[0].split("\\.")[0];
+				String year2 = p[2].split("\\.")[0];
+				System.out.println(year1+"	"+year2);
+				for (int i=0;i<lines2.length;i++){
+					
+					String str = lines2[i].replace("{", "").replace("}", "").replace(" ", "")
+										.replace(year1+".", "").replace(year2+".", "");
+					
+					String[] ps = str.split(",");
+					String s1 = ps[0];
+					String s2 = ps[ps.length-2];
+					//System.out.println(str);
+					for (int j=1; j<ps.length-2;j++){
+						int art = hashArticulations.get(ps[j]);
+						int index1 = hash1.get(s1);
+						int index2 = hash2.get(s2);
+						if (articulations[index1][index2]==null)
+							articulations[index1][index2] = new ArrayList<Integer>();
+						if (art>=5) continue; // Skip disjoint
+						articulations[index1][index2].add(art);
+					}
+				}
+				
+				System.out.println();
+				stateAnimation=0;
+				isAllowedDrawing =  true;  //******************* Start drawing **************
+	
+				// Compute the summary for each Gene
+				Taxonomy.orderByReading();
+				//write();
+	
+				vennOverview.compute();
+			}
+			catch (Exception e){
+				message = e.toString();
+				e.printStackTrace();
+			}
+						
 		}
 	}
 
@@ -842,30 +739,7 @@ public class ProvenanceMatrix extends PApplet {
 	}
 		
 
-	// This function returns all the files in a directory as an array of Strings
-	public  ArrayList<String> listFileNames(String dir, String imgType) {
-		File file = new File(dir);
-		ArrayList<String> a = new ArrayList<String>();
-		if (file.isDirectory()) { // Do
-			String names[] = file.list();
-			for (int i = 0; i < names.length; i++) {
-				ArrayList<String> b = listFileNames(dir + "/" + names[i], imgType);
-				for (int j = 0; j < b.size(); j++) {
-					a.add(b.get(j));	
-				}
-
-			}
-		} else if (dir.endsWith(imgType)) {
-			a.add(dir);
-		}
-		return a;
-	}
-
-
-
-
 	
-
 	// Thread for grouping
 	class ThreadLoader3 implements Runnable {
 		public ThreadLoader3() {}
@@ -873,19 +747,18 @@ public class ProvenanceMatrix extends PApplet {
 		}
 	}	
 
-	// Thread for grouping
+	// Open new Data
 	class ThreadLoader4 implements Runnable {
 		PApplet parent;
 		public ThreadLoader4(PApplet p) {
 			parent = p;
 		}
 		public void run() {
-			String fileName =  loadFile(new Frame(), "Open your file", "..", ".txt");
-			if (fileName.equals("..null"))
+			String fileName =  loadFile(new Frame(), "Open your file", ".");
+			if (fileName.equals(".null"))
 				return;
 			else{
 				currentFile = fileName;
-				//VEN DIAGRAM
 				vennOverview = new Venn_Overview(parent);
 				thread1=new Thread(loader1);
 				thread1.start();
@@ -893,6 +766,21 @@ public class ProvenanceMatrix extends PApplet {
 		}
 	}	
 
+	public String loadFile (Frame f, String title, String defDir) {
+		FileDialog fd = new FileDialog(f, title, FileDialog.LOAD);
+		fd.setFilenameFilter(new FilenameFilter(){
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".txt");
+            }
+        });
+		
+		fd.setDirectory(defDir);
+		fd.setLocation(50, 50);
+		fd.show();
+		String path = fd.getDirectory()+fd.getFile();
+		return path;
+	}
+	
 	void mouseWheel(int delta) {
 		//	PopupComplex.y2 -= delta/2;
 		//	if (PopupComplex.y2>20)
