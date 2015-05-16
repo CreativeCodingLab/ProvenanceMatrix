@@ -47,10 +47,7 @@ public class ProvenanceMatrix extends PApplet {
 	public static ArrayList<String>[] pairs;
 	public static ArrayList<String>[] ontologyMappings; // equivalent to pairs
 
-	// Global data
-	public static ArrayList<Taxonomy> srcTaxonomy = new ArrayList<Taxonomy>();
-	public static ArrayList<Taxonomy> trgTaxonomy = new ArrayList<Taxonomy>();
-
+	
 
 	//public static ArrayList<Integrator> iW;
 	// Contains the location and size of each gene to display
@@ -98,6 +95,8 @@ public class ProvenanceMatrix extends PApplet {
 	public HashMap<String,Integer> hashArticulations = new HashMap<String,Integer>();
 	public String taxomX;
 	public String taxomY;
+	public static ArrayList<Taxonomy> srcTaxonomy = new ArrayList<Taxonomy>();
+	public static ArrayList<Taxonomy> trgTaxonomy = new ArrayList<Taxonomy>();
 	public static ArrayList[] a1;    // ArrayList parent -> children
 	public static ArrayList[] a2;
 	public static HashMap<String,Integer> hash1;   	// Hash of taxo name-index in array
@@ -239,7 +238,7 @@ public class ProvenanceMatrix extends PApplet {
 
 		int num = 5; // Number of items in one side of lensing
 		
-		if (check1.s){
+		if (this.mouseY<mY){
 			for (int i=0;i<srcTaxonomy.size();i++){
 				int order = srcTaxonomy.get(i).order;
 				if (bX-num<=order && order<=bX+num) {
@@ -625,7 +624,7 @@ public class ProvenanceMatrix extends PApplet {
 					hash2.put(trgTaxonomy.get(i).name, i);
 				}
 				
-				// Read the structure of the 1st
+				// Read the structure of hierarchy
 				count=0;
 				count2=0;
 				count3=0;
@@ -670,21 +669,17 @@ public class ProvenanceMatrix extends PApplet {
 						}
 					}
 				}
-				
 				articulations = new ArrayList[srcTaxonomy.size()][trgTaxonomy.size()];
 				String[] p = lines2[0].split(",");
 				String year1 = p[0].split("\\.")[0];
 				String year2 = p[2].split("\\.")[0];
 				System.out.println(year1+"	"+year2);
 				for (int i=0;i<lines2.length;i++){
-					
 					String str = lines2[i].replace("{", "").replace("}", "").replace(" ", "")
 										.replace(year1+".", "").replace(year2+".", "");
-					
 					String[] ps = str.split(",");
 					String s1 = ps[0];
 					String s2 = ps[ps.length-2];
-					//System.out.println(str);
 					for (int j=1; j<ps.length-2;j++){
 						int art = hashArticulations.get(ps[j]);
 						int index1 = hash1.get(s1);
@@ -702,8 +697,6 @@ public class ProvenanceMatrix extends PApplet {
 	
 				// Compute the summary for each Gene
 				Taxonomy.orderByReading();
-				//write();
-	
 				vennOverview.compute();
 			}
 			catch (Exception e){
