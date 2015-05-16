@@ -225,20 +225,11 @@ public class ProvenanceMatrix extends PApplet {
 
 	public void drawGenes(float mX, float mY) throws IOException {
 		// Compute lensing
-		//if (check1.s){
-			bX = (int) ((mouseX-mX)/size);
-			bY = (int) ((mouseY-mY)/size);
-		//}
-		//else{
-	//		bX = -100;//srcOntology.size()+10;
-	//		bY = -100;//srcOntology.size()+10;
-
-//		}
+	
 		float lensingSize = PApplet.map(size, 0, 100, 20, 80);	
-
 		int num = 5; // Number of items in one side of lensing
 		
-		if (this.mouseY<mY){
+		if (this.mouseY>mY){
 			for (int i=0;i<srcTaxonomy.size();i++){
 				int order = srcTaxonomy.get(i).order;
 				if (bX-num<=order && order<=bX+num) {
@@ -268,44 +259,60 @@ public class ProvenanceMatrix extends PApplet {
 			}
 		}	
 		else{
-			float beginX = mX;
+			bY = -100;
 			for (int i=0;i<srcTaxonomy.size();i++){
-				float ss = size;
 				int order = srcTaxonomy.get(i).order;
 				srcTaxonomy.get(i).iW.target(size);
 				setValue(srcTaxonomy.get(i).iX, mX +order*size);
-					
+				if (srcTaxonomy.get(i).iX.value<=this.mouseX
+						&& this.mouseX<=srcTaxonomy.get(i).iX.value+size)	
+					bX=i;
 			}	
 		}
 		
-		for (int j=0;j<trgTaxonomy.size();j++){
-			int order = trgTaxonomy.get(j).order;
-			if (bY-num<=order && order<=bY+num){
-				trgTaxonomy.get(j).iH.target(lensingSize);
-				int num2 = order-(bY-num);
-				if (bY-num>=0)
-					setValue(trgTaxonomy.get(j).iY, mY +(bY-num)*size+num2*lensingSize);
-				else
-					setValue(trgTaxonomy.get(j).iY, mY +order*lensingSize);
-			}	
-			else{
-				trgTaxonomy.get(j).iH.target(size);
-				if (order<bY-num)
-					setValue(trgTaxonomy.get(j).iY, mY +order*size);
-				else if (order>bY+num){
+		
+		if (this.mouseX>mX){
+			for (int j=0;j<trgTaxonomy.size();j++){
+				int order = trgTaxonomy.get(j).order;
+				if (bY-num<=order && order<=bY+num){
+					trgTaxonomy.get(j).iH.target(lensingSize);
+					int num2 = order-(bY-num);
 					if (bY-num>=0)
-						setValue(trgTaxonomy.get(j).iY, mY +(order-(num*2+1))*size+(num*2+1)*lensingSize);
-					else{
-						int num3= bY+num+1;
-						if (num3>0)
-							setValue(trgTaxonomy.get(j).iY, mY +(order-num3)*size+num3*lensingSize);
-						else
-							setValue(trgTaxonomy.get(j).iY, mY +order*size);
-					}	
-
+						setValue(trgTaxonomy.get(j).iY, mY +(bY-num)*size+num2*lensingSize);
+					else
+						setValue(trgTaxonomy.get(j).iY, mY +order*lensingSize);
 				}	
+				else{
+					trgTaxonomy.get(j).iH.target(size);
+					if (order<bY-num)
+						setValue(trgTaxonomy.get(j).iY, mY +order*size);
+					else if (order>bY+num){
+						if (bY-num>=0)
+							setValue(trgTaxonomy.get(j).iY, mY +(order-(num*2+1))*size+(num*2+1)*lensingSize);
+						else{
+							int num3= bY+num+1;
+							if (num3>0)
+								setValue(trgTaxonomy.get(j).iY, mY +(order-num3)*size+num3*lensingSize);
+							else
+								setValue(trgTaxonomy.get(j).iY, mY +order*size);
+						}	
+	
+					}	
+				}	
+			}
+		}
+		else{
+			bX = -100;
+			for (int i=0;i<trgTaxonomy.size();i++){
+				int order = trgTaxonomy.get(i).order;
+				trgTaxonomy.get(i).iH.target(size);
+				setValue(trgTaxonomy.get(i).iY, mY +order*size);
+				if (trgTaxonomy.get(i).iY.value<=this.mouseY
+						&& this.mouseY<=trgTaxonomy.get(i).iY.value+size)	
+					bY=i;
 			}	
 		}
+		System.out.println(bX+"	bY="+bY);
 
 		//--------------------------------
 
@@ -365,7 +372,7 @@ public class ProvenanceMatrix extends PApplet {
 				this.text(trgTaxonomy.get(i).name, mX-15, yy+hh/2+5); //text for each row @Amruta 
 			}
 		}
-		if (bX<0 || srcTaxonomy.size()>bX){
+		if (bX<0 || bX>srcTaxonomy.size()){
 			this.textSize(13);
 			this.textAlign(PApplet.CENTER);
 			this.text(taxomX, 500, 40);
