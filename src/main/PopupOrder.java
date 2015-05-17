@@ -17,7 +17,7 @@ public class PopupOrder{
 	public int w1 = 98;
 	public int w = 200;
 	public int h;
-	public int itemH = 19;
+	public int itemH = 18;
 	public Color cGray  = new Color(240,240,240);
 	public static String[] items={"Random","Reading order", "Name", "Similarity", "BFS", "DFS"}; 
 	public Slider slider;
@@ -35,13 +35,13 @@ public class PopupOrder{
 		x = x_;
 		checkBrushing();
 		if (b>=0){
-			parent.fill(100);
+			parent.fill(0,100);
 			parent.stroke(0);
 			parent.textSize(12);
 			h=items.length*itemH+20;
 			parent.fill(200);
-			parent.stroke(0,150);
-			parent.rect(x, y+23, w,h);
+			parent.stroke(0,100);
+			parent.rect(x, y+20, w,h);
 			// Max number of relations
 			for (int i=0;i<items.length;i++){
 				if (i==s){
@@ -64,13 +64,13 @@ public class PopupOrder{
 				slider.draw(x+110, y+itemH*4-14+25);
 			
 		}
-		parent.fill(180);
+		parent.fill(0,50);
 		parent.noStroke();
-		parent.rect(x,y,w1,23);
+		parent.rect(x,y,w1,20);
 		parent.fill(0);
 		parent.textAlign(PApplet.CENTER);
-		parent.textSize(12);
-		parent.text("Order by",x+w1/2,y+17);
+		parent.textSize(11);
+		parent.text("Order by",x+w1/2,y+14);
 		
 	}
 	

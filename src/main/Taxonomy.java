@@ -1,5 +1,12 @@
 package main;
 
+import java.awt.Image;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,7 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.imageio.ImageIO;
+
 import processing.core.PApplet;
+import processing.core.PImage;
 
 import static main.ProvenanceMatrix.srcTaxonomy;
 import static main.ProvenanceMatrix.trgTaxonomy;
@@ -25,8 +35,11 @@ public class Taxonomy {
 	public Integrator iX, iY, iH,iW;
 	public int order;
 	public int parentIndex=-1;
+	ArrayList<PImage> images= new ArrayList<PImage>();
+	PApplet parent;
 	
-	public Taxonomy(String name_, int order_){
+	public Taxonomy(PApplet parent_, String name_, int order_){
+		parent = parent_;
 		name = name_;
 		iX = new Integrator(main.ProvenanceMatrix.marginX,.5f,.1f);
 		iY = new Integrator(main.ProvenanceMatrix.marginY,.5f,.1f);
@@ -34,6 +47,76 @@ public class Taxonomy {
 		iH = new Integrator(0,.5f,.1f);
 		order = order_;
 	}
+	
+	public void setImages() {
+		String result = excutePost("http://en.wikipedia.org/wiki/"+name,"");
+		String[] ps1 = result.split(".jpg\"");
+		ArrayList<String> a = new ArrayList<String>();
+		for (int i = 0; i<ps1.length;i++){
+			String[] ps2 = ps1[i].split("src=\"");
+			//for (int j = 0; j<ps2.length;j++){
+			String str = ps2[ps2.length-1];
+			if (str.startsWith("//upload.wikimedia.org") && str.length()<500){
+				a.add("http:"+str+".jpg");
+			}
+		}
+		for (int i = 0; i<a.size();i++){
+			try{
+				PImage image = parent.loadImage(a.get(i));
+				image.resize(180, 180);
+				images.add(image);
+				System.out.println(i+"	"+a.get(i)+"	"+image);
+			}
+			catch (Exception e) {
+			    e.printStackTrace();
+			    continue;
+			} 
+		}
+	}
+		
+	public static String excutePost(String targetURL, String urlParameters) {
+		  HttpURLConnection connection = null;  
+		  try {
+		    //Create connection
+		    URL url = new URL(targetURL);
+		    connection = (HttpURLConnection)url.openConnection();
+		    connection.setRequestMethod("POST");
+		    connection.setRequestProperty("Content-Type", 
+		        "application/x-www-form-urlencoded");
+
+		    connection.setRequestProperty("Content-Length", 
+		        Integer.toString(urlParameters.getBytes().length));
+		    connection.setRequestProperty("Content-Language", "en-US");  
+
+		    connection.setUseCaches(false);
+		    connection.setDoOutput(true);
+
+		    //Send request
+		    DataOutputStream wr = new DataOutputStream (
+		        connection.getOutputStream());
+		    wr.writeBytes(urlParameters);
+		    wr.close();
+
+		    //Get Response  
+		    InputStream is = connection.getInputStream();
+		    BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+		    StringBuilder response = new StringBuilder(); // or StringBuffer if not Java 5+ 
+		    String line;
+		    while((line = rd.readLine()) != null) {
+		      response.append(line);
+		      response.append('\r');
+		    }
+		    rd.close();
+		    return response.toString();
+		  } catch (Exception e) {
+		    e.printStackTrace();
+		    return "";
+		  } finally {
+		    if(connection != null) {
+		      connection.disconnect(); 
+		    }
+		  }
+		}
 	
 	
 	// Order genes by random

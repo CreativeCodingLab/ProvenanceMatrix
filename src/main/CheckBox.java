@@ -24,6 +24,8 @@ public class CheckBox{
 		parent.textAlign(PApplet.LEFT);
 		parent.textSize(11);
 		parent.stroke(0);
+		parent.strokeWeight(0.5f);
+		
 		if (b)
 			parent.fill(180);
 		else
