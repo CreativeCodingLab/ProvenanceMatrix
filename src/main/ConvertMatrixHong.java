@@ -176,9 +176,34 @@ public class ConvertMatrixHong extends PApplet {
 
 		//VEN DIAGRAM
 		vennOverview = new Venn_Overview(this);
-		thread1=new Thread(loader1);
-		thread1.start();
+		//thread1=new Thread(loader1);
+		//thread1.start();
 	
+		String[] lines = this.loadStrings("./HongData/CharSim4Tuan.csv");
+		String[] names = new String[lines.length-1];
+		for (int i=0; i< lines.length;i++){
+			String[] ps = lines[i].split(",");
+			if (i==0){
+				for (int j=1; j< ps.length;j++){
+					String name = "{\"name\":\""+ps[j]+"\",\"group\":1}";
+					names[j-1] = name;
+				//	System.out.println(name);
+				}
+			}
+		}
+		String result = "{\"nodes\":[";
+		for (int i=0; i< names.length;i++){
+			if (i==0)
+				result+=names[i];
+			else
+				result+=","+names[i];
+		}
+		result+="],\"links\":[]}";
+		
+		System.out.println(result);
+	
+		
+		
 		
 		// enable the mouse wheel, for zooming
 		addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -812,7 +837,6 @@ public class ConvertMatrixHong extends PApplet {
 				int count2=0;
 				int count3=0;
 				for (int i=0;i<lines.length;i++){
-					System.out.println(lines[i]);
 					if (lines[i].contains("#"))
 						continue;
 					if (lines[i].trim().equals("")){
@@ -904,7 +928,6 @@ public class ConvertMatrixHong extends PApplet {
 				String[] p = lines2[0].split(",");
 				String year1 = p[0].split("\\.")[0];
 				String year2 = p[2].split("\\.")[0];
-				System.out.println(year1+"	"+year2);
 				for (int i=0;i<lines2.length;i++){
 					String str = lines2[i].replace("{", "").replace("}", "").replace(" ", "")
 										.replace(year1+".", "").replace(year2+".", "");
@@ -948,13 +971,7 @@ public class ConvertMatrixHong extends PApplet {
 				Taxonomy.orderByReading();
 				vennOverview.compute();
 				
-				// Find images from Wikipedia ----------------------------------
-				for (int i=0;i<srcTaxonomy.size();i++){
-					srcTaxonomy.get(i).setImages();
-				}
-				for (int i=0;i<trgTaxonomy.size();i++){
-					trgTaxonomy.get(i).setImages();
-				}
+				
 			}
 			catch (Exception e){
 				message = e.toString();
