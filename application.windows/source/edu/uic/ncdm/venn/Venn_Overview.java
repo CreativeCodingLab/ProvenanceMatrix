@@ -103,10 +103,7 @@ public class Venn_Overview{
 			areas[numArt+k] = entry.getValue();
 			k++;
 		}
-		for (int i =0; i< data.length; i++){
-			System.out.println("	data[i][0]="+data[i][0]+"	"+areas[i]);
-		}
-				
+			
 		VennData dv = new VennData(data, areas);
 	   VennAnalytic va = new VennAnalytic();
        VennDiagram venn = va.compute(dv);

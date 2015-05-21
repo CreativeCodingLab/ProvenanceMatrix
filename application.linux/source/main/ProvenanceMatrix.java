@@ -48,7 +48,8 @@ public class ProvenanceMatrix extends PApplet {
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/perelleschus-multiple-worlds.txt"; 	// small, nice Venn Diagram
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2015_1982_phylo.txt"; 		
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched.txt"; 
-	public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2.txt"; 		// 160 possible worlds
+	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2.txt"; 		// 160 possible worlds
+	public String currentFile = "./BertramData/BD-Hubs-Diversity.txt";
 	
 	public static ButtonBrowse buttonBrowse;
 
@@ -235,11 +236,11 @@ public class ProvenanceMatrix extends PApplet {
 						int numColumns = srcTaxonomy.size(); 
 						int numRows = trgTaxonomy.size();
 						int num = Math.max(numRows, numColumns);
-						size = (this.height-marginY)/num+1;
+						size = (this.height-marginY)*0.85f/num;
 						if (size>100)
 							size=100;
 					}
-					drawMatrix(200,175);
+					drawMatrix(150,150);
 					
 					this.textSize(11);
 					popupOrder.draw(this.width-330);
