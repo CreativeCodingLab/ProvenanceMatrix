@@ -35,7 +35,7 @@ import javax.imageio.ImageIO;
 import edu.uic.ncdm.venn.Venn_Overview;
 import processing.core.*;
 
-public class ConvertMatrixHong extends PApplet {
+public class ProvenanceMatrix_1_2 extends PApplet {
 	private static final long serialVersionUID = 1L;
 	public int count = 0;
 	public static int currentRelation = -1;
@@ -49,6 +49,7 @@ public class ConvertMatrixHong extends PApplet {
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2015_1982_phylo.txt"; 		
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched.txt"; 
 	public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2.txt"; 		// 160 possible worlds
+	//public String currentFile = "./BertramData/BD-Hubs-Diversity.txt";
 	
 	public static ButtonBrowse buttonBrowse;
 
@@ -62,7 +63,7 @@ public class ConvertMatrixHong extends PApplet {
 	// Contains the location and size of each gene to display
 	public float size=0;
 	public static float marginX = 200;
-	public static float marginY = 120;
+	public static float marginY = 200;
 	public static String message="";
 
 	public ThreadLoader1 loader1=new ThreadLoader1(this);
@@ -119,7 +120,7 @@ public class ConvertMatrixHong extends PApplet {
 	public static String[] artStrings = {"Equals","Includes","is_included_in","Overlaps","Disjoint"}; 
 
 	public static void main(String args[]){
-		PApplet.main(new String[] { ConvertMatrixHong.class.getName() });
+		PApplet.main(new String[] { ProvenanceMatrix_1_2.class.getName() });
 	}
 
 	public void setup() {
@@ -176,61 +177,9 @@ public class ConvertMatrixHong extends PApplet {
 
 		//VEN DIAGRAM
 		vennOverview = new Venn_Overview(this);
-		//thread1=new Thread(loader1);
-		//thread1.start();
+		thread1=new Thread(loader1);
+		thread1.start();
 	
-		//String[] lines = this.loadStrings("./HongData/Data20x20.csv");
-		String[] lines = this.loadStrings("./HongData/CharSim4Tuan.csv");
-		int num =10;
-		String[] names = new String[lines.length/num-1];
-		ArrayList<String> links = new ArrayList<String>();
-		for (int i=0; i< lines.length/num;i++){
-			String[] ps = lines[i].split(",");
-			if (i==0){
-				for (int j=1; j< ps.length/num;j++){
-					int group = 1;
-					String name = "{\"name\":\""+ps[j]+"\",\"group\":"+group+"}";
-					names[j-1] = name;
-				//	System.out.println(name);
-				}
-			}
-			else{
-				int indexY =i-1;
-				for (int j=1; j< ps.length/num;j++){
-					int indexX =j-1;
-					float value = Float.parseFloat(ps[j]); 
-					
-					if (value>0f)
-						links.add("{\"source\":"+indexY+",\"target\":"+indexX+",\"value\":"+value+"}");
-					//	System.out.println(value);
-				}
-			}
-		}
-		System.out.println("links.size()="+links.size());
-		
-		
-		String result = "{\"nodes\":[";
-		for (int i=0; i< names.length;i++){
-			if (i==0)
-				result+=names[i];
-			else
-				result+=","+names[i];
-		}
-		result+="],\"links\":[";
-		for (int i=0; i< links.size();i++){
-			if (i==0)
-				result+=links.get(i);
-			else
-				result+=","+links.get(i);
-		}
-		result+="]}";
-			
-		//System.out.println(result);
-		
-		String[] results = new String[1];
-		results[0] = result;
-		this.saveStrings("./miserables.json", results);
-		
 		
 		// enable the mouse wheel, for zooming
 		addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -291,7 +240,7 @@ public class ConvertMatrixHong extends PApplet {
 						if (size>100)
 							size=100;
 					}
-					drawMatrix(200,175);
+					drawMatrix(marginX,marginY);
 					
 					this.textSize(11);
 					popupOrder.draw(this.width-330);
@@ -864,6 +813,7 @@ public class ConvertMatrixHong extends PApplet {
 				int count2=0;
 				int count3=0;
 				for (int i=0;i<lines.length;i++){
+					System.out.println(lines[i]);
 					if (lines[i].contains("#"))
 						continue;
 					if (lines[i].trim().equals("")){
@@ -955,6 +905,7 @@ public class ConvertMatrixHong extends PApplet {
 				String[] p = lines2[0].split(",");
 				String year1 = p[0].split("\\.")[0];
 				String year2 = p[2].split("\\.")[0];
+				System.out.println(year1+"	"+year2);
 				for (int i=0;i<lines2.length;i++){
 					String str = lines2[i].replace("{", "").replace("}", "").replace(" ", "")
 										.replace(year1+".", "").replace(year2+".", "");
@@ -990,6 +941,49 @@ public class ConvertMatrixHong extends PApplet {
 					}
 				}
 					
+				// Output Euler ->JSON
+				ArrayList<String> a = new ArrayList<String>();
+				
+				for (int i=0;i<srcTaxonomy.size();i++){
+					for (int j=0;j<trgTaxonomy.size();j++){
+						if (articulations[i][j]==null)
+							continue;
+						String name1 = "\"source\":\""+getDotName(i,srcTaxonomy) +"\"";
+						String name2 = "\"target\":\""+getDotName(j,trgTaxonomy) +"\"";
+						String arti = "\"articulations\":"+articulations[i][j];
+						int artSrc = artSources[i][j];
+						String str = "";
+						if (artSrc==1)
+							str = "input";
+						else if (artSrc==2)
+							str = "deduced";
+						else if (artSrc==3)
+							str = "inferred";
+						
+						String artSrcStr = "\"articulation Source\":\""+str+"\"";
+						
+						a.add("{"+name1+","+arti+","+artSrcStr+","+name2+"},");
+					//	System.out.println(articulations[i][j]);
+					}
+				}
+				//
+				//hashArtSource.put("input",1);
+				//hashArtSource.put("deduced",2);
+				//hashArtSource.put("inferred",3);
+				
+				String[] b = new String[a.size()+2];
+				b[0]="[";
+				for (int i=0;i<a.size();i++){
+					b[i+1] = a.get(i);
+				}
+				b[a.size()] = b[a.size()].substring(0,b[a.size()].length()-1);
+				b[a.size()+1]="]";
+				
+				parent.saveStrings(currentFile.replace(".txt", ".json"), b);
+					
+					
+				
+				
 				
 				System.out.println();
 				stateAnimation=0;
@@ -998,7 +992,13 @@ public class ConvertMatrixHong extends PApplet {
 				Taxonomy.orderByReading();
 				vennOverview.compute();
 				
-				
+				// Find images from Wikipedia ----------------------------------
+				for (int i=0;i<srcTaxonomy.size();i++){
+					srcTaxonomy.get(i).setImages();
+				}
+				for (int i=0;i<trgTaxonomy.size();i++){
+					trgTaxonomy.get(i).setImages();
+				}
 			}
 			catch (Exception e){
 				message = e.toString();
@@ -1006,6 +1006,17 @@ public class ConvertMatrixHong extends PApplet {
 			}
 		}
 	}
+	public  String getDotName(int index, ArrayList<Taxonomy> onList) {
+		String name ="";
+		ArrayList<Integer> d = getAncestors(index,onList);
+		for (int i=0;i<d.size();i++){
+			int index2 = d.get(i);
+			name+=onList.get(index2).name+".";
+		}
+		name+=onList.get(index).name;
+		return name;
+	}
+		
 
 	public  ArrayList<Integer> getSubtree(int index, ArrayList<Taxonomy> onList, ArrayList<Integer>[] aList) {
 		ArrayList<Integer> a = new ArrayList<Integer>();

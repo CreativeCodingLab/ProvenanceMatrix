@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.uic.ncdm.venn.data.VennData;
-import static main.ProvenanceMatrix.srcTaxonomy;
-import static main.ProvenanceMatrix.trgTaxonomy;
-import static main.ProvenanceMatrix.articulations;
+import static main.ProvenanceMatrix_1_2.srcTaxonomy;
+import static main.ProvenanceMatrix_1_2.trgTaxonomy;
+import static main.ProvenanceMatrix_1_2.articulations;
 
 
 public class Venn_Overview{
@@ -51,7 +51,7 @@ public class Venn_Overview{
 	}  
     
 	public void compute() {
-		numArt = main.ProvenanceMatrix.artStrings.length;
+		numArt = main.ProvenanceMatrix_1_2.artStrings.length;
 		isActive = new boolean[numArt];
 		for (int i =0; i< numArt; i++){
 			isActive[i] = true;
@@ -74,11 +74,11 @@ public class Venn_Overview{
 					//	System.out.println(articulations[i][j]);
 					//	continue;
 					//}	
-					String str = main.ProvenanceMatrix.artStrings[(Integer) articulations[i][j].get(0)];
+					String str = main.ProvenanceMatrix_1_2.artStrings[(Integer) articulations[i][j].get(0)];
 					for (int k =1; k< articulations[i][j].size(); k++){
 						//if ((Integer) articulations[i][j].get(k)==4)
 						//	continue;
-						str += "&"+main.ProvenanceMatrix.artStrings[(Integer) articulations[i][j].get(k)];
+						str += "&"+main.ProvenanceMatrix_1_2.artStrings[(Integer) articulations[i][j].get(k)];
 					}
 					if (hash.get(str)==null){
 						hash.put(str, 1);
@@ -93,7 +93,7 @@ public class Venn_Overview{
 		data = new String[numArt+hash.size()][1];
 		areas =  new double[numArt+hash.size()];		
 		for (int i =0; i< numArt; i++){
-			data[i][0] = main.ProvenanceMatrix.artStrings[i];
+			data[i][0] = main.ProvenanceMatrix_1_2.artStrings[i];
 			areas[i]=count[i];
 		}
 		
@@ -142,7 +142,7 @@ public class Venn_Overview{
             float y = yy4 + (int) (yi * size);
             
             if (radius>0){
-            	Color color = new Color(main.ProvenanceMatrix.mappingColorRelations[i]);  
+            	Color color = new Color(main.ProvenanceMatrix_1_2.mappingColorRelations[i]);  
                 
             	
             	if (isActive[i])
@@ -192,12 +192,12 @@ public class Venn_Overview{
 	 
 	public boolean mouseClicked() {
 		if (brushing>=0){
-			 main.ProvenanceMatrix.currentRelation = brushing;
+			 main.ProvenanceMatrix_1_2.currentRelation = brushing;
 			 isActive[brushing] = !isActive[brushing];
 			 return true;
 		}
 		else{
-			main.ProvenanceMatrix.currentRelation = -2;
+			main.ProvenanceMatrix_1_2.currentRelation = -2;
 			return false;
 		}	
 	}

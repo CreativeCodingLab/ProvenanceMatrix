@@ -179,26 +179,29 @@ public class ConvertMatrixHong extends PApplet {
 		//thread1=new Thread(loader1);
 		//thread1.start();
 	
+		//String[] lines = this.loadStrings("./HongData/Data20x20.csv");
 		String[] lines = this.loadStrings("./HongData/CharSim4Tuan.csv");
-		String[] names = new String[lines.length-1];
+		int num =10;
+		String[] names = new String[lines.length/num-1];
 		ArrayList<String> links = new ArrayList<String>();
-		for (int i=0; i< lines.length;i++){
+		for (int i=0; i< lines.length/num;i++){
 			String[] ps = lines[i].split(",");
 			if (i==0){
-				for (int j=1; j< ps.length;j++){
-					String name = "{\"name\":\""+ps[j]+"\",\"group\":1}";
+				for (int j=1; j< ps.length/num;j++){
+					int group = 1;
+					String name = "{\"name\":\""+ps[j]+"\",\"group\":"+group+"}";
 					names[j-1] = name;
 				//	System.out.println(name);
 				}
 			}
 			else{
 				int indexY =i-1;
-				for (int j=1; j< ps.length;j++){
+				for (int j=1; j< ps.length/num;j++){
 					int indexX =j-1;
 					float value = Float.parseFloat(ps[j]); 
 					
-					if (value>0.5f)
-						links.add("{\"source\":"+indexY+",\"target\":"+indexX+",\"value\":"+(int)(value*10)+"}");
+					if (value>0f)
+						links.add("{\"source\":"+indexY+",\"target\":"+indexX+",\"value\":"+value+"}");
 					//	System.out.println(value);
 				}
 			}

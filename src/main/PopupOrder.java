@@ -1,6 +1,6 @@
 package main;
-import static main.ProvenanceMatrix.srcTaxonomy;
-import static main.ProvenanceMatrix.trgTaxonomy;
+import static main.ProvenanceMatrix_1_2.srcTaxonomy;
+import static main.ProvenanceMatrix_1_2.trgTaxonomy;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -84,18 +84,18 @@ public class PopupOrder{
 				Taxonomy.orderByReading();
 			}	
 			else if (items[s].equals("Name"))  {
-				main.ProvenanceMatrix.stateAnimation=0;
-				main.ProvenanceMatrix.check2.s =false;
+				main.ProvenanceMatrix_1_2.stateAnimation=0;
+				main.ProvenanceMatrix_1_2.check2.s =false;
 				Taxonomy.orderByName();
 			}	
 			else if (items[s].equals("Similarity"))  {
-				main.ProvenanceMatrix.stateAnimation=0;
-				main.ProvenanceMatrix.check2.s =false;
+				main.ProvenanceMatrix_1_2.stateAnimation=0;
+				main.ProvenanceMatrix_1_2.check2.s =false;
 				Taxonomy.orderBySimilarity();
 			}
 			else if (items[s].equals("BFS"))  {
-				main.ProvenanceMatrix.stateAnimation=0;
-				main.ProvenanceMatrix.check2.s =false;
+				main.ProvenanceMatrix_1_2.stateAnimation=0;
+				main.ProvenanceMatrix_1_2.check2.s =false;
 				
 				srcTaxonomy.get(0).order=0;
 				trgTaxonomy.get(0).order=0;
@@ -105,8 +105,8 @@ public class PopupOrder{
 				Taxonomy.BFS2(0); // the first element is assumed as ROOT
 			}
 			else if (items[s].equals("DFS"))  {
-				main.ProvenanceMatrix.stateAnimation=0;
-				main.ProvenanceMatrix.check2.s =false;
+				main.ProvenanceMatrix_1_2.stateAnimation=0;
+				main.ProvenanceMatrix_1_2.check2.s =false;
 				
 				countDFS1=0; 
 				countDFS2=0; 

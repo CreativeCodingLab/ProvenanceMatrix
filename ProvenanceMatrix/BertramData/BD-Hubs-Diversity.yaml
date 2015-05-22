@@ -1,0 +1,1064 @@
+BDH.AK:
+  concept: AK
+  group: BDH
+  name: test14
+BDH.AL:
+  concept: AL
+  group: BDH
+  name: test6
+BDH.AR:
+  concept: AR
+  group: BDH
+  name: test94
+BDH.AZ:
+  concept: AZ
+  group: BDH
+  name: test97
+BDH.CA:
+  concept: CA
+  group: BDH
+  name: test3
+BDH.CO:
+  concept: CO
+  group: BDH
+  name: test55
+BDH.CT:
+  concept: CT
+  group: BDH
+  name: test81
+BDH.DC:
+  concept: DC
+  group: BDH
+  name: test66
+BDH.DE:
+  concept: DE
+  group: BDH
+  name: test93
+BDH.FL:
+  concept: FL
+  group: BDH
+  name: test71
+BDH.GA:
+  concept: GA
+  group: BDH
+  name: test91
+BDH.HI:
+  concept: HI
+  group: BDH
+  name: test16
+BDH.IA:
+  concept: IA
+  group: BDH
+  name: test89
+BDH.ID:
+  concept: ID
+  group: BDH
+  name: test11
+BDH.IL:
+  concept: IL
+  group: BDH
+  name: test15
+BDH.IN:
+  concept: IN
+  group: BDH
+  name: test9
+BDH.KS:
+  concept: KS
+  group: BDH
+  name: test86
+BDH.KY:
+  concept: KY
+  group: BDH
+  name: test98
+BDH.LA:
+  concept: LA
+  group: BDH
+  name: test36
+BDH.MA:
+  concept: MA
+  group: BDH
+  name: test64
+BDH.MD:
+  concept: MD
+  group: BDH
+  name: test73
+BDH.ME:
+  concept: ME
+  group: BDH
+  name: test81
+BDH.MI:
+  concept: MI
+  group: BDH
+  name: test69
+BDH.MN:
+  concept: MN
+  group: BDH
+  name: test77
+BDH.MO:
+  concept: MO
+  group: BDH
+  name: test6
+BDH.MS:
+  concept: MS
+  group: BDH
+  name: test28
+BDH.MT:
+  concept: MT
+  group: BDH
+  name: test88
+BDH.Midwest:
+  concept: Midwest
+  group: BDH
+  name: test72
+BDH.NC:
+  concept: NC
+  group: BDH
+  name: test33
+BDH.ND:
+  concept: ND
+  group: BDH
+  name: test4
+BDH.NE:
+  concept: NE
+  group: BDH
+  name: test47
+BDH.NH:
+  concept: NH
+  group: BDH
+  name: test91
+BDH.NJ:
+  concept: NJ
+  group: BDH
+  name: test13
+BDH.NM:
+  concept: NM
+  group: BDH
+  name: test10
+BDH.NV:
+  concept: NV
+  group: BDH
+  name: test87
+BDH.NY:
+  concept: NY
+  group: BDH
+  name: test73
+BDH.Northeast:
+  concept: Northeast
+  group: BDH
+  name: test31
+BDH.OH:
+  concept: OH
+  group: BDH
+  name: test94
+BDH.OK:
+  concept: OK
+  group: BDH
+  name: test50
+BDH.OR:
+  concept: OR
+  group: BDH
+  name: test39
+BDH.PA:
+  concept: PA
+  group: BDH
+  name: test60
+BDH.RI:
+  concept: RI
+  group: BDH
+  name: test5
+BDH.SC:
+  concept: SC
+  group: BDH
+  name: test46
+BDH.SD:
+  concept: SD
+  group: BDH
+  name: test41
+BDH.South:
+  concept: South
+  group: BDH
+  name: test37
+BDH.TN:
+  concept: TN
+  group: BDH
+  name: test83
+BDH.TX:
+  concept: TX
+  group: BDH
+  name: test13
+BDH.USA:
+  concept: USA
+  group: BDH
+  name: test23
+BDH.UT:
+  concept: UT
+  group: BDH
+  name: test25
+BDH.VA:
+  concept: VA
+  group: BDH
+  name: test67
+BDH.VT:
+  concept: VT
+  group: BDH
+  name: test2
+BDH.WA:
+  concept: WA
+  group: BDH
+  name: test30
+BDH.WI:
+  concept: WI
+  group: BDH
+  name: test75
+BDH.WV:
+  concept: WV
+  group: BDH
+  name: test91
+BDH.WY:
+  concept: WY
+  group: BDH
+  name: test89
+BDH.West:
+  concept: West
+  group: BDH
+  name: test64
+NDC.AL:
+  concept: AL
+  group: NDC
+  name: test15
+NDC.AR:
+  concept: AR
+  group: NDC
+  name: test34
+NDC.AZ:
+  concept: AZ
+  group: NDC
+  name: test15
+NDC.CA:
+  concept: CA
+  group: NDC
+  name: test66
+NDC.CO:
+  concept: CO
+  group: NDC
+  name: test56
+NDC.CT:
+  concept: CT
+  group: NDC
+  name: test35
+NDC.DE:
+  concept: DE
+  group: NDC
+  name: test12
+NDC.FL:
+  concept: FL
+  group: NDC
+  name: test9
+NDC.GA:
+  concept: GA
+  group: NDC
+  name: test94
+NDC.IA:
+  concept: IA
+  group: NDC
+  name: test88
+NDC.ID:
+  concept: ID
+  group: NDC
+  name: test48
+NDC.IL:
+  concept: IL
+  group: NDC
+  name: test38
+NDC.IN:
+  concept: IN
+  group: NDC
+  name: test98
+NDC.KS:
+  concept: KS
+  group: NDC
+  name: test58
+NDC.KY:
+  concept: KY
+  group: NDC
+  name: test63
+NDC.LA:
+  concept: LA
+  group: NDC
+  name: test10
+NDC.MA:
+  concept: MA
+  group: NDC
+  name: test3
+NDC.MD:
+  concept: MD
+  group: NDC
+  name: test99
+NDC.ME:
+  concept: ME
+  group: NDC
+  name: test54
+NDC.MI:
+  concept: MI
+  group: NDC
+  name: test8
+NDC.MN:
+  concept: MN
+  group: NDC
+  name: test85
+NDC.MO:
+  concept: MO
+  group: NDC
+  name: test67
+NDC.MS:
+  concept: MS
+  group: NDC
+  name: test5
+NDC.MT:
+  concept: MT
+  group: NDC
+  name: test81
+NDC.Midwest:
+  concept: Midwest
+  group: NDC
+  name: test84
+NDC.NC:
+  concept: NC
+  group: NDC
+  name: test65
+NDC.ND:
+  concept: ND
+  group: NDC
+  name: test13
+NDC.NE:
+  concept: NE
+  group: NDC
+  name: test58
+NDC.NH:
+  concept: NH
+  group: NDC
+  name: test9
+NDC.NJ:
+  concept: NJ
+  group: NDC
+  name: test8
+NDC.NM:
+  concept: NM
+  group: NDC
+  name: test59
+NDC.NV:
+  concept: NV
+  group: NDC
+  name: test61
+NDC.NY:
+  concept: NY
+  group: NDC
+  name: test34
+NDC.Northeast:
+  concept: Northeast
+  group: NDC
+  name: test51
+NDC.OH:
+  concept: OH
+  group: NDC
+  name: test48
+NDC.OK:
+  concept: OK
+  group: NDC
+  name: test17
+NDC.OR:
+  concept: OR
+  group: NDC
+  name: test85
+NDC.PA:
+  concept: PA
+  group: NDC
+  name: test7
+NDC.RI:
+  concept: RI
+  group: NDC
+  name: test61
+NDC.SC:
+  concept: SC
+  group: NDC
+  name: test23
+NDC.SD:
+  concept: SD
+  group: NDC
+  name: test63
+NDC.Southeast:
+  concept: Southeast
+  group: NDC
+  name: test65
+NDC.Southwest:
+  concept: Southwest
+  group: NDC
+  name: test21
+NDC.TN:
+  concept: TN
+  group: NDC
+  name: test19
+NDC.TX:
+  concept: TX
+  group: NDC
+  name: test49
+NDC.USA:
+  concept: USA
+  group: NDC
+  name: test96
+NDC.UT:
+  concept: UT
+  group: NDC
+  name: test62
+NDC.VA:
+  concept: VA
+  group: NDC
+  name: test30
+NDC.VT:
+  concept: VT
+  group: NDC
+  name: test44
+NDC.WA:
+  concept: WA
+  group: NDC
+  name: test81
+NDC.WI:
+  concept: WI
+  group: NDC
+  name: test35
+NDC.WV:
+  concept: WV
+  group: NDC
+  name: test27
+NDC.WY:
+  concept: WY
+  group: NDC
+  name: test55
+NDC.West:
+  concept: West
+  group: NDC
+  name: test20
+BDH.AK_BDH.West:
+  label: isa
+  s: BDH.AK
+  t: BDH.West
+BDH.AL_BDH.South:
+  label: isa
+  s: BDH.AL
+  t: BDH.South
+BDH.AL_NDC.AL:
+  label: ==
+  s: BDH.AL
+  t: NDC.AL
+BDH.AR_BDH.South:
+  label: isa
+  s: BDH.AR
+  t: BDH.South
+BDH.AR_NDC.AR:
+  label: ==
+  s: BDH.AR
+  t: NDC.AR
+BDH.AZ_BDH.West:
+  label: isa
+  s: BDH.AZ
+  t: BDH.West
+BDH.AZ_NDC.AZ:
+  label: ==
+  s: BDH.AZ
+  t: NDC.AZ
+BDH.CA_BDH.West:
+  label: isa
+  s: BDH.CA
+  t: BDH.West
+BDH.CA_NDC.CA:
+  label: ==
+  s: BDH.CA
+  t: NDC.CA
+BDH.CO_BDH.West:
+  label: isa
+  s: BDH.CO
+  t: BDH.West
+BDH.CO_NDC.CO:
+  label: ==
+  s: BDH.CO
+  t: NDC.CO
+BDH.CT_BDH.Northeast:
+  label: isa
+  s: BDH.CT
+  t: BDH.Northeast
+BDH.CT_NDC.CT:
+  label: ==
+  s: BDH.CT
+  t: NDC.CT
+BDH.DC_BDH.South:
+  label: isa
+  s: BDH.DC
+  t: BDH.South
+BDH.DE_BDH.South:
+  label: isa
+  s: BDH.DE
+  t: BDH.South
+BDH.DE_NDC.DE:
+  label: ==
+  s: BDH.DE
+  t: NDC.DE
+BDH.FL_BDH.South:
+  label: isa
+  s: BDH.FL
+  t: BDH.South
+BDH.FL_NDC.FL:
+  label: ==
+  s: BDH.FL
+  t: NDC.FL
+BDH.GA_BDH.South:
+  label: isa
+  s: BDH.GA
+  t: BDH.South
+BDH.GA_NDC.GA:
+  label: ==
+  s: BDH.GA
+  t: NDC.GA
+BDH.HI_BDH.West:
+  label: isa
+  s: BDH.HI
+  t: BDH.West
+BDH.IA_BDH.Midwest:
+  label: isa
+  s: BDH.IA
+  t: BDH.Midwest
+BDH.IA_NDC.IA:
+  label: ==
+  s: BDH.IA
+  t: NDC.IA
+BDH.ID_BDH.West:
+  label: isa
+  s: BDH.ID
+  t: BDH.West
+BDH.ID_NDC.ID:
+  label: ==
+  s: BDH.ID
+  t: NDC.ID
+BDH.IL_BDH.Midwest:
+  label: isa
+  s: BDH.IL
+  t: BDH.Midwest
+BDH.IL_NDC.IL:
+  label: ==
+  s: BDH.IL
+  t: NDC.IL
+BDH.IN_BDH.Midwest:
+  label: isa
+  s: BDH.IN
+  t: BDH.Midwest
+BDH.IN_NDC.IN:
+  label: ==
+  s: BDH.IN
+  t: NDC.IN
+BDH.KS_BDH.Midwest:
+  label: isa
+  s: BDH.KS
+  t: BDH.Midwest
+BDH.KS_NDC.KS:
+  label: ==
+  s: BDH.KS
+  t: NDC.KS
+BDH.KY_BDH.South:
+  label: isa
+  s: BDH.KY
+  t: BDH.South
+BDH.KY_NDC.KY:
+  label: ==
+  s: BDH.KY
+  t: NDC.KY
+BDH.LA_BDH.South:
+  label: isa
+  s: BDH.LA
+  t: BDH.South
+BDH.LA_NDC.LA:
+  label: ==
+  s: BDH.LA
+  t: NDC.LA
+BDH.MA_BDH.Northeast:
+  label: isa
+  s: BDH.MA
+  t: BDH.Northeast
+BDH.MA_NDC.MA:
+  label: ==
+  s: BDH.MA
+  t: NDC.MA
+BDH.MD_BDH.South:
+  label: isa
+  s: BDH.MD
+  t: BDH.South
+BDH.MD_NDC.MD:
+  label: ==
+  s: BDH.MD
+  t: NDC.MD
+BDH.ME_BDH.Northeast:
+  label: isa
+  s: BDH.ME
+  t: BDH.Northeast
+BDH.ME_NDC.ME:
+  label: ==
+  s: BDH.ME
+  t: NDC.ME
+BDH.MI_BDH.Midwest:
+  label: isa
+  s: BDH.MI
+  t: BDH.Midwest
+BDH.MI_NDC.MI:
+  label: ==
+  s: BDH.MI
+  t: NDC.MI
+BDH.MN_BDH.Midwest:
+  label: isa
+  s: BDH.MN
+  t: BDH.Midwest
+BDH.MN_NDC.MN:
+  label: ==
+  s: BDH.MN
+  t: NDC.MN
+BDH.MO_BDH.Midwest:
+  label: isa
+  s: BDH.MO
+  t: BDH.Midwest
+BDH.MO_NDC.MO:
+  label: ==
+  s: BDH.MO
+  t: NDC.MO
+BDH.MS_BDH.South:
+  label: isa
+  s: BDH.MS
+  t: BDH.South
+BDH.MS_NDC.MS:
+  label: ==
+  s: BDH.MS
+  t: NDC.MS
+BDH.MT_BDH.West:
+  label: isa
+  s: BDH.MT
+  t: BDH.West
+BDH.MT_NDC.MT:
+  label: ==
+  s: BDH.MT
+  t: NDC.MT
+BDH.Midwest_BDH.USA:
+  label: isa
+  s: BDH.Midwest
+  t: BDH.USA
+BDH.NC_BDH.South:
+  label: isa
+  s: BDH.NC
+  t: BDH.South
+BDH.NC_NDC.NC:
+  label: ==
+  s: BDH.NC
+  t: NDC.NC
+BDH.ND_BDH.Midwest:
+  label: isa
+  s: BDH.ND
+  t: BDH.Midwest
+BDH.ND_NDC.ND:
+  label: ==
+  s: BDH.ND
+  t: NDC.ND
+BDH.NE_BDH.Midwest:
+  label: isa
+  s: BDH.NE
+  t: BDH.Midwest
+BDH.NE_NDC.NE:
+  label: ==
+  s: BDH.NE
+  t: NDC.NE
+BDH.NH_BDH.Northeast:
+  label: isa
+  s: BDH.NH
+  t: BDH.Northeast
+BDH.NH_NDC.NH:
+  label: ==
+  s: BDH.NH
+  t: NDC.NH
+BDH.NJ_BDH.Northeast:
+  label: isa
+  s: BDH.NJ
+  t: BDH.Northeast
+BDH.NJ_NDC.NJ:
+  label: ==
+  s: BDH.NJ
+  t: NDC.NJ
+BDH.NM_BDH.West:
+  label: isa
+  s: BDH.NM
+  t: BDH.West
+BDH.NM_NDC.NM:
+  label: ==
+  s: BDH.NM
+  t: NDC.NM
+BDH.NV_BDH.West:
+  label: isa
+  s: BDH.NV
+  t: BDH.West
+BDH.NV_NDC.NV:
+  label: ==
+  s: BDH.NV
+  t: NDC.NV
+BDH.NY_BDH.Northeast:
+  label: isa
+  s: BDH.NY
+  t: BDH.Northeast
+BDH.NY_NDC.NY:
+  label: ==
+  s: BDH.NY
+  t: NDC.NY
+BDH.Northeast_BDH.USA:
+  label: isa
+  s: BDH.Northeast
+  t: BDH.USA
+BDH.OH_BDH.Midwest:
+  label: isa
+  s: BDH.OH
+  t: BDH.Midwest
+BDH.OH_NDC.OH:
+  label: ==
+  s: BDH.OH
+  t: NDC.OH
+BDH.OK_BDH.South:
+  label: isa
+  s: BDH.OK
+  t: BDH.South
+BDH.OK_NDC.OK:
+  label: ==
+  s: BDH.OK
+  t: NDC.OK
+BDH.OR_BDH.West:
+  label: isa
+  s: BDH.OR
+  t: BDH.West
+BDH.OR_NDC.OR:
+  label: ==
+  s: BDH.OR
+  t: NDC.OR
+BDH.PA_BDH.Northeast:
+  label: isa
+  s: BDH.PA
+  t: BDH.Northeast
+BDH.PA_NDC.PA:
+  label: ==
+  s: BDH.PA
+  t: NDC.PA
+BDH.RI_BDH.Northeast:
+  label: isa
+  s: BDH.RI
+  t: BDH.Northeast
+BDH.RI_NDC.RI:
+  label: ==
+  s: BDH.RI
+  t: NDC.RI
+BDH.SC_BDH.South:
+  label: isa
+  s: BDH.SC
+  t: BDH.South
+BDH.SC_NDC.SC:
+  label: ==
+  s: BDH.SC
+  t: NDC.SC
+BDH.SD_BDH.Midwest:
+  label: isa
+  s: BDH.SD
+  t: BDH.Midwest
+BDH.SD_NDC.SD:
+  label: ==
+  s: BDH.SD
+  t: NDC.SD
+BDH.South_BDH.USA:
+  label: isa
+  s: BDH.South
+  t: BDH.USA
+BDH.TN_BDH.South:
+  label: isa
+  s: BDH.TN
+  t: BDH.South
+BDH.TN_NDC.TN:
+  label: ==
+  s: BDH.TN
+  t: NDC.TN
+BDH.TX_BDH.South:
+  label: isa
+  s: BDH.TX
+  t: BDH.South
+BDH.TX_NDC.TX:
+  label: ==
+  s: BDH.TX
+  t: NDC.TX
+BDH.UT_BDH.West:
+  label: isa
+  s: BDH.UT
+  t: BDH.West
+BDH.UT_NDC.UT:
+  label: ==
+  s: BDH.UT
+  t: NDC.UT
+BDH.VA_BDH.South:
+  label: isa
+  s: BDH.VA
+  t: BDH.South
+BDH.VA_NDC.VA:
+  label: ==
+  s: BDH.VA
+  t: NDC.VA
+BDH.VT_BDH.Northeast:
+  label: isa
+  s: BDH.VT
+  t: BDH.Northeast
+BDH.VT_NDC.VT:
+  label: ==
+  s: BDH.VT
+  t: NDC.VT
+BDH.WA_BDH.West:
+  label: isa
+  s: BDH.WA
+  t: BDH.West
+BDH.WA_NDC.WA:
+  label: ==
+  s: BDH.WA
+  t: NDC.WA
+BDH.WI_BDH.Midwest:
+  label: isa
+  s: BDH.WI
+  t: BDH.Midwest
+BDH.WI_NDC.WI:
+  label: ==
+  s: BDH.WI
+  t: NDC.WI
+BDH.WV_BDH.South:
+  label: isa
+  s: BDH.WV
+  t: BDH.South
+BDH.WV_NDC.WV:
+  label: ==
+  s: BDH.WV
+  t: NDC.WV
+BDH.WY_BDH.West:
+  label: isa
+  s: BDH.WY
+  t: BDH.West
+BDH.WY_NDC.WY:
+  label: ==
+  s: BDH.WY
+  t: NDC.WY
+BDH.West_BDH.USA:
+  label: isa
+  s: BDH.West
+  t: BDH.USA
+NDC.AL_NDC.Southeast:
+  label: isa
+  s: NDC.AL
+  t: NDC.Southeast
+NDC.AR_NDC.Southeast:
+  label: isa
+  s: NDC.AR
+  t: NDC.Southeast
+NDC.AZ_NDC.Southwest:
+  label: isa
+  s: NDC.AZ
+  t: NDC.Southwest
+NDC.CA_NDC.West:
+  label: isa
+  s: NDC.CA
+  t: NDC.West
+NDC.CO_NDC.West:
+  label: isa
+  s: NDC.CO
+  t: NDC.West
+NDC.CT_NDC.Northeast:
+  label: isa
+  s: NDC.CT
+  t: NDC.Northeast
+NDC.DE_NDC.Northeast:
+  label: isa
+  s: NDC.DE
+  t: NDC.Northeast
+NDC.FL_NDC.Southeast:
+  label: isa
+  s: NDC.FL
+  t: NDC.Southeast
+NDC.GA_NDC.Southeast:
+  label: isa
+  s: NDC.GA
+  t: NDC.Southeast
+NDC.IA_NDC.Midwest:
+  label: isa
+  s: NDC.IA
+  t: NDC.Midwest
+NDC.ID_NDC.West:
+  label: isa
+  s: NDC.ID
+  t: NDC.West
+NDC.IL_NDC.Midwest:
+  label: isa
+  s: NDC.IL
+  t: NDC.Midwest
+NDC.IN_NDC.Midwest:
+  label: isa
+  s: NDC.IN
+  t: NDC.Midwest
+NDC.KS_NDC.Midwest:
+  label: isa
+  s: NDC.KS
+  t: NDC.Midwest
+NDC.KY_NDC.Southeast:
+  label: isa
+  s: NDC.KY
+  t: NDC.Southeast
+NDC.LA_NDC.Southeast:
+  label: isa
+  s: NDC.LA
+  t: NDC.Southeast
+NDC.MA_NDC.Northeast:
+  label: isa
+  s: NDC.MA
+  t: NDC.Northeast
+NDC.MD_NDC.Northeast:
+  label: isa
+  s: NDC.MD
+  t: NDC.Northeast
+NDC.ME_NDC.Northeast:
+  label: isa
+  s: NDC.ME
+  t: NDC.Northeast
+NDC.MI_NDC.Midwest:
+  label: isa
+  s: NDC.MI
+  t: NDC.Midwest
+NDC.MN_NDC.Midwest:
+  label: isa
+  s: NDC.MN
+  t: NDC.Midwest
+NDC.MO_NDC.Midwest:
+  label: isa
+  s: NDC.MO
+  t: NDC.Midwest
+NDC.MS_NDC.Southeast:
+  label: isa
+  s: NDC.MS
+  t: NDC.Southeast
+NDC.MT_NDC.West:
+  label: isa
+  s: NDC.MT
+  t: NDC.West
+NDC.Midwest_NDC.USA:
+  label: isa
+  s: NDC.Midwest
+  t: NDC.USA
+NDC.NC_NDC.Southeast:
+  label: isa
+  s: NDC.NC
+  t: NDC.Southeast
+NDC.ND_NDC.Midwest:
+  label: isa
+  s: NDC.ND
+  t: NDC.Midwest
+NDC.NE_NDC.Midwest:
+  label: isa
+  s: NDC.NE
+  t: NDC.Midwest
+NDC.NH_NDC.Northeast:
+  label: isa
+  s: NDC.NH
+  t: NDC.Northeast
+NDC.NJ_NDC.Northeast:
+  label: isa
+  s: NDC.NJ
+  t: NDC.Northeast
+NDC.NM_NDC.Southwest:
+  label: isa
+  s: NDC.NM
+  t: NDC.Southwest
+NDC.NV_NDC.West:
+  label: isa
+  s: NDC.NV
+  t: NDC.West
+NDC.NY_NDC.Northeast:
+  label: isa
+  s: NDC.NY
+  t: NDC.Northeast
+NDC.Northeast_NDC.USA:
+  label: isa
+  s: NDC.Northeast
+  t: NDC.USA
+NDC.OH_NDC.Midwest:
+  label: isa
+  s: NDC.OH
+  t: NDC.Midwest
+NDC.OK_NDC.Southwest:
+  label: isa
+  s: NDC.OK
+  t: NDC.Southwest
+NDC.OR_NDC.West:
+  label: isa
+  s: NDC.OR
+  t: NDC.West
+NDC.PA_NDC.Northeast:
+  label: isa
+  s: NDC.PA
+  t: NDC.Northeast
+NDC.RI_NDC.Northeast:
+  label: isa
+  s: NDC.RI
+  t: NDC.Northeast
+NDC.SC_NDC.Southeast:
+  label: isa
+  s: NDC.SC
+  t: NDC.Southeast
+NDC.SD_NDC.Midwest:
+  label: isa
+  s: NDC.SD
+  t: NDC.Midwest
+NDC.Southeast_NDC.USA:
+  label: isa
+  s: NDC.Southeast
+  t: NDC.USA
+NDC.Southwest_NDC.USA:
+  label: isa
+  s: NDC.Southwest
+  t: NDC.USA
+NDC.TN_NDC.Southeast:
+  label: isa
+  s: NDC.TN
+  t: NDC.Southeast
+NDC.TX_NDC.Southwest:
+  label: isa
+  s: NDC.TX
+  t: NDC.Southwest
+NDC.UT_NDC.West:
+  label: isa
+  s: NDC.UT
+  t: NDC.West
+NDC.VA_NDC.Southeast:
+  label: isa
+  s: NDC.VA
+  t: NDC.Southeast
+NDC.VT_NDC.Northeast:
+  label: isa
+  s: NDC.VT
+  t: NDC.Northeast
+NDC.WA_NDC.West:
+  label: isa
+  s: NDC.WA
+  t: NDC.West
+NDC.WI_NDC.Midwest:
+  label: isa
+  s: NDC.WI
+  t: NDC.Midwest
+NDC.WV_NDC.Southeast:
+  label: isa
+  s: NDC.WV
+  t: NDC.Southeast
+NDC.WY_NDC.West:
+  label: isa
+  s: NDC.WY
+  t: NDC.West
+NDC.West_NDC.USA:
+  label: isa
+  s: NDC.West
+  t: NDC.USA
