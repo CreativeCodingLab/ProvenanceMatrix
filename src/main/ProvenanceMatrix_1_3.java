@@ -172,7 +172,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		popupOrder  = new PopupOrder(this);
 		check1 = new CheckBox(this, "Show articulation sources");
 		check2 = new CheckBox(this, "Show");
-		check3 = new CheckBox(this, "Highlighting groups");
+		check3 = new CheckBox(this, "Display Wikipedia images");
 
 
 		//VEN DIAGRAM
@@ -211,12 +211,13 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				}
 				else{
 					float xCheck = this.width-185;
-					float yCheck = 23;
+					float yCheck = 22;
 					
-					check2.draw(xCheck, yCheck-20);
+					check2.draw(xCheck, yCheck-18);
+					check3.draw(xCheck, yCheck);
 					this.fill(255,0,0);
 					this.text("bad apples", xCheck+53,yCheck-7);
-					check1.draw(xCheck, yCheck);
+					check1.draw(xCheck, yCheck+18);
 					if (check1.s){
 						for (int i=0;i<sourceColors.length;i++){
 							this.fill(sourceColors[i].getRGB());
@@ -228,7 +229,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 							this.text(hashArtSource.keySet().toArray()[i].toString(),xCheck+20,yCheck2+12);
 						}
 					}
-					//	check3.draw(this.width-500, 48);
 					
 					if (srcTaxonomy==null || srcTaxonomy.size()==0)
 						return;
@@ -247,27 +247,29 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				}
 			}
 			buttonBrowse.draw();
-			vennOverview.draw(this.width-380, 80);
 			//popupRelation.draw(this.width-304);
 			
 			//Draw images ****************************************************
 			
-			if ((0<=bX && bX<srcTaxonomy.size()) || (0<=bY && bY<trgTaxonomy.size())){
+			float iWidth = 180;
+			float x8 = this.width-(iWidth+10)*2;
+			float y8 = 150;
+			if (!check3.s){
+				vennOverview.draw(this.width-380, 80);
+			}
+			else if (check3.s && ((0<=bX && bX<srcTaxonomy.size()) || (0<=bY && bY<trgTaxonomy.size()))){
 				this.fill(255);
 				this.noStroke();
-				float iWidth = 180;
-				float x8 = this.width-(iWidth+10)*2;
-				float y8 = 150;
 				this.rect(x8,y8-50,380,this.height);
 				if (0<=bX && bX<srcTaxonomy.size()){
 					ArrayList<PImage> a =srcTaxonomy.get(bX).images;
 					if (a.size()>0){
 						this.fill(0);
 						this.textSize(11);
-						this.text("Images from Wikipedia for:", x8,y8-12);
+						this.text(a.size()+" Images from Wikipedia for:", x8,y8-12);
 						this.fill(120,0,0);
-						this.textSize(16);
-						this.text(srcTaxonomy.get(bX).name,x8+150, y8-12);
+						this.textSize(11);
+						this.text(srcTaxonomy.get(bX).name,x8+158, y8-12);
 					}
 					else{
 						this.fill(0);
@@ -280,7 +282,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					for (int im=0; im<a.size();im++){
 						float row = im/2;
 						float col = im%2;
-						this.image(a.get(im), x8+row*(iWidth+10), y8+col*(iWidth+10));
+						this.image(a.get(im), x8+col*(iWidth+10), y8+row*(iWidth+10));
 					}
 				}
 				else if (0<=bY && bY<trgTaxonomy.size()){
@@ -307,6 +309,11 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 						this.image(a.get(im), x8+row*(iWidth+10), y8+col*(iWidth+10));
 					}
 				}
+			}
+			else{
+				this.fill(0);
+				this.textSize(11);
+				this.text("Please select a taxon in the left matrix",  x8,y8-12);
 			}
 			
 			this.textSize(13);

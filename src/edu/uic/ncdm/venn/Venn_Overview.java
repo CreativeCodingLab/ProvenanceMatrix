@@ -150,10 +150,7 @@ public class Venn_Overview{
             	else
             		parent.fill(color.getRed(),color.getGreen(),color.getBlue(),40);
            
-            
-            
-           
-            
+            	// Check brushing
               	if (PApplet.dist(x, y, parent.mouseX, parent.mouseY)<radius/2 && brushing<0){
         	   		parent.fill(color.getRed(),color.getGreen(),color.getBlue());
             	   	brushing=i;
@@ -164,7 +161,14 @@ public class Venn_Overview{
                 	parent.fill(0,200);
         	   	else 
         	   		parent.fill(0,30);
-        	    parent.text(labels[i], x , y+4);
+        	    // draw the number of relationships when brushing
+        	    if (brushing==i){
+        	    	parent.fill(0);
+        	    	parent.text((int)areas[i]+" articulations", x , y+4);
+                }
+        	    else{
+        	    	parent.text(labels[i], x , y+4);
+            	}
            }
         }
         parent.fill(Color.GRAY.getRGB());
