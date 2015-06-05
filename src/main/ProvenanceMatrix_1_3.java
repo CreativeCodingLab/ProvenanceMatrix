@@ -35,7 +35,7 @@ import javax.imageio.ImageIO;
 import edu.uic.ncdm.venn.Venn_Overview;
 import processing.core.*;
 
-public class ProvenanceMatrix_1_2 extends PApplet {
+public class ProvenanceMatrix_1_3 extends PApplet {
 	private static final long serialVersionUID = 1L;
 	public int count = 0;
 	public static int currentRelation = -1;
@@ -120,7 +120,7 @@ public class ProvenanceMatrix_1_2 extends PApplet {
 	public static String[] artStrings = {"Equals","Includes","is_included_in","Overlaps","Disjoint"}; 
 
 	public static void main(String args[]){
-		PApplet.main(new String[] { ProvenanceMatrix_1_2.class.getName() });
+		PApplet.main(new String[] { ProvenanceMatrix_1_3.class.getName() });
 	}
 
 	public void setup() {
@@ -545,23 +545,19 @@ public class ProvenanceMatrix_1_2 extends PApplet {
 		
 		
 		// Draw Taxonomy names
-		if ((lX<0 || lX>srcTaxonomy.size()) && (bListX.size()==0 && bListY.size()==0) ){
-			this.fill(0,0,0);
-			this.textSize(13);
-			this.textAlign(PApplet.CENTER);
-			this.text(taxomX, 480, 20);
-		}
-		if ((lY<0 || lY>trgTaxonomy.size()) && (bListX.size()==0 && bListY.size()==0) ){
-			this.fill(0,0,0);
-			this.textSize(13);
-			this.textAlign(PApplet.CENTER);
-			float al = -PApplet.PI/2;
-			this.translate(30,280);
-			this.rotate(al);
-			this.text(taxomY, 0,0); // text for each column @Amruta
-			this.rotate(-al);
-			this.translate(-(30), -(280));
-		}	
+		this.fill(0,0,0);
+		this.textSize(13);
+		this.textAlign(PApplet.CENTER);
+		this.text(taxomX, 480, 20);
+		this.fill(0,0,0);
+		this.textSize(13);
+		this.textAlign(PApplet.CENTER);
+		float al = -PApplet.PI/2;
+		this.translate(30,280);
+		this.rotate(al);
+		this.text(taxomY, 0,0); // text for each column @Amruta
+		this.rotate(-al);
+		this.translate(-(30), -(280));
 		
 		// Hierarchy links
 		float arcRate = 0.5f;

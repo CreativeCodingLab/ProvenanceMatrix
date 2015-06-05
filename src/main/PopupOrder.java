@@ -1,6 +1,6 @@
 package main;
-import static main.ProvenanceMatrix_1_2.srcTaxonomy;
-import static main.ProvenanceMatrix_1_2.trgTaxonomy;
+import static main.ProvenanceMatrix_1_3.srcTaxonomy;
+import static main.ProvenanceMatrix_1_3.trgTaxonomy;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -19,7 +19,7 @@ public class PopupOrder{
 	public int h;
 	public int itemH = 18;
 	public Color cGray  = new Color(240,240,240);
-	public static String[] items={"Random","Reading order", "Name", "Similarity", "BFS", "DFS"}; 
+	public static String[] items={"Random","Reading order", "Name", "Similarity", "Breadth-first listing", "Depth-first listing"}; 
 	public Slider slider;
 	public static int countBFS1=0; 
 	public static int countBFS2=0; 
@@ -84,18 +84,18 @@ public class PopupOrder{
 				Taxonomy.orderByReading();
 			}	
 			else if (items[s].equals("Name"))  {
-				main.ProvenanceMatrix_1_2.stateAnimation=0;
-				main.ProvenanceMatrix_1_2.check2.s =false;
+				main.ProvenanceMatrix_1_3.stateAnimation=0;
+				main.ProvenanceMatrix_1_3.check2.s =false;
 				Taxonomy.orderByName();
 			}	
 			else if (items[s].equals("Similarity"))  {
-				main.ProvenanceMatrix_1_2.stateAnimation=0;
-				main.ProvenanceMatrix_1_2.check2.s =false;
+				main.ProvenanceMatrix_1_3.stateAnimation=0;
+				main.ProvenanceMatrix_1_3.check2.s =false;
 				Taxonomy.orderBySimilarity();
 			}
-			else if (items[s].equals("BFS"))  {
-				main.ProvenanceMatrix_1_2.stateAnimation=0;
-				main.ProvenanceMatrix_1_2.check2.s =false;
+			else if (items[s].equals("Breadth-first listing"))  {
+				main.ProvenanceMatrix_1_3.stateAnimation=0;
+				main.ProvenanceMatrix_1_3.check2.s =false;
 				
 				srcTaxonomy.get(0).order=0;
 				trgTaxonomy.get(0).order=0;
@@ -104,9 +104,9 @@ public class PopupOrder{
 				Taxonomy.BFS1(0); // the first element is assumed as ROOT
 				Taxonomy.BFS2(0); // the first element is assumed as ROOT
 			}
-			else if (items[s].equals("DFS"))  {
-				main.ProvenanceMatrix_1_2.stateAnimation=0;
-				main.ProvenanceMatrix_1_2.check2.s =false;
+			else if (items[s].equals("Depth-first listing"))  {
+				main.ProvenanceMatrix_1_3.stateAnimation=0;
+				main.ProvenanceMatrix_1_3.check2.s =false;
 				
 				countDFS1=0; 
 				countDFS2=0; 
