@@ -1,0 +1,14 @@
+[
+{"source":"PER","articulations":[0, 1, 2, 3],"articulation Source":"inferred","target":"ELL"},
+{"source":"PER","articulations":[1, 4, 3],"articulation Source":"inferred","target":"ELL.ELL_IC"},
+{"source":"PER","articulations":[1],"articulation Source":"deduced","target":"ELL.ELLcarlud"},
+{"source":"PER.Pcarlud","articulations":[2],"articulation Source":"inferred","target":"ELL"},
+{"source":"PER.Pcarlud","articulations":[4],"articulation Source":"deduced","target":"ELL.ELL_IC"},
+{"source":"PER.Pcarlud","articulations":[0],"articulation Source":"input","target":"ELL.ELLcarlud"},
+{"source":"PER.Prectir","articulations":[2, 4, 3],"articulation Source":"inferred","target":"ELL"},
+{"source":"PER.Prectir","articulations":[0, 1, 2, 4, 3],"articulation Source":"inferred","target":"ELL.ELL_IC"},
+{"source":"PER.Prectir","articulations":[4],"articulation Source":"input","target":"ELL.ELLcarlud"},
+{"source":"PER.Psubcin","articulations":[2, 4, 3],"articulation Source":"inferred","target":"ELL"},
+{"source":"PER.Psubcin","articulations":[0, 1, 2, 4, 3],"articulation Source":"inferred","target":"ELL.ELL_IC"},
+{"source":"PER.Psubcin","articulations":[4],"articulation Source":"input","target":"ELL.ELLcarlud"}
+]

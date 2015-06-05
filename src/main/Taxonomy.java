@@ -1,6 +1,5 @@
 package main;
 
-import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -18,14 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.imageio.ImageIO;
-
 import processing.core.PApplet;
 import processing.core.PImage;
 
 import static main.ProvenanceMatrix_1_3.srcTaxonomy;
 import static main.ProvenanceMatrix_1_3.trgTaxonomy;
-
 import static main.ProvenanceMatrix_1_3.articulations;
 
 
@@ -37,6 +33,8 @@ public class Taxonomy {
 	public int parentIndex=-1;
 	ArrayList<PImage> images= new ArrayList<PImage>();
 	PApplet parent;
+	public boolean isExpanded = true;
+	
 	
 	public Taxonomy(PApplet parent_, String name_, int order_){
 		parent = parent_;
@@ -60,7 +58,7 @@ public class Taxonomy {
 				a.add("http:"+str+".jpg");
 			}
 			if (name.contains("Zamiaceae")){
-				System.out.println(ps1[i]);
+			//	System.out.println(ps1[i]);
 			}
 			
 		}

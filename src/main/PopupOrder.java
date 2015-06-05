@@ -14,8 +14,8 @@ public class PopupOrder{
 	public PApplet parent;
 	public float x = 800;
 	public int y = 0;
-	public int w1 = 98;
-	public int w = 180;
+	public int w1 = 70;
+	public int w = 150;
 	public int h;
 	public int itemH = 17;
 	public Color cGray  = new Color(240,240,240);

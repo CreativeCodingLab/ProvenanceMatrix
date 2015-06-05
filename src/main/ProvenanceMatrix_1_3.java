@@ -81,9 +81,9 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 
 	// Order genes
 	public static PopupOrder popupOrder;
-	public static CheckBox check1;
+	public static CheckBox check4;
 	public static CheckBox check2;
-	public static CheckBox check3;
+	public static CheckBox check1;
 
 	// Grouping animation
 	public static int stateAnimation =0;
@@ -104,8 +104,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 	
 	public static ArrayList[][] articulations;
 	public static int[][] artSources;
-	public static boolean[] goodTaxonX;  // Good taxon is the taxon cotains at least 1 Equals
-	public static boolean[] goodTaxonY;
 	public HashMap<String,Integer> hashArticulations = new HashMap<String,Integer>();
 	public HashMap<String,Integer> hashArtSource = new HashMap<String,Integer>();
 	public String taxomX;
@@ -118,7 +116,16 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 	public static HashMap<String,Integer> hash2;	// Hash of taxo name-index in array
 	
 	public static String[] artStrings = {"Equals","Includes","is_included_in","Overlaps","Disjoint"}; 
-	public static Color brushingColor = new Color(128,128,0);
+	public static int[] goodTaxonX;  // Good taxon is the taxon cotains at least 1 Equals
+	public static int[] goodTaxonY;
+	public static String[] taxonTypes = {"Something wrong",
+										"Congruent",
+										"Non-congruent but its children are",
+										"Non-congruent" };
+	public static Color[] colors = {new Color(127,127,127),
+									new Color(0,180,0),
+									new Color(0,70,0),
+									new Color(170,0,0) };
 	
 	public static void main(String args[]){
 		PApplet.main(new String[] { ProvenanceMatrix_1_3.class.getName() });
@@ -167,13 +174,12 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		hashArtSource.put("deduced",2);
 		hashArtSource.put("inferred",3);
 		
-		
 		//-----------------------------
 		buttonBrowse = new ButtonBrowse(this);
 		popupOrder  = new PopupOrder(this);
-		check1 = new CheckBox(this, "Show articulation sources");
-		check2 = new CheckBox(this, "Show");
-		check3 = new CheckBox(this, "Display Wikipedia images");
+		check4 = new CheckBox(this, "Show articulation sources");
+		check2 = new CheckBox(this, "Color by congruence");
+		check1 = new CheckBox(this, "Display Wikipedia images");
 
 
 		//VEN DIAGRAM
@@ -211,23 +217,30 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					this.triangle(x6, y6, x6+4, y6+13, x6+13, y6+4);
 				}
 				else{
-					float xCheck = this.width-185;
-					float yCheck = 22;
+					float xCheck = this.width-210;
+					float yCheck = 3;
 					
-					check2.draw(xCheck, yCheck-18);
-					check3.draw(xCheck, yCheck);
-					this.fill(255,0,0);
-					this.text("bad apples", xCheck+53,yCheck-7);
-					check1.draw(xCheck, yCheck+18);
-					if (check1.s){
+					check1.draw(xCheck, yCheck);
+					check2.draw(xCheck, yCheck+18);
+					float yCheck2 = yCheck+36;
+					if (check2.s){
+						for (int i=1;i<colors.length;i++){
+							float yCheck3 = yCheck+20+i*15;
+							this.fill(colors[i].getRGB());
+							this.text(taxonTypes[i],xCheck+20,yCheck3+12);
+						}
+						yCheck2 = yCheck+85;
+					}
+					check4.draw(xCheck, yCheck2);
+					if (check4.s){
 						for (int i=0;i<sourceColors.length;i++){
 							this.fill(sourceColors[i].getRGB());
 							this.stroke(0);
 							this.strokeWeight(0.2f);
-							float yCheck2 = yCheck+25+i*18;
-							this.rect(xCheck, yCheck2, 15,15);
+							float yCheck3 = yCheck2+20+i*15;
+							this.rect(xCheck+17, yCheck3, 13,13);
 							this.fill(sourceColors[i].darker().getRGB());
-							this.text(hashArtSource.keySet().toArray()[i].toString(),xCheck+20,yCheck2+12);
+							this.text(hashArtSource.keySet().toArray()[i].toString(),xCheck+35,yCheck3+12);
 						}
 					}
 					
@@ -250,9 +263,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				}
 			}
 			buttonBrowse.draw();
-			//popupRelation.draw(this.width-304);
-			
-			
 			
 			this.textSize(13);
 			this.fill(0);
@@ -274,28 +284,40 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		float x8 = this.width-(iWidth+10)*2;
 		float y8 = 150;
 		this.textAlign(PApplet.LEFT);
-		if (!check3.s){
+		if (!check1.s){
 			vennOverview.draw(this.width-380, 80);
 		}
-		else if (check3.s && ((0<=bX && bX<srcTaxonomy.size()) || (0<=bY && bY<trgTaxonomy.size()))){
+		else if (check1.s && ((0<=bX && bX<srcTaxonomy.size()) || (0<=bY && bY<trgTaxonomy.size()))){
 			this.fill(255);
 			this.noStroke();
-			this.rect(x8,y8-50,380,this.height);
+			this.rect(x8,y8-40,380,this.height);
 			if (0<=bX && bX<srcTaxonomy.size()){
 				ArrayList<PImage> a =srcTaxonomy.get(bX).images;
 				if (a.size()>0){
 					this.fill(0);
 					this.textSize(11);
-					this.text(a.size()+" Images from Wikipedia for:", x8,y8-12);
-					this.fill(120,0,0);
+					this.text("Images from Wikipedia for:", x8,y8-12);
+					
+					Color color = new Color(0,0,0);
+					if (check2.s)
+						color = colors[goodTaxonX[bX]];
+					float sat = 55+(this.frameCount*20)%200;
+					this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
+					
 					this.textSize(11);
-					this.text(srcTaxonomy.get(bX).name,x8+158, y8-12);
+					this.text(srcTaxonomy.get(bX).name,x8+152, y8-12);
 				}
 				else{
 					this.fill(0);
 					this.textSize(11);
 					this.text("Can NOT find images for", x8,y8-12);
-					this.fill(120,0,0);
+					
+					Color color = new Color(0,0,0);
+					if (check2.s)
+						color = colors[goodTaxonX[bX]];
+					float sat = 55+(this.frameCount*20)%200;
+					this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
+					
 					this.textSize(11);
 					this.text(srcTaxonomy.get(bX).name,x8+140, y8-12);
 				}
@@ -311,15 +333,27 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					this.fill(0);
 					this.textSize(11);
 					this.text("Images from Wikipedia for:", x8,y8-12);
-					this.fill(128,0,0);
-					this.textSize(16);
-					this.text(trgTaxonomy.get(bY).name,x8+150, y8-12);
+					
+					Color color = new Color(0,0,0);
+					if (check2.s)
+						color = colors[goodTaxonY[bY]];
+					float sat = 55+(this.frameCount*20)%200;
+					this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
+					
+					this.textSize(11);
+					this.text(trgTaxonomy.get(bY).name,x8+152, y8-12);
 				}
 				else{
 					this.fill(0);
 					this.textSize(11);
 					this.text("Can NOT find images for", x8,y8-12);
-					this.fill(128,0,0);
+					
+					Color color = new Color(0,0,0);
+					if (check2.s)
+						color = colors[goodTaxonY[bY]];
+					float sat = 55+(this.frameCount*20)%200;
+					this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
+					
 					this.textSize(11);
 					this.text(trgTaxonomy.get(bY).name,x8+140, y8-12);
 				}
@@ -350,88 +384,94 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		lY = -100;
 		bX = -100;
 		bY = -100;
-		
-		if (this.mouseX>mX&&this.mouseY>mY){
+		if (mouseX>mX && mouseY>mY && mouseX<mX+size*srcTaxonomy.size() && mouseY<mY+size*trgTaxonomy.size()){
 			lX = (int) ((this.mouseX-mX)/size);
-			for (int i=0;i<srcTaxonomy.size();i++){
-				int order = srcTaxonomy.get(i).order;
-				if (lX-num<=order && order<=lX+num) {
-					srcTaxonomy.get(i).iW.target(lensingSize);
-					int num2 = order-(lX-num);
-					if (lX-num>=0)
-						setValue(srcTaxonomy.get(i).iX, mX +(lX-num)*size+num2*lensingSize);
-					else
-						setValue(srcTaxonomy.get(i).iX, mX +order*lensingSize);
-				}	
-				else{
-					srcTaxonomy.get(i).iW.target(size);
-					if (order<lX-num)
-						setValue(srcTaxonomy.get(i).iX, mX +order*size);
-					else if (order>lX+num){
-						if (lX-num>=0)
-							setValue(srcTaxonomy.get(i).iX, mX +(order-(num*2+1))*size+(num*2+1)*lensingSize);
-						else{
-							int num3= lX+num+1;
-							if (num3>0)
-								setValue(srcTaxonomy.get(i).iX, mX +(order-num3)*size+num3*lensingSize);
-							else
-								setValue(srcTaxonomy.get(i).iX, mX +order*size);
-						}	
-					}	 
-				}	
-			}
+			lY = (int) ((this.mouseY-mY)/size);
+			bX = -100;
+			bY = -100;
 		}	
-		else{
+		else if (mouseY<=mY){
 			for (int i=0;i<srcTaxonomy.size();i++){
 				int order = srcTaxonomy.get(i).order;
 				srcTaxonomy.get(i).iW.target(size);
-				setValue(srcTaxonomy.get(i).iX, mX +order*size);
+				setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +order*size);
 				if (srcTaxonomy.get(i).iX.value<=this.mouseX
 						&& this.mouseX<=srcTaxonomy.get(i).iX.value+size)	
 					bX=i;
 			}	
+			lX=-100;
+			lY=-100;
+			bY=-100;
 		}
-		
-		if (this.mouseY>mY  && this.mouseX>mX){
-			lY = (int) ((this.mouseY-mY)/size);
-			for (int j=0;j<trgTaxonomy.size();j++){
-				int order = trgTaxonomy.get(j).order;
-				if (lY-num<=order && order<=lY+num){
-					trgTaxonomy.get(j).iH.target(lensingSize);
-					int num2 = order-(lY-num);
-					if (lY-num>=0)
-						setValue(trgTaxonomy.get(j).iY, mY +(lY-num)*size+num2*lensingSize);
-					else
-						setValue(trgTaxonomy.get(j).iY, mY +order*lensingSize);
-				}	
-				else{
-					trgTaxonomy.get(j).iH.target(size);
-					if (order<lY-num)
-						setValue(trgTaxonomy.get(j).iY, mY +order*size);
-					else if (order>lY+num){
-						if (lY-num>=0)
-							setValue(trgTaxonomy.get(j).iY, mY +(order-(num*2+1))*size+(num*2+1)*lensingSize);
-						else{
-							int num3= lY+num+1;
-							if (num3>0)
-								setValue(trgTaxonomy.get(j).iY, mY +(order-num3)*size+num3*lensingSize);
-							else
-								setValue(trgTaxonomy.get(j).iY, mY +order*size);
-						}	
-	
-					}	
-				}	
-			}
-		}
-		else{
+		else if (mouseX<=mX){
 			for (int i=0;i<trgTaxonomy.size();i++){
 				int order = trgTaxonomy.get(i).order;
 				trgTaxonomy.get(i).iH.target(size);
-				setValue(trgTaxonomy.get(i).iY, mY +order*size);
+				setValue(trgTaxonomy.get(i), trgTaxonomy.get(i).iY, mY +order*size);
 				if (trgTaxonomy.get(i).iY.value<=this.mouseY
 					&& this.mouseY<=trgTaxonomy.get(i).iY.value+size)	
 					bY = i;
 			}
+			lX=-100;
+			lY=-100;
+			bX=-100;
+		}
+		
+		
+		for (int i=0;i<srcTaxonomy.size();i++){
+			int order = srcTaxonomy.get(i).order;
+			if (lX-num<=order && order<=lX+num) {
+				srcTaxonomy.get(i).iW.target(lensingSize);
+				int num2 = order-(lX-num);
+				if (lX-num>=0)
+					setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +(lX-num)*size+num2*lensingSize);
+				else
+					setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +order*lensingSize);
+			}	
+			else{
+				srcTaxonomy.get(i).iW.target(size);
+				if (order<lX-num)
+					setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +order*size);
+				else if (order>lX+num){
+					if (lX-num>=0)
+						setValue(srcTaxonomy.get(i),srcTaxonomy.get(i).iX, mX +(order-(num*2+1))*size+(num*2+1)*lensingSize);
+					else{
+						int num3= lX+num+1;
+						if (num3>0)
+							setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +(order-num3)*size+num3*lensingSize);
+						else
+							setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +order*size);
+					}	
+				}	 
+			}	
+		}
+		for (int j=0;j<trgTaxonomy.size();j++){
+			int order = trgTaxonomy.get(j).order;
+			if (lY-num<=order && order<=lY+num){
+				trgTaxonomy.get(j).iH.target(lensingSize);
+				int num2 = order-(lY-num);
+				if (lY-num>=0)
+					setValue(trgTaxonomy.get(j),trgTaxonomy.get(j).iY, mY +(lY-num)*size+num2*lensingSize);
+				else
+					setValue(trgTaxonomy.get(j),trgTaxonomy.get(j).iY, mY +order*lensingSize);
+			}	
+			else{
+				trgTaxonomy.get(j).iH.target(size);
+				if (order<lY-num)
+					setValue(trgTaxonomy.get(j), trgTaxonomy.get(j).iY, mY +order*size);
+				else if (order>lY+num){
+					if (lY-num>=0)
+						setValue(trgTaxonomy.get(j), trgTaxonomy.get(j).iY, mY +(order-(num*2+1))*size+(num*2+1)*lensingSize);
+					else{
+						int num3= lY+num+1;
+						if (num3>0)
+							setValue(trgTaxonomy.get(j), trgTaxonomy.get(j).iY, mY +(order-num3)*size+num3*lensingSize);
+						else
+							setValue(trgTaxonomy.get(j), trgTaxonomy.get(j).iY, mY +order*size);
+					}	
+
+				}	
+			}	
 		}
 
 		//--------------------------------
@@ -487,7 +527,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 			}
 		}
 		
-		
 		// Draw taxonomy (names) on X and Y axis
 		float indent =10;
 		float indentGap =10;
@@ -509,8 +548,8 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				float indent2 = indent+indentGap*b.size();
 				
 				// Check bad apples
-				if (check2.s && !goodTaxonX[i]){
-					color = new Color(255,0,0);
+				if (check2.s){
+					color = colors[goodTaxonX[i]];
 				}
 				if (i==bX){
 					sat = 55+(this.frameCount*20)%200;
@@ -542,8 +581,8 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 			}
 			if (hh>6){
 				// Check bad apples
-				if (check2.s && !goodTaxonY[i]){
-					color = new Color(255,0,0);
+				if (check2.s){
+					color = colors[goodTaxonY[i]];
 				}
 				if (i==bY) {
 					sat = 55+(this.frameCount*20)%200;
@@ -693,7 +732,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				float xx =  srcTaxonomy.get(j).iX.value+ww/2;
 				
 				// Draw articulation sources
-				if (check1.s){
+				if (check4.s){
 					int source =  artSources[j][i]-1; 
 					this.noStroke();
 					if (source>=0){
@@ -701,20 +740,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 						this.rect(xx-ww/2,yy-hh/2,ww,hh);
 					}
 				}
-				// Draw bad apples
-				/*
-				if (check2.s){
-					this.noStroke();
-					if (!goodTaxonX[j]){
-						this.fill(255,0,0,100);
-						this.rect(xx-ww/2,yy-hh/2,ww,hh);
-					}
-					if (!goodTaxonY[i]){
-						this.fill(255,0,0,100);
-						this.rect(xx-ww/2,yy-hh/2,ww,hh);
-					}
-				}*/
-				
 				
 				// Draw articulation sectors
 				if (articulations[j][i]==null) continue;
@@ -731,7 +756,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					}
 					if (vennOverview.isActive[indexArt]){
 						float radius =  PApplet.min(ww,hh)+2;
-						if (check1.s)
+						if (check4.s)
 							radius =  PApplet.min(ww,hh)*0.75f; // Smaller sectors for showing articulation sources 
 						this.arc(xx,yy,radius,radius, PApplet.PI+artArray[indexArt]*alpha, PApplet.PI+(artArray[indexArt]+1)*alpha);
 						
@@ -755,8 +780,13 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 	}	
 
 
-	public void setValue(Integrator inter, float value) {
-		inter.target(value);
+	public void setValue(Taxonomy taxon, Integrator inter, float value) {
+		if (!taxon.isExpanded){
+			int parentIndex = taxon.parentIndex;
+			
+			inter.target(0);
+		}	
+		else inter.target(value);
 	}
 
 	public void mousePressed() {
@@ -786,14 +816,14 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 			thread4.start();
 		}
 
-		if (check1.b){
-			check1.mouseClicked();
+		if (check4.b){
+			check4.mouseClicked();
 		}
 		else if (check2.b){
 			check2.mouseClicked();
 		}
-		else if (check3.b){
-			check3.mouseClicked();
+		else if (check1.b){
+			check1.mouseClicked();
 		}
 		else if (popupOrder.b>=0){
 			popupOrder.mouseClicked();
@@ -801,6 +831,24 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		else if (vennOverview!=null){
 			vennOverview.mouseClicked();
 			//update();
+		}
+		
+		if (bX>=0){
+			srcTaxonomy.get(bX).isExpanded = !srcTaxonomy.get(bX).isExpanded;
+			ArrayList<Integer> children = this.getSuccessors(bX, a1);
+			for (int i=0;i<children.size();i++){
+				int index = children.get(i);
+				srcTaxonomy.get(index).isExpanded = srcTaxonomy.get(bX).isExpanded;
+			}
+			System.out.println("mouseClicked() = "+srcTaxonomy.get(bX).isExpanded);
+		}
+		else if (bY>=0){
+			trgTaxonomy.get(bY).isExpanded = !trgTaxonomy.get(bY).isExpanded;
+			ArrayList<Integer> children = this.getSuccessors(bY, a2);
+			for (int i=0;i<children.size();i++){
+				int index = children.get(i);
+				trgTaxonomy.get(index).isExpanded = trgTaxonomy.get(bY).isExpanded;
+			}
 		}
 	}
 
@@ -938,18 +986,54 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					artSources[index1][index2] = hashArtSource.get(s3);
 				}
 				// Compute bad apples
-				goodTaxonX = new boolean[srcTaxonomy.size()];
-				goodTaxonY = new boolean[trgTaxonomy.size()];
-				for (int i=0;i<srcTaxonomy.size();i++){
-					for (int j=0;j<trgTaxonomy.size();j++){
-						if (articulations[i][j].contains(0)) // contains Equals
-							goodTaxonX[i] = true;
+				goodTaxonX = new int[srcTaxonomy.size()];
+				goodTaxonY = new int[trgTaxonomy.size()];
+				for (int i1=0;i1<srcTaxonomy.size();i1++){
+					for (int j1=0;j1<trgTaxonomy.size();j1++){
+						if (articulations[i1][j1].contains(0)) // contains Equals
+							goodTaxonX[i1] = 1;
+					}
+					if (goodTaxonX[i1] != 1){
+						ArrayList<Integer> bListX = getSubtree(i1,srcTaxonomy,a1);
+						if (bListX.size()>0){
+							boolean found = false;
+							for (int i2=0;i2<bListX.size() && !found;i2++){
+								int index = bListX.get(i2);
+								for (int j2=0;j2<trgTaxonomy.size() && !found;j2++){
+									if (articulations[index][j2].contains(0)) {// Equals
+										found = true;
+									}	
+								}	                     
+							}
+							if (found)
+								goodTaxonX[i1] = 2;
+							else
+								goodTaxonX[i1] = 3;
+						}
 					}
 				}
-				for (int j=0;j<trgTaxonomy.size();j++){
-					for (int i=0;i<srcTaxonomy.size();i++){
-						if (articulations[i][j].contains(0)) // contains Equals
-							goodTaxonY[j] = true;
+				for (int j1=0;j1<trgTaxonomy.size();j1++){
+					for (int i1=0;i1<srcTaxonomy.size();i1++){
+						if (articulations[i1][j1].contains(0)) // contains Equals
+							goodTaxonY[j1] = 1;
+					}
+					if (goodTaxonY[j1] != 1){
+						ArrayList<Integer> bListY = getSubtree(j1,trgTaxonomy,a2);
+						if (bListY.size()>0){
+							boolean found = false;
+							for (int j2=0;j2<bListY.size() && !found; j2++){
+								int index = bListY.get(j2);
+								for (int i2=0; i2<srcTaxonomy.size() && !found; i2++){
+									if (articulations[i2][index].contains(0)) {// Equals
+										found = true;
+									}	
+								}	                     
+							}
+							if (found)
+								goodTaxonY[j1] = 2;
+							else
+								goodTaxonY[j1] = 3;
+						}
 					}
 				}
 					
