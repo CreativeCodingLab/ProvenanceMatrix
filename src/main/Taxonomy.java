@@ -59,13 +59,17 @@ public class Taxonomy {
 			if (str.startsWith("//upload.wikimedia.org") && str.length()<500){
 				a.add("http:"+str+".jpg");
 			}
+			if (name.contains("Zamiaceae")){
+				System.out.println(ps1[i]);
+			}
+			
 		}
+		
 		for (int i = 0; i<a.size();i++){
 			try{
 				PImage image = parent.loadImage(a.get(i));
 				image.resize(180, 180);
 				images.add(image);
-				System.out.println(i+"	"+a.get(i)+"	"+image);
 			}
 			catch (Exception e) {
 			    e.printStackTrace();

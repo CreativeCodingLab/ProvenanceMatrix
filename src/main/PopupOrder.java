@@ -15,9 +15,9 @@ public class PopupOrder{
 	public float x = 800;
 	public int y = 0;
 	public int w1 = 98;
-	public int w = 200;
+	public int w = 180;
 	public int h;
-	public int itemH = 18;
+	public int itemH = 17;
 	public Color cGray  = new Color(240,240,240);
 	public static String[] items={"Random","Reading order", "Name", "Similarity", "Breadth-first listing", "Depth-first listing"}; 
 	public Slider slider;
@@ -37,8 +37,8 @@ public class PopupOrder{
 		if (b>=0){
 			parent.fill(0,100);
 			parent.stroke(0);
-			parent.textSize(12);
-			h=items.length*itemH+20;
+			parent.textSize(11);
+			h=items.length*itemH+16;
 			parent.fill(200);
 			parent.stroke(0,100);
 			parent.rect(x, y+20, w,h);
@@ -47,7 +47,7 @@ public class PopupOrder{
 				if (i==s){
 					parent.noStroke();
 					parent.fill(0);
-					parent.rect(x+10,y+itemH*(i)+5+25,w-25,itemH+1);
+					parent.rect(x+10,y+itemH*(i)+26,w-25,itemH);
 					parent.fill(255,255,0);
 				}
 				else if (i==b){
@@ -57,11 +57,11 @@ public class PopupOrder{
 					parent.fill(0);
 				}
 				parent.textAlign(PApplet.LEFT);
-				parent.text(items[i],x+20,y+itemH*(i+1)+25);  // 
+				parent.text(items[i],x+20,y+itemH*(i+1)+22);  // 
 			}	
 			
-			if (s>=0 && items[s].equals("Similarity")) 
-				slider.draw(x+110, y+itemH*4-14+25);
+			//if (s>=0 && items[s].equals("Similarity")) 
+			//	slider.draw(x+110, y+itemH*4-14+25);
 			
 		}
 		parent.fill(0,50);
@@ -128,7 +128,7 @@ public class PopupOrder{
 		}
 		else{
 			for (int i=0; i<items.length; i++){
-				if (x<=mX && mX<=x+w && y+itemH*i+25<=mY && mY<=y+itemH*(i+1)+6+25){
+				if (x<=mX && mX<=x+w && y+itemH*i+22<=mY && mY<=y+itemH*(i+1)+23){
 					b =i;
 					return;
 				}	

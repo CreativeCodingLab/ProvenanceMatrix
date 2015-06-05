@@ -118,7 +118,8 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 	public static HashMap<String,Integer> hash2;	// Hash of taxo name-index in array
 	
 	public static String[] artStrings = {"Equals","Includes","is_included_in","Overlaps","Disjoint"}; 
-
+	public static Color brushingColor = new Color(128,128,0);
+	
 	public static void main(String args[]){
 		PApplet.main(new String[] { ProvenanceMatrix_1_3.class.getName() });
 	}
@@ -241,6 +242,8 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 							size=100;
 					}
 					drawMatrix(marginX,marginY);
+					//Draw images ****************************************************
+					drawImages();
 					
 					this.textSize(11);
 					popupOrder.draw(this.width-330);
@@ -249,72 +252,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 			buttonBrowse.draw();
 			//popupRelation.draw(this.width-304);
 			
-			//Draw images ****************************************************
 			
-			float iWidth = 180;
-			float x8 = this.width-(iWidth+10)*2;
-			float y8 = 150;
-			if (!check3.s){
-				vennOverview.draw(this.width-380, 80);
-			}
-			else if (check3.s && ((0<=bX && bX<srcTaxonomy.size()) || (0<=bY && bY<trgTaxonomy.size()))){
-				this.fill(255);
-				this.noStroke();
-				this.rect(x8,y8-50,380,this.height);
-				if (0<=bX && bX<srcTaxonomy.size()){
-					ArrayList<PImage> a =srcTaxonomy.get(bX).images;
-					if (a.size()>0){
-						this.fill(0);
-						this.textSize(11);
-						this.text(a.size()+" Images from Wikipedia for:", x8,y8-12);
-						this.fill(120,0,0);
-						this.textSize(11);
-						this.text(srcTaxonomy.get(bX).name,x8+158, y8-12);
-					}
-					else{
-						this.fill(0);
-						this.textSize(11);
-						this.text("Can NOT find images for", x8,y8-12);
-						this.fill(120,0,0);
-						this.textSize(11);
-						this.text(srcTaxonomy.get(bX).name,x8+140, y8-12);
-					}
-					for (int im=0; im<a.size();im++){
-						float row = im/2;
-						float col = im%2;
-						this.image(a.get(im), x8+col*(iWidth+10), y8+row*(iWidth+10));
-					}
-				}
-				else if (0<=bY && bY<trgTaxonomy.size()){
-					ArrayList<PImage> a =trgTaxonomy.get(bY).images;
-					if (a.size()>0){
-						this.fill(0);
-						this.textSize(11);
-						this.text("Images from Wikipedia for:", x8,y8-12);
-						this.fill(128,0,0);
-						this.textSize(16);
-						this.text(trgTaxonomy.get(bY).name,x8+150, y8-12);
-					}
-					else{
-						this.fill(0);
-						this.textSize(11);
-						this.text("Can NOT find images for", x8,y8-12);
-						this.fill(128,0,0);
-						this.textSize(11);
-						this.text(trgTaxonomy.get(bY).name,x8+140, y8-12);
-					}
-					for (int im=0; im<a.size();im++){
-						float row = im/2;
-						float col = im%2;
-						this.image(a.get(im), x8+row*(iWidth+10), y8+col*(iWidth+10));
-					}
-				}
-			}
-			else{
-				this.fill(0);
-				this.textSize(11);
-				this.text("Please select a taxon in the left matrix",  x8,y8-12);
-			}
 			
 			this.textSize(13);
 			this.fill(0);
@@ -330,6 +268,76 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		}
 	}	
 
+	//Draw images ****************************************************
+	public void drawImages() throws IOException {
+		float iWidth = 180;
+		float x8 = this.width-(iWidth+10)*2;
+		float y8 = 150;
+		this.textAlign(PApplet.LEFT);
+		if (!check3.s){
+			vennOverview.draw(this.width-380, 80);
+		}
+		else if (check3.s && ((0<=bX && bX<srcTaxonomy.size()) || (0<=bY && bY<trgTaxonomy.size()))){
+			this.fill(255);
+			this.noStroke();
+			this.rect(x8,y8-50,380,this.height);
+			if (0<=bX && bX<srcTaxonomy.size()){
+				ArrayList<PImage> a =srcTaxonomy.get(bX).images;
+				if (a.size()>0){
+					this.fill(0);
+					this.textSize(11);
+					this.text(a.size()+" Images from Wikipedia for:", x8,y8-12);
+					this.fill(120,0,0);
+					this.textSize(11);
+					this.text(srcTaxonomy.get(bX).name,x8+158, y8-12);
+				}
+				else{
+					this.fill(0);
+					this.textSize(11);
+					this.text("Can NOT find images for", x8,y8-12);
+					this.fill(120,0,0);
+					this.textSize(11);
+					this.text(srcTaxonomy.get(bX).name,x8+140, y8-12);
+				}
+				for (int im=0; im<a.size();im++){
+					float row = im/2;
+					float col = im%2;
+					this.image(a.get(im), x8+col*(iWidth+10), y8+row*(iWidth+10));
+				}
+			}
+			else if (0<=bY && bY<trgTaxonomy.size()){
+				ArrayList<PImage> a =trgTaxonomy.get(bY).images;
+				if (a.size()>0){
+					this.fill(0);
+					this.textSize(11);
+					this.text("Images from Wikipedia for:", x8,y8-12);
+					this.fill(128,0,0);
+					this.textSize(16);
+					this.text(trgTaxonomy.get(bY).name,x8+150, y8-12);
+				}
+				else{
+					this.fill(0);
+					this.textSize(11);
+					this.text("Can NOT find images for", x8,y8-12);
+					this.fill(128,0,0);
+					this.textSize(11);
+					this.text(trgTaxonomy.get(bY).name,x8+140, y8-12);
+				}
+				for (int im=0; im<a.size();im++){
+					float row = im/2;
+					float col = im%2;
+					this.image(a.get(im), x8+row*(iWidth+10), y8+col*(iWidth+10));
+				}
+			}
+		}
+		else{
+			this.fill(0);
+			this.textSize(11);
+			this.text("Please select a taxon in the left matrix",  x8,y8-12);
+		}
+	}
+		
+	
 	@SuppressWarnings("unchecked")
 	public void drawMatrix(float mX, float mY) throws IOException {
 		// Compute lensing
@@ -503,10 +511,10 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				// Check bad apples
 				if (check2.s && !goodTaxonX[i]){
 					color = new Color(255,0,0);
-				}	
-				if (i==bX)
-					color = new Color(128,0,0);
-				
+				}
+				if (i==bX){
+					sat = 55+(this.frameCount*20)%200;
+				}
 				this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
 				
 				this.textSize(11);
@@ -537,8 +545,9 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				if (check2.s && !goodTaxonY[i]){
 					color = new Color(255,0,0);
 				}
-				if (i==bY)
-					color = new Color(128,0,0);
+				if (i==bY) {
+					sat = 55+(this.frameCount*20)%200;
+				}
 				
 				this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
 				
