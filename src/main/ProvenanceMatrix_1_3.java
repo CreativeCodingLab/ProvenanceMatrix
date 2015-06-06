@@ -247,8 +247,15 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					if (srcTaxonomy==null || srcTaxonomy.size()==0)
 						return;
 					else{
-						int numColumns = srcTaxonomy.size(); 
+						int numColumns = 0; 
 						int numRows = trgTaxonomy.size();
+						// Find number of expanded concepts
+						for (int i=0; i<srcTaxonomy.size();i++){
+							if (srcTaxonomy.get(i).isExpanded)
+								numColumns++;
+						}
+						
+						
 						int num = Math.max(numRows, numColumns);
 						size = (this.height-marginY)/num;
 						if (size>100)
@@ -379,99 +386,70 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		float lensingSize = PApplet.map(size, 0, 100, 20, 80);	
 		int num = 5; // Number of items in one side of lensing
 		
-		// Check brushing
-		lX = -100;
-		lY = -100;
-		bX = -100;
-		bY = -100;
-		if (mouseX>mX && mouseY>mY && mouseX<mX+size*srcTaxonomy.size() && mouseY<mY+size*trgTaxonomy.size()){
-			lX = (int) ((this.mouseX-mX)/size);
-			lY = (int) ((this.mouseY-mY)/size);
-			bX = -100;
-			bY = -100;
-		}	
-		else if (mouseY<=mY){
-			for (int i=0;i<srcTaxonomy.size();i++){
-				int order = srcTaxonomy.get(i).order;
-				srcTaxonomy.get(i).iW.target(size);
-				setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +order*size);
-				if (srcTaxonomy.get(i).iX.value<=this.mouseX
-						&& this.mouseX<=srcTaxonomy.get(i).iX.value+size)	
-					bX=i;
-			}	
-			lX=-100;
-			lY=-100;
-			bY=-100;
-		}
-		else if (mouseX<=mX){
-			for (int i=0;i<trgTaxonomy.size();i++){
-				int order = trgTaxonomy.get(i).order;
-				trgTaxonomy.get(i).iH.target(size);
-				setValue(trgTaxonomy.get(i), trgTaxonomy.get(i).iY, mY +order*size);
-				if (trgTaxonomy.get(i).iY.value<=this.mouseY
-					&& this.mouseY<=trgTaxonomy.get(i).iY.value+size)	
-					bY = i;
-			}
-			lX=-100;
-			lY=-100;
-			bX=-100;
-		}
-		
-		
 		for (int i=0;i<srcTaxonomy.size();i++){
 			int order = srcTaxonomy.get(i).order;
-			if (lX-num<=order && order<=lX+num) {
+			float value = 0;
+			int parentIndex = srcTaxonomy.get(i).parentIndex;
+			if (parentIndex>=0 && !srcTaxonomy.get(parentIndex).isExpanded){
+				// set the position as of the parent
+				value = srcTaxonomy.get(parentIndex).iX.value;
+			}
+			else if (lX-num<=order && order<=lX+num) {
 				srcTaxonomy.get(i).iW.target(lensingSize);
 				int num2 = order-(lX-num);
 				if (lX-num>=0)
-					setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +(lX-num)*size+num2*lensingSize);
+					value = mX +(lX-num)*size+num2*lensingSize;
 				else
-					setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +order*lensingSize);
+					value = mX +order*lensingSize;
 			}	
 			else{
 				srcTaxonomy.get(i).iW.target(size);
 				if (order<lX-num)
-					setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +order*size);
+					value = mX +order*size;
 				else if (order>lX+num){
 					if (lX-num>=0)
-						setValue(srcTaxonomy.get(i),srcTaxonomy.get(i).iX, mX +(order-(num*2+1))*size+(num*2+1)*lensingSize);
+						value = mX +(order-(num*2+1))*size+(num*2+1)*lensingSize;
 					else{
 						int num3= lX+num+1;
 						if (num3>0)
-							setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +(order-num3)*size+num3*lensingSize);
+							value = mX +(order-num3)*size+num3*lensingSize;
 						else
-							setValue(srcTaxonomy.get(i), srcTaxonomy.get(i).iX, mX +order*size);
+							value = mX +order*size;
 					}	
 				}	 
-			}	
+			}
+			
+			srcTaxonomy.get(i).iX.target(value);
 		}
 		for (int j=0;j<trgTaxonomy.size();j++){
 			int order = trgTaxonomy.get(j).order;
+			float value = 0;
 			if (lY-num<=order && order<=lY+num){
 				trgTaxonomy.get(j).iH.target(lensingSize);
 				int num2 = order-(lY-num);
 				if (lY-num>=0)
-					setValue(trgTaxonomy.get(j),trgTaxonomy.get(j).iY, mY +(lY-num)*size+num2*lensingSize);
+					value = mY +(lY-num)*size+num2*lensingSize;
 				else
-					setValue(trgTaxonomy.get(j),trgTaxonomy.get(j).iY, mY +order*lensingSize);
+					value = mY +order*lensingSize;
 			}	
 			else{
 				trgTaxonomy.get(j).iH.target(size);
 				if (order<lY-num)
-					setValue(trgTaxonomy.get(j), trgTaxonomy.get(j).iY, mY +order*size);
+					value = mY +order*size;
 				else if (order>lY+num){
 					if (lY-num>=0)
-						setValue(trgTaxonomy.get(j), trgTaxonomy.get(j).iY, mY +(order-(num*2+1))*size+(num*2+1)*lensingSize);
+						value = mY +(order-(num*2+1))*size+(num*2+1)*lensingSize;
 					else{
 						int num3= lY+num+1;
 						if (num3>0)
-							setValue(trgTaxonomy.get(j), trgTaxonomy.get(j).iY, mY +(order-num3)*size+num3*lensingSize);
+							value = mY +(order-num3)*size+num3*lensingSize;
 						else
-							setValue(trgTaxonomy.get(j), trgTaxonomy.get(j).iY, mY +order*size);
+							value = mY +order*size;
 					}	
 
 				}	
-			}	
+			}
+			trgTaxonomy.get(j).iY.target(value);
 		}
 
 		//--------------------------------
@@ -780,15 +758,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 	}	
 
 
-	public void setValue(Taxonomy taxon, Integrator inter, float value) {
-		if (!taxon.isExpanded){
-			int parentIndex = taxon.parentIndex;
-			
-			inter.target(0);
-		}	
-		else inter.target(value);
-	}
-
+	
 	public void mousePressed() {
 		if (popupOrder.b>=0){
 			popupOrder.slider.checkSelectedSlider1();
@@ -807,7 +777,50 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 	}
 
 	public void mouseMoved() {
-
+		float mX = this.mouseX;
+		float mY = this.mouseY;
+		
+		// Check brushing
+		lX = -100;
+		lY = -100;
+		bX = -100;
+		bY = -100;
+		if (mouseX>mX && mouseY>mY && mouseX<mX+size*srcTaxonomy.size() && mouseY<mY+size*trgTaxonomy.size()){
+			lX = (int) ((this.mouseX-mX)/size);
+			lY = (int) ((this.mouseY-mY)/size);
+			bX = -100;
+			bY = -100;
+		}	
+		else if (mouseY<=mY){
+			for (int i=0;i<srcTaxonomy.size();i++){
+				int parentIndex = srcTaxonomy.get(i).parentIndex;
+				if (parentIndex>=0 && srcTaxonomy.get(parentIndex).isExpanded){
+					int order = srcTaxonomy.get(i).order;
+					srcTaxonomy.get(i).iW.target(size);
+					srcTaxonomy.get(i).iX.target(mX +order*size);
+					if (srcTaxonomy.get(i).iX.value<=this.mouseX
+							&& this.mouseX<=srcTaxonomy.get(i).iX.value+size)	
+						bX=i;
+				}
+			}	
+			lX=-100;
+			lY=-100;
+			bY=-100;
+		}
+		else if (mouseX<=mX){
+			for (int i=0;i<trgTaxonomy.size();i++){
+				int order = trgTaxonomy.get(i).order;
+				trgTaxonomy.get(i).iH.target(size);
+				trgTaxonomy.get(i).iY.target(mY +order*size);
+				if (trgTaxonomy.get(i).iY.value<=this.mouseY
+					&& this.mouseY<=trgTaxonomy.get(i).iY.value+size)	
+					bY = i;
+			}
+			lX=-100;
+			lY=-100;
+			bX=-100;
+		}
+		
 	}
 
 	public void mouseClicked() {
