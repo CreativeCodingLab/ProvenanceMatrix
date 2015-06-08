@@ -13,6 +13,7 @@ package main;
  * for the specific language governing rights and limitations under the License.
  */
 
+
 import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -28,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -251,7 +253,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 						int numRows = trgTaxonomy.size();
 						// Find number of expanded concepts
 						for (int i=0; i<srcTaxonomy.size();i++){
-							if (srcTaxonomy.get(i).isExpanded)
+							if (srcTaxonomy.get(i).isExpanded==1)
 								numColumns++;
 						}
 						
@@ -386,16 +388,29 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		float lensingSize = PApplet.map(size, 0, 100, 20, 80);	
 		int num = 5; // Number of items in one side of lensing
 		
+		///////////////////
+		ArrayList<Integer> src = new ArrayList<Integer>();
+		Map<Integer, Integer> unsortMap1 = new HashMap<Integer, Integer>();
 		for (int i=0;i<srcTaxonomy.size();i++){
-			int order = srcTaxonomy.get(i).order;
-			float value = 0;
 			int parentIndex = srcTaxonomy.get(i).parentIndex;
-			if (parentIndex>=0 && !srcTaxonomy.get(parentIndex).isExpanded){
+			if (parentIndex>=0 && srcTaxonomy.get(parentIndex).isExpanded<1){
 				// set the position as of the parent
-				value = srcTaxonomy.get(parentIndex).iX.target;
+				float value = srcTaxonomy.get(parentIndex).iX.target;
+				srcTaxonomy.get(i).iX.target(value);
 			}
-			else if (lX-num<=order && order<=lX+num) {
-				srcTaxonomy.get(i).iW.target(lensingSize);
+			else
+				unsortMap1.put(i, srcTaxonomy.get(i).order);
+		}
+		Map<Integer, Integer> sorted1 = Taxonomy.sortByComparator2(unsortMap1);
+		for (Map.Entry<Integer, Integer> entry : sorted1.entrySet()) {
+			src.add(entry.getKey());
+		}
+		
+		for (int order=0;order<src.size();order++){
+			int index =   src.get(order);
+			float value = 0;
+			if (lX-num<=order && order<=lX+num) {
+				srcTaxonomy.get(index).iW.target(lensingSize);
 				int num2 = order-(lX-num);
 				if (lX-num>=0)
 					value = mX +(lX-num)*size+num2*lensingSize;
@@ -403,7 +418,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					value = mX +order*lensingSize;
 			}	
 			else{
-				srcTaxonomy.get(i).iW.target(size);
+				srcTaxonomy.get(index).iW.target(size);
 				if (order<lX-num)
 					value = mX +order*size;
 				else if (order>lX+num){
@@ -419,13 +434,30 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				}	 
 			}
 			
-			srcTaxonomy.get(i).iX.target(value);
+			srcTaxonomy.get(index).iX.target(value);
 		}
-		for (int j=0;j<trgTaxonomy.size();j++){
-			int order = trgTaxonomy.get(j).order;
+		///////////////////
+		ArrayList<Integer> trg = new ArrayList<Integer>();
+		Map<Integer, Integer> unsortMap2 = new HashMap<Integer, Integer>();
+		for (int i=0;i<trgTaxonomy.size();i++){
+			int parentIndex = trgTaxonomy.get(i).parentIndex;
+			if (parentIndex>=0 && trgTaxonomy.get(parentIndex).isExpanded<1){
+				// set the position as of the parent
+				float value = trgTaxonomy.get(parentIndex).iY.target;
+				trgTaxonomy.get(i).iY.target(value);
+			}
+			else
+				unsortMap2.put(i, trgTaxonomy.get(i).order);
+		}
+		Map<Integer, Integer> sorted2 = Taxonomy.sortByComparator2(unsortMap2);
+		for (Map.Entry<Integer, Integer> entry : sorted2.entrySet()) {
+			trg.add(entry.getKey());
+		}
+		for (int order=0;order<trg.size();order++){
+			int index = trg.get(order);
 			float value = 0;
 			if (lY-num<=order && order<=lY+num){
-				trgTaxonomy.get(j).iH.target(lensingSize);
+				trgTaxonomy.get(index).iH.target(lensingSize);
 				int num2 = order-(lY-num);
 				if (lY-num>=0)
 					value = mY +(lY-num)*size+num2*lensingSize;
@@ -433,7 +465,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					value = mY +order*lensingSize;
 			}	
 			else{
-				trgTaxonomy.get(j).iH.target(size);
+				trgTaxonomy.get(index).iH.target(size);
 				if (order<lY-num)
 					value = mY +order*size;
 				else if (order>lY+num){
@@ -449,11 +481,10 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 
 				}	
 			}
-			trgTaxonomy.get(j).iY.target(value);
+			trgTaxonomy.get(index).iY.target(value);
 		}
 
 		//--------------------------------
-		System.out.println(lX+"	"+lY+"	"+bX+"	"+bY);
 		for (int i=0;i<srcTaxonomy.size();i++){			
 			srcTaxonomy.get(i).iW.update();
 			srcTaxonomy.get(i).iX.update();		
@@ -462,8 +493,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		for (int i=0;i<trgTaxonomy.size();i++){
 			trgTaxonomy.get(i).iH.update();
 			trgTaxonomy.get(i).iY.update();
-			System.out.println("	"+i+" "+trgTaxonomy.get(i).iH.value);
-			
 		}
 
 
@@ -555,6 +584,11 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		for (int i=0;i<trgTaxonomy.size();i++){
 			float hh =trgTaxonomy.get(i).iH.value;
 			float yy =  trgTaxonomy.get(i).iY.value;
+			// If not expanded, then no drawing
+			if (!isTaxonYDraw(i)){
+				continue;
+			}
+			
 			Color color = new Color(0,0,0);
 			float sat = 255;
 			if (bListX.size()>0 || bListY.size()>0){
@@ -605,7 +639,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		for (int i=0;i<srcTaxonomy.size();i++){
 			if (a1[i]==null) 
 				continue;
-			if (!srcTaxonomy.get(i).isExpanded)
+			if (srcTaxonomy.get(i).isExpanded<1)
 				continue;
 			float w1 =  srcTaxonomy.get(i).iW.value;
 			float x1 =  srcTaxonomy.get(i).iX.value+w1*0.6f;
@@ -643,16 +677,36 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				this.fill(0,v);
 				
 				if (bListX.size()>0 || bListY.size()>0){
-					if (bListX.contains(i) && bListX.contains(indexChild))
-						this.triangle(x2, mY-indent2-9, x2-2, mY-indent2, x2+2, mY-indent2);
+					if (bListX.contains(i) && bListX.contains(indexChild)){
+						if (srcTaxonomy.get(indexChild).isExpanded==1)
+							this.triangle(x2, mY-indent2-9, x2-2, mY-indent2, x2+2, mY-indent2);
+						else{ // draw a cirle and plus when it is not expanded
+							this.ellipse(x2, mY-indent2-5, 10, 10);
+							this.stroke(1f);
+							this.stroke(255);
+							this.line(x2-4, mY-indent2-5, x2+4, mY-indent2-5);
+							this.line(x2, mY-indent2-9, x2, mY-indent2-1);
+						}	
+					}	
 				}
-				else
-					this.triangle(x2, mY-indent2-9, x2-2, mY-indent2, x2+2, mY-indent2);
+				else{
+					if (srcTaxonomy.get(indexChild).isExpanded==1)
+						this.triangle(x2, mY-indent2-9, x2-2, mY-indent2, x2+2, mY-indent2);
+					else{ // draw a cirle and plus when it is not expanded
+						this.ellipse(x2, mY-indent2-5, 10, 10);
+						this.stroke(1f);
+						this.stroke(255);
+						this.line(x2-4, mY-indent2-5, x2+4, mY-indent2-5);
+						this.line(x2, mY-indent2-9, x2, mY-indent2-1);
+					}	
+				}	
 			}
 		}
 		
 		for (int i=0;i<trgTaxonomy.size();i++){
 			if (a2[i]==null) 
+				continue;
+			if (trgTaxonomy.get(i).isExpanded<1)
 				continue;
 			float h1 =  trgTaxonomy.get(i).iH.value;
 			float y1 =  trgTaxonomy.get(i).iY.value+h1*0.6f;
@@ -691,12 +745,30 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				this.fill(0,v);
 				
 				if (bListY.size()>0 || bListX.size()>0){
-					if (bListY.contains(i) && bListY.contains(indexChild))
-						this.triangle(mX-indent2-9, y2, mX-indent2, y2-2, mX-indent2, y2+2);
+					if (bListY.contains(i) && bListY.contains(indexChild)){
+						if (trgTaxonomy.get(indexChild).isExpanded==1)
+							this.triangle(mX-indent2-9, y2, mX-indent2, y2-2, mX-indent2, y2+2);
+						else{ // draw a cirle and plus when it is not expanded
+							this.ellipse(mX-indent2-5, y2, 10, 10);
+							this.stroke(1f);
+							this.stroke(255);
+							this.line(mX-indent2-9, y2, mX-indent2-1, y2);
+							this.line(mX-indent2-5, y2-4, mX-indent2-5, y2+4);
+						}
+					}	
 				}
-				else
-					this.triangle(mX-indent2-9, y2, mX-indent2, y2-2, mX-indent2, y2+2);
-			}
+				else{
+					if (trgTaxonomy.get(indexChild).isExpanded==1)
+						this.triangle(mX-indent2-9, y2, mX-indent2, y2-2, mX-indent2, y2+2);
+					else{ // draw a cirle and plus when it is not expanded
+						this.ellipse(mX-indent2-5, y2, 10, 10);
+						this.stroke(1f);
+						this.stroke(255);
+						this.line(mX-indent2-9, y2, mX-indent2-1, y2);
+						this.line(mX-indent2-5, y2-4, mX-indent2-5, y2+4);
+					}	
+				}
+			}	
 		}
 			
 			
@@ -776,8 +848,12 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		if (parentIndex>=0){
 			float xx = srcTaxonomy.get(index).iX.value;
 			float xxParent = srcTaxonomy.get(parentIndex).iX.value;
-			if (PApplet.abs(xx-xxParent)<5)
+			if (srcTaxonomy.get(index).isExpanded<0)
 				return false;
+			else if (srcTaxonomy.get(index).isExpanded==0 && PApplet.abs(xx-xxParent)<1){
+				srcTaxonomy.get(index).isExpanded=-1;
+				return false;
+			}	
 		}	
 		return true;
 	}
@@ -787,8 +863,12 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		if (parentIndex>=0){
 			float yy = trgTaxonomy.get(index).iY.value;
 			float yyParent = trgTaxonomy.get(parentIndex).iY.value;
-			if (PApplet.abs(yy-yyParent)<5)
+			if (trgTaxonomy.get(index).isExpanded<0)
 				return false;
+			else if (trgTaxonomy.get(index).isExpanded==0 && PApplet.abs(yy-yyParent)<1){
+				trgTaxonomy.get(index).isExpanded=-1;
+				return false;
+			}	
 		}	
 		return true;
 	}
@@ -811,27 +891,25 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 	}
 
 	public void mouseMoved() {
-		float mX = this.mouseX;
-		float mY = this.mouseY;
-		
 		// Check brushing
 		lX = -100;
 		lY = -100;
 		bX = -100;
 		bY = -100;
-		if (mouseX>mX && mouseY>mY && mouseX<mX+size*srcTaxonomy.size() && mouseY<mY+size*trgTaxonomy.size()){
-			lX = (int) ((this.mouseX-mX)/size);
-			lY = (int) ((this.mouseY-mY)/size);
+		if (mouseX>marginX && mouseY>marginY && mouseX<marginX+size*srcTaxonomy.size() && mouseY<marginY+size*trgTaxonomy.size()){
+			lX = (int) ((this.mouseX-marginX)/size);
+			lY = (int) ((this.mouseY-marginX)/size);
 			bX = -100;
 			bY = -100;
+		//	System.out.println(lX+"	"+lY+"	"+bX+"	"+bY+"	"+size);
 		}	
-		else if (mouseY<=mY){
+		else if (mouseY<=marginY){
 			for (int i=0;i<srcTaxonomy.size();i++){
 				int parentIndex = srcTaxonomy.get(i).parentIndex;
-				if (parentIndex<0 || (parentIndex>=0 && srcTaxonomy.get(parentIndex).isExpanded)){
+				if (parentIndex<0 || (parentIndex>=0 && srcTaxonomy.get(parentIndex).isExpanded==1)){
 					int order = srcTaxonomy.get(i).order;
 					srcTaxonomy.get(i).iW.target(size);
-					srcTaxonomy.get(i).iX.target(mX +order*size);
+					srcTaxonomy.get(i).iX.target(marginY +order*size);
 					if (srcTaxonomy.get(i).iX.value<=this.mouseX
 							&& this.mouseX<=srcTaxonomy.get(i).iX.value+size)	
 						bX=i;
@@ -841,11 +919,11 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 			lY=-100;
 			bY=-100;
 		}
-		else if (mouseX<=mX){
+		else if (mouseX<=marginX){
 			for (int i=0;i<trgTaxonomy.size();i++){
 				int order = trgTaxonomy.get(i).order;
 				trgTaxonomy.get(i).iH.target(size);
-				trgTaxonomy.get(i).iY.target(mY +order*size);
+				trgTaxonomy.get(i).iY.target(marginY +order*size);
 				if (trgTaxonomy.get(i).iY.value<=this.mouseY
 					&& this.mouseY<=trgTaxonomy.get(i).iY.value+size)	
 					bY = i;
@@ -881,16 +959,21 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		}
 		
 		if (bX>=0){
-			srcTaxonomy.get(bX).isExpanded = !srcTaxonomy.get(bX).isExpanded;
+			if (srcTaxonomy.get(bX).isExpanded<1)
+				srcTaxonomy.get(bX).isExpanded = 1;
+			else
+				srcTaxonomy.get(bX).isExpanded =0;
 			ArrayList<Integer> children = this.getSuccessors(bX, a1);
 			for (int i=0;i<children.size();i++){
 				int index = children.get(i);
 				srcTaxonomy.get(index).isExpanded = srcTaxonomy.get(bX).isExpanded;
 			}
-			System.out.println("mouseClicked() = "+srcTaxonomy.get(bX).isExpanded);
 		}
 		else if (bY>=0){
-			trgTaxonomy.get(bY).isExpanded = !trgTaxonomy.get(bY).isExpanded;
+			if (trgTaxonomy.get(bY).isExpanded<1)
+				trgTaxonomy.get(bY).isExpanded = 1;
+			else
+				trgTaxonomy.get(bY).isExpanded = 0;
 			ArrayList<Integer> children = this.getSuccessors(bY, a2);
 			for (int i=0;i<children.size();i++){
 				int index = children.get(i);

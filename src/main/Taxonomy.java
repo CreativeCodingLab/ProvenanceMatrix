@@ -33,7 +33,7 @@ public class Taxonomy {
 	public int parentIndex=-1;
 	ArrayList<PImage> images= new ArrayList<PImage>();
 	PApplet parent;
-	public boolean isExpanded = true;
+	public int isExpanded = 1;
 	
 	
 	public Taxonomy(PApplet parent_, String name_, int order_){
@@ -207,6 +207,27 @@ public class Taxonomy {
 		return sortedMap;
 	}
 	
+	public static Map<Integer, Integer> sortByComparator2(Map<Integer, Integer> unsortMap) {
+		// Convert Map to List
+		List<Map.Entry<Integer, Integer>> list = 
+			new LinkedList<Map.Entry<Integer, Integer>>(unsortMap.entrySet());
+ 
+		// Sort list with comparator, to compare the Map values
+		Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
+			public int compare(Map.Entry<Integer, Integer> o1,
+                                           Map.Entry<Integer, Integer> o2) {
+				return (o1.getValue()).compareTo(o2.getValue());
+			}
+		});
+ 
+		// Convert sorted map back to a Map
+		Map<Integer, Integer> sortedMap = new LinkedHashMap<Integer, Integer>();
+		for (Iterator<Map.Entry<Integer, Integer>> it = list.iterator(); it.hasNext();) {
+			Map.Entry<Integer, Integer> entry = it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+		return sortedMap;
+	}
 	
 	
 	
