@@ -887,7 +887,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		if (popupOrder.b>=0){
 			popupOrder.slider.checkSelectedSlider3();
 		}
-
 	}
 
 	public void mouseMoved() {
@@ -901,7 +900,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 			lY = (int) ((this.mouseY-marginX)/size);
 			bX = -100;
 			bY = -100;
-		//	System.out.println(lX+"	"+lY+"	"+bX+"	"+bY+"	"+size);
 		}	
 		else if (mouseY<=marginY){
 			for (int i=0;i<srcTaxonomy.size();i++){
@@ -932,7 +930,6 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 			lY=-100;
 			bX=-100;
 		}
-		
 	}
 
 	public void mouseClicked() {
