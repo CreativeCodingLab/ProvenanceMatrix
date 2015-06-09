@@ -263,7 +263,8 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 						if (size>100)
 							size=100;
 					}
-					drawMatrix(marginX,marginY);
+					drawTanglegram(marginX,marginY);
+					//drawMatrix(marginX,marginY);
 					//Draw images ****************************************************
 					drawImages();
 					
@@ -380,7 +381,463 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 		}
 	}
 		
+	@SuppressWarnings("unchecked")
+	public void drawTanglegram(float mX, float mY) throws IOException {
+		// Compute lensing
 	
+		float lensingSize = PApplet.map(size, 0, 100, 20, 80);	
+		int num = 5; // Number of items in one side of lensing
+		
+		///////////////////
+		ArrayList<Integer> src = new ArrayList<Integer>();
+		Map<Integer, Integer> unsortMap1 = new HashMap<Integer, Integer>();
+		for (int i=0;i<srcTaxonomy.size();i++){
+			int parentIndex = srcTaxonomy.get(i).parentIndex;
+			if (parentIndex>=0 && srcTaxonomy.get(parentIndex).isExpanded<1){
+				// set the position as of the parent
+				float value = srcTaxonomy.get(parentIndex).iX.target;
+				srcTaxonomy.get(i).iX.target(value);
+			}
+			else
+				unsortMap1.put(i, srcTaxonomy.get(i).order);
+		}
+		Map<Integer, Integer> sorted1 = Taxonomy.sortByComparator2(unsortMap1);
+		for (Map.Entry<Integer, Integer> entry : sorted1.entrySet()) {
+			src.add(entry.getKey());
+		}
+		
+		for (int order=0;order<src.size();order++){
+			int index =   src.get(order);
+			float value = 0;
+			if (lX-num<=order && order<=lX+num) {
+				srcTaxonomy.get(index).iW.target(lensingSize);
+				int num2 = order-(lX-num);
+				if (lX-num>=0)
+					value = mX +(lX-num)*size+num2*lensingSize;
+				else
+					value = mX +order*lensingSize;
+			}	
+			else{
+				srcTaxonomy.get(index).iW.target(size);
+				if (order<lX-num)
+					value = mX +order*size;
+				else if (order>lX+num){
+					if (lX-num>=0)
+						value = mX +(order-(num*2+1))*size+(num*2+1)*lensingSize;
+					else{
+						int num3= lX+num+1;
+						if (num3>0)
+							value = mX +(order-num3)*size+num3*lensingSize;
+						else
+							value = mX +order*size;
+					}	
+				}	 
+			}
+			
+			srcTaxonomy.get(index).iX.target(value);
+		}
+		
+		///////////////////
+		ArrayList<Integer> trg = new ArrayList<Integer>();
+		Map<Integer, Integer> unsortMap2 = new HashMap<Integer, Integer>();
+		for (int i=0;i<trgTaxonomy.size();i++){
+			int parentIndex = trgTaxonomy.get(i).parentIndex;
+			if (parentIndex>=0 && trgTaxonomy.get(parentIndex).isExpanded<1){
+				// set the position as of the parent
+				float value = trgTaxonomy.get(parentIndex).iY.target;
+				trgTaxonomy.get(i).iY.target(value);
+			}
+			else
+				unsortMap2.put(i, trgTaxonomy.get(i).order);
+		}
+		Map<Integer, Integer> sorted2 = Taxonomy.sortByComparator2(unsortMap2);
+		for (Map.Entry<Integer, Integer> entry : sorted2.entrySet()) {
+			trg.add(entry.getKey());
+		}
+		for (int order=0;order<trg.size();order++){
+			int index = trg.get(order);
+			float value = 0;
+			if (lY-num<=order && order<=lY+num){
+				trgTaxonomy.get(index).iH.target(lensingSize);
+				int num2 = order-(lY-num);
+				if (lY-num>=0)
+					value = mY +(lY-num)*size+num2*lensingSize;
+				else
+					value = mY +order*lensingSize;
+			}	
+			else{
+				trgTaxonomy.get(index).iH.target(size);
+				if (order<lY-num)
+					value = mY +order*size;
+				else if (order>lY+num){
+					if (lY-num>=0)
+						value = mY +(order-(num*2+1))*size+(num*2+1)*lensingSize;
+					else{
+						int num3= lY+num+1;
+						if (num3>0)
+							value = mY +(order-num3)*size+num3*lensingSize;
+						else
+							value = mY +order*size;
+					}	
+
+				}	
+			}
+			trgTaxonomy.get(index).iY.target(value);
+		}
+
+		//--------------------------------
+		for (int i=0;i<srcTaxonomy.size();i++){			
+			srcTaxonomy.get(i).iW.update();
+			srcTaxonomy.get(i).iX.update();		
+		}
+
+		for (int i=0;i<trgTaxonomy.size();i++){
+			trgTaxonomy.get(i).iH.update();
+			trgTaxonomy.get(i).iY.update();
+		}
+
+
+		//-----------------------------
+		ArrayList<Integer> bListX = new ArrayList<Integer>(); 
+		if (0<=bX && bX<srcTaxonomy.size()){
+			bListX = getSubtree(bX,srcTaxonomy,a1);
+		}
+		ArrayList<Integer> bListY = new ArrayList<Integer>(); 
+		if (0<=bY && bY<trgTaxonomy.size()){
+			bListY = getSubtree(bY,trgTaxonomy,a2);
+		}
+		
+		// Find the mappings on the other hierarchy
+		if (bListX.size()>0){
+			for (int i=0;i<bListX.size();i++){
+				int index = bListX.get(i);
+				for (int j=0;j<trgTaxonomy.size();j++){
+					if (articulations[index][j].contains(0)) {// Equals
+						ArrayList<Integer> b = getSubtree(j,trgTaxonomy,a2); 
+						for (int k=0;k<b.size();k++){
+							int index2 = b.get(k);
+							bListY.add(index2);
+						}
+					}	
+				}	                     
+			}
+		}
+		else if (bListY.size()>0){
+			for (int i=0;i<bListY.size();i++){
+				int index = bListY.get(i);
+				for (int j=0;j<srcTaxonomy.size();j++){
+					if (articulations[j][index].contains(0)) {// Equals
+						ArrayList<Integer> b = getSubtree(j,srcTaxonomy,a1); 
+						for (int k=0;k<b.size();k++){
+							int index2 = b.get(k);
+							bListX.add(index2);
+						}
+					}	
+				}	                     
+			}
+		}
+		
+		// Draw taxonomy (names) on X and Y axis
+		float indent =10;
+		float indentGap =10;
+		for (int i=0;i<srcTaxonomy.size();i++){
+			float hh = srcTaxonomy.get(i).iW.value;
+			float yy =  srcTaxonomy.get(i).iX.value;
+			
+			// If not expanded, then no drawing
+			if (!isTaxonXDraw(i)){
+				continue;
+			}	
+			
+			float sat = 255;
+			Color color = new Color(0,0,0);
+			if (bListX.size()>0 || bListY.size()>0){
+				if (bListX.contains(i)){
+					sat = 255;
+				}
+				else{
+					sat = 30;
+				}
+			}
+			if (hh>2){
+				ArrayList<Integer> b = getAncestors(i,srcTaxonomy);
+				float indent2 = indent+indentGap*b.size();
+				
+				// Check bad apples
+				if (check2.s){
+					color = colors[goodTaxonX[i]];
+				}
+				if (i==bX){
+					sat = 55+(this.frameCount*20)%200;
+				}
+				this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
+				
+				this.textSize(11);
+				float al = -PApplet.PI/2;
+				this.text(srcTaxonomy.get(i).name, mX+indent2,yy+hh/2); // text for each column @Amruta
+			}
+		}
+		for (int i=0;i<trgTaxonomy.size();i++){
+			float hh =trgTaxonomy.get(i).iH.value;
+			float yy =  trgTaxonomy.get(i).iY.value;
+			// If not expanded, then no drawing
+			if (!isTaxonYDraw(i)){
+				continue;
+			}
+			
+			Color color = new Color(0,0,0);
+			float sat = 255;
+			if (bListX.size()>0 || bListY.size()>0){
+				if (bListY.contains(i)){
+					sat = 255;
+				}
+				else{
+					sat = 30;
+				}
+			}
+			if (hh>2){
+				// Check bad apples
+				if (check2.s){
+					color = colors[goodTaxonY[i]];
+				}
+				if (i==bY) {
+					sat = 55+(this.frameCount*20)%200;
+				}
+				
+				this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
+				
+				ArrayList<Integer> b = getAncestors(i,trgTaxonomy);
+				float indent2 = indent+indentGap*b.size();
+				this.textSize(11);
+				this.textAlign(PApplet.RIGHT);
+				this.text(trgTaxonomy.get(i).name, mX-indent2, yy+hh/2+5); //text for each row @Amruta 
+			}
+		}
+		
+		
+		// Draw Taxonomy names
+		this.fill(0,0,0);
+		this.textSize(13);
+		this.textAlign(PApplet.CENTER);
+		this.text(taxomX, 480, 20);
+		this.fill(0,0,0);
+		this.textSize(13);
+		this.textAlign(PApplet.CENTER);
+		float al = -PApplet.PI/2;
+		this.translate(30,280);
+		this.rotate(al);
+		this.text(taxomY, 0,0); // text for each column @Amruta
+		this.rotate(-al);
+		this.translate(-(30), -(280));
+		
+		// Hierarchy links
+		float arcRate = 0.5f;
+		for (int i=0;i<srcTaxonomy.size();i++){
+			if (a1[i]==null) 
+				continue;
+			if (srcTaxonomy.get(i).isExpanded<1)
+				continue;
+			float w1 =  srcTaxonomy.get(i).iW.value;
+			float x1 =  srcTaxonomy.get(i).iX.value+w1*0.6f;
+			ArrayList<Integer> b = getAncestors(i,srcTaxonomy);
+			float indent2 = indent+indentGap*b.size();
+			
+			for (int j=0; j<a1[i].size();j++){
+				int indexChild = (Integer) a1[i].get(j);
+				float w2 =  srcTaxonomy.get(indexChild).iW.value;
+				float x2 =  srcTaxonomy.get(indexChild).iX.value+w2*0.5f;
+				this.noFill();
+				this.stroke(0,0,0);
+				float r = PApplet.abs(x2-x1);
+				
+				if (bListX.size()>0){
+					if (!bListX.contains(i) || !bListX.contains(indexChild))
+					this.stroke(0,20);
+				}
+				else if (0<=bY && bY<trgTaxonomy.size())
+					this.stroke(0,20);
+				
+				//if (w1>6 || w2>6){
+					this.strokeWeight(0.3f);
+					this.arc((x1+x2)/2,mY-indent2,r,r*arcRate, 0,PApplet.PI);
+				/*}
+				else{
+					this.strokeWeight(0.05f);
+					this.arc((x1+x2)/2,mY-indent2,r,r*arcRate,-PApplet.PI, 0);
+				}*/	
+				
+				this.noStroke();
+				float v = PApplet.map(w2, 0, 25, 10, 255);
+				if (v>255)
+					v=255;
+				this.fill(0,v);
+				
+				if (bListX.size()>0 || bListY.size()>0){
+					if (bListX.contains(i) && bListX.contains(indexChild)){
+						if (srcTaxonomy.get(indexChild).isExpanded==1)
+							this.triangle(x2, mY-indent2-9, x2-2, mY-indent2, x2+2, mY-indent2);
+						else{ // draw a cirle and plus when it is not expanded
+							this.ellipse(x2, mY-indent2-5, 10, 10);
+							this.stroke(1f);
+							this.stroke(255);
+							this.line(x2-4, mY-indent2-5, x2+4, mY-indent2-5);
+							this.line(x2, mY-indent2-9, x2, mY-indent2-1);
+						}	
+					}	
+				}
+				else{
+					if (srcTaxonomy.get(indexChild).isExpanded==1)
+						this.triangle(x2, mY-indent2-9, x2-2, mY-indent2, x2+2, mY-indent2);
+					else{ // draw a cirle and plus when it is not expanded
+						this.ellipse(x2, mY-indent2-5, 10, 10);
+						this.stroke(1f);
+						this.stroke(255);
+						this.line(x2-4, mY-indent2-5, x2+4, mY-indent2-5);
+						this.line(x2, mY-indent2-9, x2, mY-indent2-1);
+					}	
+				}	
+			}
+		}
+		
+		for (int i=0;i<trgTaxonomy.size();i++){
+			if (a2[i]==null) 
+				continue;
+			if (trgTaxonomy.get(i).isExpanded<1)
+				continue;
+			float h1 =  trgTaxonomy.get(i).iH.value;
+			float y1 =  trgTaxonomy.get(i).iY.value+h1*0.6f;
+			ArrayList<Integer> b = getAncestors(i,trgTaxonomy);
+			float indent2 = indent+indentGap*b.size();
+			
+			for (int j=0; j<a2[i].size();j++){
+				int indexChild = (Integer) a2[i].get(j);
+				float h2 =  trgTaxonomy.get(indexChild).iH.value;
+				float y2 =  trgTaxonomy.get(indexChild).iY.value+h2*0.5f;
+				
+				this.noFill();
+				this.stroke(0,0,0);
+				float r = PApplet.abs(y2-y1);
+				
+				if (bListY.size()>0){
+					if (!bListY.contains(i) || !bListY.contains(indexChild))
+					this.stroke(0,20);
+				}
+				else if (0<=bX && bX<srcTaxonomy.size())
+					this.stroke(0,20);
+				
+				//if (h1>6 || h2>6){
+					this.strokeWeight(0.3f);
+					this.arc(mX-indent2, (y1+y2)/2,r*arcRate,r, -PApplet.PI/2, PApplet.PI/2);
+				/*}	
+				else{
+					this.strokeWeight(0.05f);
+					this.arc(mX-indent2, (y1+y2)/2,r*arcRate,r, PApplet.PI/2, 3*PApplet.PI/2);
+				}	*/
+				
+				this.noStroke();
+				float v = PApplet.map(h2, 0, 25, 10, 255);
+				if (v>255)
+					v=255;
+				this.fill(0,v);
+				
+				if (bListY.size()>0 || bListX.size()>0){
+					if (bListY.contains(i) && bListY.contains(indexChild)){
+						if (trgTaxonomy.get(indexChild).isExpanded==1)
+							this.triangle(mX-indent2-9, y2, mX-indent2, y2-2, mX-indent2, y2+2);
+						else{ // draw a cirle and plus when it is not expanded
+							this.ellipse(mX-indent2-5, y2, 10, 10);
+							this.stroke(1f);
+							this.stroke(255);
+							this.line(mX-indent2-9, y2, mX-indent2-1, y2);
+							this.line(mX-indent2-5, y2-4, mX-indent2-5, y2+4);
+						}
+					}	
+				}
+				else{
+					if (trgTaxonomy.get(indexChild).isExpanded==1)
+						this.triangle(mX-indent2-9, y2, mX-indent2, y2-2, mX-indent2, y2+2);
+					else{ // draw a cirle and plus when it is not expanded
+						this.ellipse(mX-indent2-5, y2, 10, 10);
+						this.stroke(1f);
+						this.stroke(255);
+						this.line(mX-indent2-9, y2, mX-indent2-1, y2);
+						this.line(mX-indent2-5, y2-4, mX-indent2-5, y2+4);
+					}	
+				}
+			}	
+		}
+			
+			
+		// Circular sectors
+		int numberOfSector = 0;
+		int[] artArray = new int[mappingColorRelations.length];
+		for (int i=0; i<vennOverview.numArt;i++){
+			if (vennOverview.isActive[i]){
+				artArray[i] = numberOfSector;
+				numberOfSector++;
+			}	
+		}	
+		float alpha = PApplet.PI*2/numberOfSector;
+		
+		for (int i=0;i<trgTaxonomy.size();i++){
+			// Check if this is grouping
+			float hh = trgTaxonomy.get(i).iH.value;
+			float yy =  trgTaxonomy.get(i).iY.value+hh/2;
+			if (!isTaxonYDraw(i))
+				continue;
+			for (int j=0;j<srcTaxonomy.size();j++){
+				float ww =srcTaxonomy.get(j).iW.value;
+				float xx =  srcTaxonomy.get(j).iX.value+ww/2;
+				if (!isTaxonXDraw(j))
+					continue;
+				// Draw articulation sources
+				if (check4.s){
+					int source =  artSources[j][i]-1; 
+					this.noStroke();
+					if (source>=0){
+						this.fill(sourceColors[source].getRed(),sourceColors[source].getGreen(),sourceColors[source].getBlue(),220);
+						this.rect(xx-ww/2,yy-hh/2,ww,hh);
+					}
+				}
+				
+				// Draw articulation sectors
+				if (articulations[j][i]==null) continue;
+				for (int i2=0;i2<articulations[j][i].size();i2++){
+					int indexArt = (Integer) articulations[j][i].get(i2);
+					this.noStroke();
+					this.fill(mappingColorRelations[indexArt]);
+					if (bListX.size()>0 || bListY.size()>0){
+						Color c = new Color(mappingColorRelations[indexArt]);
+						if (bListX.contains(j) && bListY.contains(i))
+							this.fill(c.getRed(),c.getGreen(),c.getBlue());
+						else	
+							this.fill(c.getRed(),c.getGreen(),c.getBlue(),15);
+					}
+					if (vennOverview.isActive[indexArt]){
+						float radius =  PApplet.min(ww,hh)+2;
+						if (check4.s)
+							radius =  PApplet.min(ww,hh)*0.75f; // Smaller sectors for showing articulation sources 
+						this.arc(xx,yy,radius,radius, PApplet.PI+artArray[indexArt]*alpha, PApplet.PI+(artArray[indexArt]+1)*alpha);
+						
+						// Draw green connections for Equals
+						if (indexArt==0 && bListX.contains(j) && bListY.contains(i)){
+							this.stroke(0,150,0,100);
+							this.strokeWeight(0.5f);
+							
+							ArrayList<Integer> b = getAncestors(j,srcTaxonomy);
+							float indentX = indent+indentGap*b.size();
+							ArrayList<Integer> c = getAncestors(i,trgTaxonomy);
+							float indentY = indent+indentGap*c.size();
+							
+							this.line(xx, mY-indentY, xx, yy);
+							this.line(mX-indentX, yy, xx, yy);
+						}
+					}
+				}
+			}
+		}
+	}	
+
 	@SuppressWarnings("unchecked")
 	public void drawMatrix(float mX, float mY) throws IOException {
 		// Compute lensing
@@ -558,7 +1015,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					sat = 30;
 				}
 			}
-			if (ww>6){
+			if (ww>2){
 				ArrayList<Integer> b = getAncestors(i,srcTaxonomy);
 				float indent2 = indent+indentGap*b.size();
 				
@@ -599,7 +1056,7 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 					sat = 30;
 				}
 			}
-			if (hh>6){
+			if (hh>2){
 				// Check bad apples
 				if (check2.s){
 					color = colors[goodTaxonY[i]];
@@ -661,14 +1118,14 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				else if (0<=bY && bY<trgTaxonomy.size())
 					this.stroke(0,20);
 				
-				if (w1>6 || w2>6){
+				//if (w1>6 || w2>6){
 					this.strokeWeight(0.3f);
 					this.arc((x1+x2)/2,mY-indent2,r,r*arcRate, 0,PApplet.PI);
-				}
+				/*}
 				else{
 					this.strokeWeight(0.05f);
 					this.arc((x1+x2)/2,mY-indent2,r,r*arcRate,-PApplet.PI, 0);
-				}	
+				}*/	
 				
 				this.noStroke();
 				float v = PApplet.map(w2, 0, 25, 10, 255);
@@ -729,14 +1186,14 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 				else if (0<=bX && bX<srcTaxonomy.size())
 					this.stroke(0,20);
 				
-				if (h1>6 || h2>6){
+				//if (h1>6 || h2>6){
 					this.strokeWeight(0.3f);
 					this.arc(mX-indent2, (y1+y2)/2,r*arcRate,r, -PApplet.PI/2, PApplet.PI/2);
-				}	
+				/*}	
 				else{
 					this.strokeWeight(0.05f);
 					this.arc(mX-indent2, (y1+y2)/2,r*arcRate,r, PApplet.PI/2, 3*PApplet.PI/2);
-				}	
+				}	*/
 				
 				this.noStroke();
 				float v = PApplet.map(h2, 0, 25, 10, 255);
