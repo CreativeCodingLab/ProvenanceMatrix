@@ -263,8 +263,8 @@ public class ProvenanceMatrix_1_3 extends PApplet {
 						if (size>100)
 							size=100;
 					}
-					drawTanglegram(marginX,marginY);
-					//drawMatrix(marginX,marginY);
+					//drawTanglegram(marginX,marginY);
+					drawMatrix(marginX,marginY);
 					//Draw images ****************************************************
 					drawImages();
 					
