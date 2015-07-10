@@ -20,9 +20,9 @@ import java.util.TreeMap;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-import static main.ProvenanceMatrix_1_3.srcTaxonomy;
-import static main.ProvenanceMatrix_1_3.trgTaxonomy;
-import static main.ProvenanceMatrix_1_3.articulations;
+import static main.ProvenanceMatrix_1_4.srcTaxonomy;
+import static main.ProvenanceMatrix_1_4.trgTaxonomy;
+import static main.ProvenanceMatrix_1_4.articulations;
 
 
 public class Taxonomy {
@@ -39,8 +39,8 @@ public class Taxonomy {
 	public Taxonomy(PApplet parent_, String name_, int order_){
 		parent = parent_;
 		name = name_;
-		iX = new Integrator(main.ProvenanceMatrix_1_3.marginX,.5f,.1f);
-		iY = new Integrator(main.ProvenanceMatrix_1_3.marginY,.5f,.1f);
+		iX = new Integrator(main.ProvenanceMatrix_1_4.marginX,.5f,.1f);
+		iY = new Integrator(main.ProvenanceMatrix_1_4.marginY,.5f,.1f);
 		iW = new Integrator(0,.5f,.1f);
 		iH = new Integrator(0,.5f,.1f);
 		order = order_;
@@ -282,7 +282,7 @@ public class Taxonomy {
 			int index1 = i;
 			if (a.contains(index1)) continue;
 			int index2 = a.get(0);
-			float dis = computeDis(index1,index2, main.ProvenanceMatrix_1_3.popupOrder.slider.val);
+			float dis = computeDis(index1,index2, main.ProvenanceMatrix_1_4.popupOrder.slider.val);
 			/*if (a.size()>1){
 				index2 = a.get(a.size()-2);
 				dis += computeDis(index1,index2, main.PathwayMatrixTaxo.popupOrder.slider.val);
@@ -302,7 +302,7 @@ public class Taxonomy {
 			int index1 = i;
 			if (a.contains(index1)) continue;
 			int index2 = a.get(0);
-			float dis = computeDis2(index1,index2, main.ProvenanceMatrix_1_3.popupOrder.slider.val);
+			float dis = computeDis2(index1,index2, main.ProvenanceMatrix_1_4.popupOrder.slider.val);
 			/*if (a.size()>1){
 				index2 = a.get(a.size()-1);
 				dis += computeDis2(index1,index2, main.PathwayMatrixTaxo.popupOrder.slider.val);
@@ -352,22 +352,22 @@ public class Taxonomy {
 	}
 	
 	public static void BFS1(int index){
-		if (main.ProvenanceMatrix_1_3.a1[index]==null) return;
-		for (int i=0;i<main.ProvenanceMatrix_1_3.a1[index].size();i++){
-			int index2 = (Integer) main.ProvenanceMatrix_1_3.a1[index].get(i);
+		if (main.ProvenanceMatrix_1_4.a1[index]==null) return;
+		for (int i=0;i<main.ProvenanceMatrix_1_4.a1[index].size();i++){
+			int index2 = (Integer) main.ProvenanceMatrix_1_4.a1[index].get(i);
 			srcTaxonomy.get(index2).order=main.PopupOrder.countBFS1;
 			main.PopupOrder.countBFS1++;
 		}
-		for (int i=0;i<main.ProvenanceMatrix_1_3.a1[index].size();i++){
-			int index2 = (Integer) main.ProvenanceMatrix_1_3.a1[index].get(i);
+		for (int i=0;i<main.ProvenanceMatrix_1_4.a1[index].size();i++){
+			int index2 = (Integer) main.ProvenanceMatrix_1_4.a1[index].get(i);
 			BFS1(index2);
 		}
 	}	
 	public static void BFS2(int index){
-		if (main.ProvenanceMatrix_1_3.a2[index]==null) return;
+		if (main.ProvenanceMatrix_1_4.a2[index]==null) return;
 		ArrayList<Integer> childrenList2 = new ArrayList<Integer>();
-		for (int i=0;i<main.ProvenanceMatrix_1_3.a2[index].size();i++){
-			childrenList2.add((Integer) main.ProvenanceMatrix_1_3.a2[index].get(i));
+		for (int i=0;i<main.ProvenanceMatrix_1_4.a2[index].size();i++){
+			childrenList2.add((Integer) main.ProvenanceMatrix_1_4.a2[index].get(i));
 		}
 		
 		
@@ -414,10 +414,10 @@ public class Taxonomy {
 		//System.out.println("	"+index2+"	"+pos +"	");
 		//if (pos<srcTaxo.size() && pos>=0)
 		//	System.out.println("		"+srcTaxo.get(pos).name);
-		if (main.ProvenanceMatrix_1_3.a2[index2]!=null){
+		if (main.ProvenanceMatrix_1_4.a2[index2]!=null){
 			ArrayList<Integer> childrenList4 = new ArrayList<Integer>();
-			for (int i4=0;i4<main.ProvenanceMatrix_1_3.a2[index2].size();i4++){
-				childrenList4.add((Integer) main.ProvenanceMatrix_1_3.a2[index2].get(i4));
+			for (int i4=0;i4<main.ProvenanceMatrix_1_4.a2[index2].size();i4++){
+				childrenList4.add((Integer) main.ProvenanceMatrix_1_4.a2[index2].get(i4));
 			}
 			for (int i4=0;i4<childrenList4.size();i4++){
 				int index4 = childrenList4.get(i4);
@@ -430,10 +430,10 @@ public class Taxonomy {
 		
 	
 	public static int computeNum(int index2){
-		if (main.ProvenanceMatrix_1_3.a2[index2]!=null){
+		if (main.ProvenanceMatrix_1_4.a2[index2]!=null){
 			ArrayList<Integer> childrenList4 = new ArrayList<Integer>();
-			for (int i4=0;i4<main.ProvenanceMatrix_1_3.a2[index2].size();i4++){
-				childrenList4.add((Integer) main.ProvenanceMatrix_1_3.a2[index2].get(i4));
+			for (int i4=0;i4<main.ProvenanceMatrix_1_4.a2[index2].size();i4++){
+				childrenList4.add((Integer) main.ProvenanceMatrix_1_4.a2[index2].get(i4));
 			}
 			int sum=0;
 			for (int i4=0;i4<childrenList4.size();i4++){
@@ -450,9 +450,9 @@ public class Taxonomy {
 	public static void DFS1(int index){
 		srcTaxonomy.get(index).order=main.PopupOrder.countDFS1;
 		main.PopupOrder.countDFS1++;
-		if (main.ProvenanceMatrix_1_3.a1[index]==null) return;
-		for (int i=0;i<main.ProvenanceMatrix_1_3.a1[index].size();i++){
-			int index2 = (Integer) main.ProvenanceMatrix_1_3.a1[index].get(i);
+		if (main.ProvenanceMatrix_1_4.a1[index]==null) return;
+		for (int i=0;i<main.ProvenanceMatrix_1_4.a1[index].size();i++){
+			int index2 = (Integer) main.ProvenanceMatrix_1_4.a1[index].get(i);
 			DFS1(index2);
 		}
 	}
@@ -460,9 +460,9 @@ public class Taxonomy {
 	public static void DFS2(int index){
 		trgTaxonomy.get(index).order=main.PopupOrder.countDFS2;
 		main.PopupOrder.countDFS2++;
-		if (main.ProvenanceMatrix_1_3.a2[index]==null) return;
-		for (int i=0;i<main.ProvenanceMatrix_1_3.a2[index].size();i++){
-			int index2 = (Integer) main.ProvenanceMatrix_1_3.a2[index].get(i);
+		if (main.ProvenanceMatrix_1_4.a2[index]==null) return;
+		for (int i=0;i<main.ProvenanceMatrix_1_4.a2[index].size();i++){
+			int index2 = (Integer) main.ProvenanceMatrix_1_4.a2[index].get(i);
 			DFS2(index2);
 		}
 	}

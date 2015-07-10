@@ -1,0 +1,61 @@
+# Franz et al. 2014. Taxonomic Provenance: Two Influential Primate Classifications Logically Aligned. Systematic Biology. (In Review)
+# Supplementary Materials S3 - FigureS3-3
+# Euler/X command - input visualization: euler -i figureS3-3.txt --iv
+# Euler/X command - alignment: euler -i figureS3-3.txt -e mnpw --rcgo
+# 
+taxonomy 2005 Groves_MSW3
+(Lorisiformes Lorisidae Galagidae)
+(Lorisidae Arctocebus Loris Nycticebus Perodicticus Pseudopotto)
+(Arctocebus Arctocebus_aureus Arctocebus_calabarensis)
+(Loris Loris_lydekkerianus Loris_tardigradus)
+(Nycticebus Nycticebus_bengalensis Nycticebus_coucang Nycticebus_pygmaeus)
+(Perodicticus Perodicticus_potto)
+(Pseudopotto Pseudopotto_martini)
+(Galagidae Euoticus Galago Otolemur)
+(Euoticus Euoticus_elegantulus Euoticus_pallidus)
+(Galago Galago_alleni Galago_cameronensis Galago_demidoff Galago_gabonensis Galago_gallarum Galago_granti Galago_matschiei Galago_moholi Galago_nyasae Galago_orinus Galago_rondoensis Galago_senegalensis Galago_thomasi Galago_zanzibaricus)
+(Otolemur Otolemur_crassicaudatus Otolemur_garnettii Otolemur_monteiri)
+
+taxonomy 1993 Groves_MSW2
+(Loridae Arctocebus Loris Nycticebus Perodicticus)
+(Arctocebus Arctocebus_aureus Arctocebus_calabarensis)
+(Loris Loris_tardigradus)
+(Nycticebus Nycticebus_coucang Nycticebus_pygmaeus)
+(Perodicticus Perodicticus_potto)
+(Galagonidae Euoticus Galago Galagoides Otolemur)
+(Euoticus Euoticus_elegantulus Euoticus_pallidus)
+(Galago Galago_alleni Galago_gallarum Galago_matschiei Galago_moholi Galago_senegalensis)
+(Galagoides Galagoides_demidoff Galagoides_zanzibaricus)
+(Otolemur Otolemur_crassicaudatus Otolemur_garnettii)
+
+articulation 2005-1993 Groves_MSW3-Groves_MSW2
+[2005.Lorisidae includes 1993.Loridae]
+[2005.Arctocebus_aureus equals 1993.Arctocebus_aureus]
+[2005.Arctocebus_calabarensis equals 1993.Arctocebus_calabarensis]
+[2005.Loris_lydekkerianus is_included_in 1993.Loris_tardigradus]
+[2005.Loris_tardigradus is_included_in 1993.Loris_tardigradus]
+[2005.Nycticebus_bengalensis disjoint 1993.Loridae]
+[2005.Nycticebus_coucang equals 1993.Nycticebus_coucang]
+[2005.Nycticebus_pygmaeus equals 1993.Nycticebus_pygmaeus]
+[2005.Perodicticus_potto is_included_in 1993.Perodicticus_potto]
+[2005.Pseudopotto_martini is_included_in 1993.Perodicticus_potto]
+[2005.Galagidae includes 1993.Galagonidae]
+[2005.Euoticus_elegantulus equals 1993.Euoticus_elegantulus]
+[2005.Euoticus_pallidus equals 1993.Euoticus_pallidus]
+[2005.Galago_alleni is_included_in 1993.Galago_alleni]
+[2005.Galago_cameronensis is_included_in 1993.Galago_alleni]
+[2005.Galago_gabonensis is_included_in 1993.Galago_alleni]
+[2005.Galago_demidoff is_included_in 1993.Galagoides_demidoff]
+[2005.Galago_thomasi is_included_in 1993.Galagoides_demidoff]
+[2005.Galago_gallarum equals 1993.Galago_gallarum]
+[2005.Galago_granti disjoint 1993.Galagonidae]
+[2005.Galago_matschiei equals 1993.Galago_matschiei]
+[2005.Galago_moholi equals 1993.Galago_moholi]
+[2005.Galago_nyasae disjoint 1993.Galagonidae]
+[2005.Galago_orinus disjoint 1993.Galagonidae]
+[2005.Galago_rondoensis disjoint 1993.Galagonidae]
+[2005.Galago_senegalensis equals 1993.Galago_senegalensis]
+[2005.Galago_zanzibaricus equals 1993.Galagoides_zanzibaricus]
+[2005.Otolemur_crassicaudatus is_included_in 1993.Otolemur_crassicaudatus]
+[2005.Otolemur_monteiri is_included_in 1993.Otolemur_crassicaudatus]
+[2005.Otolemur_garnettii equals 1993.Otolemur_garnettii]

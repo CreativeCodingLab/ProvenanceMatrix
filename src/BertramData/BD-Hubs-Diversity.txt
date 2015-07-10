@@ -2,7 +2,7 @@
 # Taxonomy 2: http://www.nationaldiversitycouncil.org/wp-content/uploads/2011/12/us_regions.jpg
 #
 taxonomy BDH Big Data Hubs
-(USA Northeast Midwest South West)
+(USA Midwest Northeast South West)
 (Northeast CT MA ME NH NJ NY PA RI VT)
 (Midwest IL IN IA KS MI MN MO NE ND OH SD WI)
 (South AL AR DE DC FL GA KY LA MD MS NC OK SC TN TX VA WV)
