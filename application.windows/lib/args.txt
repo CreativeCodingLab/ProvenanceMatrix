@@ -1,3 +1,0 @@
--Xmx4g
-main.ProvenanceMatrix_1_4
-ProvenanceMatrix_1_4.jar
