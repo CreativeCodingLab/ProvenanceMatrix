@@ -146,7 +146,6 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 		curveTightness(0.7f); 
 		smooth();
 
-		
 		// Articulation colors-----------------------------
 		mappingColorRelations =  new int[5];	
 		mappingColorRelations[0] = new Color(0,200,0).getRGB(); 
