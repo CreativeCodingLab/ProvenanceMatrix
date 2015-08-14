@@ -47,10 +47,10 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 	//public String currentFile = "./NicoData/large/prim-uc-entire.txt";  	//********* remember to change to length-1 instead of length -2
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/primates-large-alignment.txt";
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/weevils-merge-concepts.txt";
-	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/perelleschus-multiple-worlds.txt"; 	// small, nice Venn Diagram
+	public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/perelleschus-multiple-worlds.txt"; 	// small, nice Venn Diagram
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2015_1982_phylo.txt"; 		
 	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched.txt"; 
-	public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2.txt"; 		// 160 possible worlds
+	//public String currentFile = "./NicoData/relargeandlargestmonkeyalignments/2010-1968-gymno-enriched2.txt"; 		// 160 possible worlds
 	//public String currentFile = "./BertramData/BD-Hubs-Diversity.txt";
 	
 	public static ButtonBrowse buttonBrowse;
@@ -260,8 +260,8 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 						
 						int num = Math.max(numRows, numColumns);
 						size = addition+(this.height-marginY)/num;
-						if (size>100)
-							size=100;
+						if (size>75)
+							size=75;
 					}
 					//drawTanglegram(marginX,marginY);
 					drawMatrix(marginX,marginY);
@@ -895,7 +895,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 				}	 
 			}
 			
-			srcTaxonomy.get(index).iX.target(value+10);
+			srcTaxonomy.get(index).iX.target(value+25);
 		}
 		///////////////////
 		ArrayList<Integer> trg = new ArrayList<Integer>();
@@ -942,7 +942,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 
 				}	
 			}
-			trgTaxonomy.get(index).iY.target(value+10);
+			trgTaxonomy.get(index).iY.target(value+25);
 		}
 
 		//--------------------------------
@@ -1032,14 +1032,14 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 				}
 				this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
 				
-				this.textSize(11);
+				this.textSize(20);
 				float al = -PApplet.PI/2;
 				float xx2 = xx+ww/2+5;
-				this.translate(xx2,mY-indent2);
+				this.translate(xx2,mY-indent2-2);
 				this.rotate(al);
 				this.text(srcTaxonomy.get(i).name, 0,0); // text for each column @Amruta
 				this.rotate(-al);
-				this.translate(-xx2, -(mY-indent2));
+				this.translate(-xx2, -(mY-indent2-2));
 			}
 		}
 		for (int i=0;i<trgTaxonomy.size();i++){
@@ -1073,37 +1073,36 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 				
 				ArrayList<Integer> b = getAncestors(i,trgTaxonomy);
 				float indent2 = indent+indentGap*b.size();
-				this.textSize(11);
+				this.textSize(20);
 				this.textAlign(PApplet.RIGHT);
-				this.text(trgTaxonomy.get(i).name, mX-indent2, yy+hh/2+5); //text for each row @Amruta 
+				this.text(trgTaxonomy.get(i).name, mX-indent2-2, yy+hh/2+5); //text for each row @Amruta 
 			}
 		}
 		
 		
 		// Draw Taxonomy names
 		this.fill(0,0,0);
-		this.textSize(13);
+		this.textSize(22);
 		this.textAlign(PApplet.CENTER);
-		this.text(taxomX, 480, 20);
+		this.text(taxomX, 400, 112);
 		this.fill(0,0,0);
-		this.textSize(13);
 		this.textAlign(PApplet.CENTER);
 		float al = -PApplet.PI/2;
-		this.translate(30,350);
+		this.translate(85,350);
 		this.rotate(al);
 		this.text(taxomY, 0,0); // text for each column @Amruta
 		this.rotate(-al);
-		this.translate(-(30), -(350));
+		this.translate(-(85), -(350));
 		
 		// Hierarchy links
-		float arcRate = 0.4f;
+		float arcRate = 0.3f;
 		for (int i=0;i<srcTaxonomy.size();i++){
 			if (a1[i]==null) 
 				continue;
 			if (srcTaxonomy.get(i).isExpanded<1)
 				continue;
 			float w1 =  srcTaxonomy.get(i).iW.value;
-			float x1 =  srcTaxonomy.get(i).iX.value+w1*0.6f;
+			float x1 =  srcTaxonomy.get(i).iX.value+w1*0.5f;
 			ArrayList<Integer> b = getAncestors(i,srcTaxonomy);
 			float indent2 = indent+indentGap*b.size();
 			
@@ -1123,7 +1122,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 					this.stroke(0,20);
 				
 				//if (w1>6 || w2>6){
-					this.strokeWeight(0.3f);
+					this.strokeWeight(1f);
 					this.arc((x1+x2)/2,mY-indent2,r,r*arcRate, 0,PApplet.PI);
 				/*}
 				else{
@@ -1140,7 +1139,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 				if (bListX.size()>0 || bListY.size()>0){
 					if (bListX.contains(i) && bListX.contains(indexChild)){
 						if (srcTaxonomy.get(indexChild).isExpanded==1)
-							this.triangle(x2, mY-indent2-9, x2-2, mY-indent2, x2+2, mY-indent2);
+							this.triangle(x2, mY-indent2-10, x2-5, mY-indent2, x2+5, mY-indent2);
 						else{ // draw a cirle and plus when it is not expanded
 							this.ellipse(x2, mY-indent2-5, 10, 10);
 							this.stroke(1f);
@@ -1152,7 +1151,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 				}
 				else{
 					if (srcTaxonomy.get(indexChild).isExpanded==1)
-						this.triangle(x2, mY-indent2-9, x2-2, mY-indent2, x2+2, mY-indent2);
+						this.triangle(x2, mY-indent2-10, x2-5, mY-indent2, x2+5, mY-indent2);
 					else{ // draw a cirle and plus when it is not expanded
 						this.ellipse(x2, mY-indent2-5, 10, 10);
 						this.stroke(1f);
@@ -1170,7 +1169,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 			if (trgTaxonomy.get(i).isExpanded<1)
 				continue;
 			float h1 =  trgTaxonomy.get(i).iH.value;
-			float y1 =  trgTaxonomy.get(i).iY.value+h1*0.6f;
+			float y1 =  trgTaxonomy.get(i).iY.value+h1*0.5f;
 			ArrayList<Integer> b = getAncestors(i,trgTaxonomy);
 			float indent2 = indent+indentGap*b.size();
 			
@@ -1191,7 +1190,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 					this.stroke(0,20);
 				
 				//if (h1>6 || h2>6){
-					this.strokeWeight(0.3f);
+					this.strokeWeight(1f);
 					this.arc(mX-indent2, (y1+y2)/2,r*arcRate,r, -PApplet.PI/2, PApplet.PI/2);
 				/*}	
 				else{
@@ -1208,7 +1207,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 				if (bListY.size()>0 || bListX.size()>0){
 					if (bListY.contains(i) && bListY.contains(indexChild)){
 						if (trgTaxonomy.get(indexChild).isExpanded==1)
-							this.triangle(mX-indent2-9, y2, mX-indent2, y2-2, mX-indent2, y2+2);
+							this.triangle(mX-indent2-10, y2, mX-indent2, y2-5, mX-indent2, y2+5);
 						else{ // draw a cirle and plus when it is not expanded
 							this.ellipse(mX-indent2-5, y2, 10, 10);
 							this.stroke(1f);
@@ -1220,7 +1219,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 				}
 				else{
 					if (trgTaxonomy.get(indexChild).isExpanded==1)
-						this.triangle(mX-indent2-9, y2, mX-indent2, y2-2, mX-indent2, y2+2);
+						this.triangle(mX-indent2-10, y2, mX-indent2, y2-5, mX-indent2, y2+5);
 					else{ // draw a cirle and plus when it is not expanded
 						this.ellipse(mX-indent2-5, y2, 10, 10);
 						this.stroke(1f);
@@ -1279,7 +1278,7 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 							this.fill(c.getRed(),c.getGreen(),c.getBlue(),15);
 					}
 					if (vennOverview.isActive[indexArt]){
-						float radius =  PApplet.min(ww,hh)+2;
+						float radius =  PApplet.min(ww,hh)-9;
 						if (check4.s)
 							radius =  PApplet.min(ww,hh)*0.75f; // Smaller sectors for showing articulation sources 
 						this.arc(xx,yy,radius,radius, PApplet.PI+artArray[indexArt]*alpha, PApplet.PI+(artArray[indexArt]+1)*alpha);
@@ -1301,6 +1300,27 @@ public class ProvenanceMatrix_1_4 extends PApplet {
 				}
 			}
 		}
+	
+		// Color legend
+		this.fill(0);
+		this.textSize(22);
+		this.textAlign(PApplet.LEFT);
+		float xx1 = 640;
+		float yy1 = 260;
+		float rr1 =26;
+		this.text("Color legend:", xx1, yy1);
+		for (int i=0;i<artStrings.length;i++){
+			float yy2 = yy1+25+i*30;
+			this.fill(mappingColorRelations[i]);
+			
+			this.noStroke();
+			this.ellipse(xx1+rr1/2, yy2, rr1, rr1);
+			if (i==4)
+				this.fill(new Color(mappingColorRelations[i]).darker().getRGB());
+			this.textSize(20);
+			this.text(artStrings[i], xx1+rr1*1.38f, yy2+7);
+			//System.out.println(artStrings[i]);
+		}	
 	}	
 
 	// If not expanded, then no drawing
