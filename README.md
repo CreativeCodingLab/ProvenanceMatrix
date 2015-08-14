@@ -7,5 +7,6 @@ The application (ProvenanceMatrix1_4.jar) is available in application folder.
 
 [![ScreenShot](http://www.cs.uic.edu/~tdang/PathwayMatrix/ProvenanceMatrix.png)](http://www2.cs.uic.edu/~tdang/ProvenanceMatrix/video.mp4)
 
-The demo video is available at: http://www2.cs.uic.edu/~tdang/ProvenanceMatrix/video.mp4
-This work was funded by the DARPA Big Mechanism Program under ARO contract WF911NF-14-1-0395.
+The demo video is available at: http://www2.cs.uic.edu/~tdang/ProvenanceMatrix/video.mp4.
+
+This work was funded by the DARPA Big Mechanism Program under ARO contract WF911NF-14-1-0395 and the National  Science Foundation NSF DEB-1155984, DBI-1342595, NSF IIS-118088, DBI-1147273.
