@@ -129,6 +129,9 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 									new Color(0,70,0),
 									new Color(170,0,0) };
 	public static float addition = 1;
+	public static TextBox textbox;
+	
+	
 	
 	public static void main(String args[]){
 		PApplet.main(new String[] { ProvenanceMatrix_1_5.class.getName() });
@@ -189,6 +192,11 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		thread1=new Thread(loader1);
 		thread1.start();
 	
+		String[] commonPhasesCount = new String[2];
+		commonPhasesCount[0] ="Charlie";
+		commonPhasesCount[1] ="Swidish";
+		
+		textbox = new TextBox(this, 1,50,"Search concepts:",commonPhasesCount);
 		
 		// enable the mouse wheel, for zooming
 		addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -277,6 +285,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				}
 			}
 			buttonBrowse.draw();
+			textbox.draw();
 			
 			this.textSize(13);
 			this.fill(0);
@@ -1333,6 +1342,10 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		return true;
 	}
 	
+	public void keyPressed() {
+		textbox.keyPressed();
+	}
+	
 	public void mousePressed() {
 		if (popupOrder.b>=0){
 			popupOrder.slider.checkSelectedSlider1();
@@ -1393,50 +1406,58 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 	}
 
 	public void mouseClicked() {
-		if (buttonBrowse.b>=0){
-			thread4=new Thread(loader4);
-			thread4.start();
+		int s = textbox.mouseClicked();
+		if (s>=0 && textbox.mouseOnTextList>=0){
+			// main work when clicked
 		}
-
-		if (check4.b){
-			check4.mouseClicked();
+		else{		
+			if (buttonBrowse.b>=0){
+				thread4=new Thread(loader4);
+				thread4.start();
+			}
+			
+			if (check4.b){
+				check4.mouseClicked();
+			}
+			else if (check2.b){
+				check2.mouseClicked();
+			}
+			else if (check1.b){
+				check1.mouseClicked();
+			}
+			else if (popupOrder.b>=0){
+				popupOrder.mouseClicked();
+			}
+			else if (vennOverview!=null){
+				vennOverview.mouseClicked();
+				//update();
+			}
+			
+			if (bX>=0){
+				if (srcTaxonomy.get(bX).isExpanded<1)
+					srcTaxonomy.get(bX).isExpanded = 1;
+				else
+					srcTaxonomy.get(bX).isExpanded =0;
+				ArrayList<Integer> children = this.getSuccessors(bX, a1);
+				for (int i=0;i<children.size();i++){
+					int index = children.get(i);
+					srcTaxonomy.get(index).isExpanded = srcTaxonomy.get(bX).isExpanded;
+				}
+			}
+			else if (bY>=0){
+				if (trgTaxonomy.get(bY).isExpanded<1)
+					trgTaxonomy.get(bY).isExpanded = 1;
+				else
+					trgTaxonomy.get(bY).isExpanded = 0;
+				ArrayList<Integer> children = this.getSuccessors(bY, a2);
+				for (int i=0;i<children.size();i++){
+					int index = children.get(i);
+					trgTaxonomy.get(index).isExpanded = trgTaxonomy.get(bY).isExpanded;
+				}
+			}
 		}
-		else if (check2.b){
-			check2.mouseClicked();
-		}
-		else if (check1.b){
-			check1.mouseClicked();
-		}
-		else if (popupOrder.b>=0){
-			popupOrder.mouseClicked();
-		}
-		else if (vennOverview!=null){
-			vennOverview.mouseClicked();
-			//update();
-		}
+		textbox.mouseOnTextList =-1;
 		
-		if (bX>=0){
-			if (srcTaxonomy.get(bX).isExpanded<1)
-				srcTaxonomy.get(bX).isExpanded = 1;
-			else
-				srcTaxonomy.get(bX).isExpanded =0;
-			ArrayList<Integer> children = this.getSuccessors(bX, a1);
-			for (int i=0;i<children.size();i++){
-				int index = children.get(i);
-				srcTaxonomy.get(index).isExpanded = srcTaxonomy.get(bX).isExpanded;
-			}
-		}
-		else if (bY>=0){
-			if (trgTaxonomy.get(bY).isExpanded<1)
-				trgTaxonomy.get(bY).isExpanded = 1;
-			else
-				trgTaxonomy.get(bY).isExpanded = 0;
-			ArrayList<Integer> children = this.getSuccessors(bY, a2);
-			for (int i=0;i<children.size();i++){
-				int index = children.get(i);
-				trgTaxonomy.get(index).isExpanded = trgTaxonomy.get(bY).isExpanded;
-			}
-		}
 	}
 
 
@@ -1493,12 +1514,16 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 					}
 				}
 				hash1 = new HashMap<String,Integer>();
+				String[] listSrc = new String[srcTaxonomy.size()];
 				for (int i=0;i<srcTaxonomy.size();i++){
 					hash1.put(srcTaxonomy.get(i).name, i);
+					listSrc[i] = srcTaxonomy.get(i).name;
 				}
 				hash2 = new HashMap<String,Integer>();
+				String[] listTrg = new String[trgTaxonomy.size()];
 				for (int i=0;i<trgTaxonomy.size();i++){
 					hash2.put(trgTaxonomy.get(i).name, i);
+					listTrg[i] = trgTaxonomy.get(i).name];
 				}
 				
 				// Read the structure of hierarchy
