@@ -34,7 +34,7 @@ public class TextBox {
 		x = x_;
 		y = y_;
 		text = text_;
-		listx = l;
+		listSrc = l;
 	}
 
 	public void draw() {
@@ -88,9 +88,9 @@ public class TextBox {
 				searchText = "";
 			// Making sure duplicates are not included
 			
-			for (int i = 0; i < listx.length; i++) {
-				if (listx[i]!=null){
-					String tolower = listx[i].toLowerCase();
+			for (int i = 0; i < listSrc.length; i++) {
+				if (listSrc[i]!=null){
+					String tolower = listSrc[i].toLowerCase();
 					if (tolower.contains(searchText.toLowerCase())) {
 						indices1.add(tolower);
 						indices2.add(i);
@@ -119,9 +119,11 @@ public class TextBox {
 		}
 		// Making Default list 
 		if (searchText.equals("")){
-			for (int i = 0; i < listx.length; i++) {
+			indices1 = new ArrayList<String>();
+			indices2 = new ArrayList<Integer>();
+			for (int i = 0; i < listSrc.length; i++) {
 				if (i<nResults){
-					String tolower = listx[i].toLowerCase();
+					String tolower = listSrc[i].toLowerCase();
 					indices1.add(tolower);
 					indices2.add(i);
 				}

@@ -1364,6 +1364,8 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 
 	public void mouseMoved() {
 		// Check brushing
+		if (textbox.b || textbox.mouseOnTextList>=0)
+			return;
 		lX = -100;
 		lY = -100;
 		bX = -100;
@@ -1409,6 +1411,26 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		int s = textbox.mouseClicked();
 		if (s>=0 && textbox.mouseOnTextList>=0){
 			// main work when clicked
+			for (int i=0; i<srcTaxonomy.size();i++){
+				srcTaxonomy.get(i).isExpanded=0;
+			}
+			/*
+			if (srcTaxonomy.get(bX).isExpanded<1)
+				srcTaxonomy.get(bX).isExpanded = 1;
+			else
+				srcTaxonomy.get(bX).isExpanded =0;
+			*/	
+			srcTaxonomy.get(s).isExpanded = 1;
+			ArrayList<Integer> ancestors = this.getAncestors(s, srcTaxonomy);
+			ArrayList<Integer> children = this.getSuccessors(s, a1);
+			for (int i=0;i<ancestors.size();i++){
+				int index = ancestors.get(i);
+				srcTaxonomy.get(index).isExpanded = 1;
+			}
+			for (int i=0;i<children.size();i++){
+				int index = children.get(i);
+				srcTaxonomy.get(index).isExpanded = 1;
+			}
 		}
 		else{		
 			if (buttonBrowse.b>=0){
@@ -1523,8 +1545,11 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				String[] listTrg = new String[trgTaxonomy.size()];
 				for (int i=0;i<trgTaxonomy.size();i++){
 					hash2.put(trgTaxonomy.get(i).name, i);
-					listTrg[i] = trgTaxonomy.get(i).name];
+					listTrg[i] = trgTaxonomy.get(i).name;
 				}
+				textbox.listSrc = listSrc;
+				textbox.listTrg = listTrg;
+				
 				
 				// Read the structure of hierarchy
 				count=0;
