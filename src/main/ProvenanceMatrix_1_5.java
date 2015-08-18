@@ -1013,12 +1013,10 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		for (int i=0;i<srcTaxonomy.size();i++){
 			float ww = srcTaxonomy.get(i).iW.value;
 			float xx =  srcTaxonomy.get(i).iX.value;
-			
 			// If not expanded, then no drawing
 			if (!isTaxonXDraw(i)){
 				continue;
 			}	
-			
 			float sat = 255;
 			Color color = new Color(0,0,0);
 			if (bListX.size()>0 || bListY.size()>0){
