@@ -34,6 +34,7 @@ public class Taxonomy {
 	ArrayList<PImage> images= new ArrayList<PImage>();
 	PApplet parent;
 	public int isExpanded = 1;
+	public boolean isLeaf = false;
 	
 	
 	public Taxonomy(PApplet parent_, String name_, int order_){

@@ -18,13 +18,16 @@ public class TextBox {
 	public String searchText = "";
 	
 	// Draw srach results
-	public int nResults = 25;
+	public int nResults = 40;
 	public int sIndex = -1;
-	public int w2 = 370; 
-	public int hBox = 640;
-	public int h3 = 24;  // TextBox result high
-	public ArrayList<String> indices1 = new ArrayList<String>();;
-	public ArrayList<Integer> indices2 = new ArrayList<Integer>();;
+	public int sColumn = 1;
+	public int w2 = 500; 
+	public int hBox = 760;
+	public int h3 = 18;  // TextBox result high
+	public ArrayList<String> nameSrc = new ArrayList<String>();;
+	public ArrayList<Integer> indicesSrc = new ArrayList<Integer>();;
+	public ArrayList<String> nameTrg = new ArrayList<String>();;
+	public ArrayList<Integer> indicesTrg = new ArrayList<Integer>();;
 	public String[] listSrc;
 	public String[] listTrg;
 	public int mouseOnTextList = -1;
@@ -71,8 +74,10 @@ public class TextBox {
 	public void keyPressed() {
 		if (s) {
 			char c = (char) parent.key;
-			indices1 = new ArrayList<String>();
-			indices2 = new ArrayList<Integer>();
+			nameSrc = new ArrayList<String>();
+			indicesSrc = new ArrayList<Integer>();
+			nameTrg = new ArrayList<String>();
+			indicesTrg = new ArrayList<Integer>();
 			if (c == 8 && searchText.length() > 0) {
 				searchText = searchText.substring(0, searchText.length() - 1);
 				if (searchText.length() == 1 && searchText.equals(""))
@@ -92,8 +97,17 @@ public class TextBox {
 				if (listSrc[i]!=null){
 					String tolower = listSrc[i].toLowerCase();
 					if (tolower.contains(searchText.toLowerCase())) {
-						indices1.add(tolower);
-						indices2.add(i);
+						nameSrc.add(tolower);
+						indicesSrc.add(i);
+					} 
+				}
+			}
+			for (int i = 0; i < listTrg.length; i++) {
+				if (listTrg[i]!=null){
+					String tolower = listTrg[i].toLowerCase();
+					if (tolower.contains(searchText.toLowerCase())) {
+						nameTrg.add(tolower);
+						indicesTrg.add(i);
 					} 
 				}
 			}
@@ -119,13 +133,22 @@ public class TextBox {
 		}
 		// Making Default list 
 		if (searchText.equals("")){
-			indices1 = new ArrayList<String>();
-			indices2 = new ArrayList<Integer>();
+			nameSrc = new ArrayList<String>();
+			indicesSrc = new ArrayList<Integer>();
+			nameTrg = new ArrayList<String>();
+			indicesTrg = new ArrayList<Integer>();
 			for (int i = 0; i < listSrc.length; i++) {
 				if (i<nResults){
 					String tolower = listSrc[i].toLowerCase();
-					indices1.add(tolower);
-					indices2.add(i);
+					nameSrc.add(tolower);
+					indicesSrc.add(i);
+				}
+			}
+			for (int i = 0; i < listTrg.length; i++) {
+				if (i<nResults){
+					String tolower = listTrg[i].toLowerCase();
+					nameTrg.add(tolower);
+					indicesTrg.add(i);
 				}
 			}
 		}
@@ -134,37 +157,85 @@ public class TextBox {
 
 	// Used for search box
 	void drawClickableSearchResults() {
-		float y1 = y+15;
+		float y1 = y+25;
 		parent.strokeWeight(1);
 		parent.stroke(200);
 		parent.fill(100,100,100,250);
 		parent.rect(x+w, y, w2, hBox);
-		parent.textSize(12);
+		
+		parent.fill(0);
+		parent.textSize(14);
+		parent.textAlign(PApplet.RIGHT);
+		parent.text(ProvenanceMatrix_1_5.taxomY, x+w+237, y+20);
+		
+		parent.textAlign(PApplet.LEFT);
+		parent.text(ProvenanceMatrix_1_5.taxomX, x+w+276, y+20);
+		
+		
+		parent.textSize(11);
 		int selected =-1;
 		mouseOnTextList = -1;
-		for (int i = 0; i < nResults && i < indices1.size(); i++) {
-			if (parent.mouseX >= x+w  && parent.mouseX <= x + w+w2
+		
+		if (parent.mouseX >= x+w+14  && parent.mouseX <= x + w+w2*0.45f)
+			sColumn = 1;
+		else if (parent.mouseX >= x+w+w2*0.55  && parent.mouseX <= x + w+w2-14)
+			sColumn = 2;
+		else
+			sColumn = 0;
+		
+		for (int i = 0; i < nResults && i < nameTrg.size(); i++) {
+			if (parent.mouseX >= x+w  && parent.mouseX <= x + w+w2/2
 				&& parent.mouseY > y1 && parent.mouseY <= y1+h3)
 				mouseOnTextList = i;
-			if (mouseOnTextList==i) {
+			if (mouseOnTextList==i && sColumn==1) {
 				parent.stroke(Color.PINK.getRGB());
 				parent.fill(0, 0, 0);
-				parent.rect(x + w+20, y1, w2-50, h3-1);
+				parent.rect(x + w+20, y1, w2*0.45f, h3-0.5f);
 				
-				parent.textAlign(PApplet.LEFT);
+				parent.textAlign(PApplet.RIGHT);
 				parent.fill(Color.PINK.getRGB());
-				parent.text(indices1.get(i), x + w + 30, y1 + 18);
+				parent.text(nameTrg.get(i), x + w + w2*0.455f, y1 + 12);
 				parent.textAlign(PApplet.CENTER);
 				y1 += h3;
-				selected = indices2.get(i);
+				selected = indicesTrg.get(i);
+				
 			} else {
 				parent.noStroke();
 				parent.fill(0, 0, 0);
-				parent.rect(x + w + 20, y1, w2-50, h3-1);
-				parent.textAlign(PApplet.LEFT);
-				String tt1 = indices1.get(i);
+				parent.rect(x + w + 20, y1, w2*0.45f, h3-0.5f);
+				parent.textAlign(PApplet.RIGHT);
+				String tt1 = nameTrg.get(i);
 				parent.fill(220);
-				parent.text(tt1, x + w + 30, y1 + 18);
+				parent.text(tt1, x + w + w2*0.455f, y1 + 12);
+				
+				parent.textAlign(PApplet.CENTER);
+				y1 += h3;
+			}
+		}
+		y1 = y+25;
+		for (int i = 0; i < nResults && i < nameSrc.size(); i++) {
+			if (parent.mouseX >= x+w+w2/2  && parent.mouseX <= x + w+w2
+				&& parent.mouseY > y1 && parent.mouseY <= y1+h3)
+				mouseOnTextList = i;
+			if (mouseOnTextList==i && sColumn==2) {
+				parent.stroke(Color.PINK.getRGB());
+				parent.fill(0, 0, 0);
+				parent.rect(x + w + w2*0.55f, y1, w2*0.41f, h3-0.5f);
+				
+				parent.textAlign(PApplet.LEFT);
+				parent.fill(Color.PINK.getRGB());
+				parent.text(nameSrc.get(i), x + w + w2*0.57f, y1 + 12);
+				parent.textAlign(PApplet.CENTER);
+				y1 += h3;
+				selected = indicesSrc.get(i);
+			} else {
+				parent.noStroke();
+				parent.fill(0, 0, 0);
+				parent.rect(x + w + w2*0.55f, y1, w2*0.41f, h3-0.5f);
+				parent.textAlign(PApplet.LEFT);
+				String tt1 = nameSrc.get(i);
+				parent.fill(220);
+				parent.text(tt1, x + w + w2*0.57f, y1 + 12);
 				
 				parent.textAlign(PApplet.CENTER);
 				y1 += h3;

@@ -54,6 +54,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 	//public String currentFile = "./BertramData/BD-Hubs-Diversity.txt";
 	
 	public static ButtonBrowse buttonBrowse;
+	public static Button buttonExpand;
 
 	// Store the genes results
 	public static ArrayList<String>[] pairs;
@@ -108,8 +109,8 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 	public static int[][] artSources;
 	public HashMap<String,Integer> hashArticulations = new HashMap<String,Integer>();
 	public HashMap<String,Integer> hashArtSource = new HashMap<String,Integer>();
-	public String taxomX;
-	public String taxomY;
+	public static String taxomX;
+	public static String taxomY;
 	public static ArrayList<Taxonomy> srcTaxonomy = new ArrayList<Taxonomy>();
 	public static ArrayList<Taxonomy> trgTaxonomy = new ArrayList<Taxonomy>();
 	public static ArrayList[] a1;    // ArrayList parent -> children
@@ -182,6 +183,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		
 		//-----------------------------
 		buttonBrowse = new ButtonBrowse(this);
+		buttonExpand = new Button(this,"Expand all");
 		popupOrder  = new PopupOrder(this);
 		check4 = new CheckBox(this, "Show articulation sources");
 		check2 = new CheckBox(this, "Color by congruence");
@@ -287,11 +289,24 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 			}
 			buttonBrowse.draw();
 			textbox.draw();
+			// checking for any collapsed
+			int count = 0;
+			for (int i=0; i<srcTaxonomy.size();i++){
+				if (!srcTaxonomy.get(i).isLeaf && srcTaxonomy.get(i).isExpanded==0)
+					count++;
+			}
+			for (int i=0; i<trgTaxonomy.size();i++){
+				if (!trgTaxonomy.get(i).isLeaf && trgTaxonomy.get(i).isExpanded==0)
+					count++;
+			}
+			if (count>0)
+				buttonExpand.draw(2, 80);
 			
 			this.textSize(13);
 			this.fill(0);
 			this.textAlign(PApplet.LEFT);
 			this.text(message, 30, this.height-10);
+			
 		}
 		catch (Exception e){
 			System.out.println();
@@ -1035,9 +1050,11 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				if (check2.s){
 					color = colors[goodTaxonX[i]];
 				}
-				if (i==bX || i==searchIndexSrc){
+				if (i==bX)
 					sat = 55+(this.frameCount*20)%200;
-				}
+				else if (textbox.sColumn==2 && i==searchIndexSrc)
+					color = new Color(180,0,0);
+					
 				this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
 				
 				this.textSize(11);
@@ -1076,6 +1093,8 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				if (i==bY) {
 					sat = 55+(this.frameCount*20)%200;
 				}
+				else if (textbox.sColumn==1 && i==searchIndexSrc)
+					color = new Color(180,0,0);
 				
 				this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
 				
@@ -1146,7 +1165,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				
 				if (bListX.size()>0 || bListY.size()>0){
 					if (bListX.contains(i) && bListX.contains(indexChild)){
-						if (srcTaxonomy.get(indexChild).isExpanded==1)
+						if (srcTaxonomy.get(indexChild).isExpanded==1 || srcTaxonomy.get(indexChild).isLeaf)
 							this.triangle(x2, mY-indent2-10, x2-2, mY-indent2, x2+3, mY-indent2);
 						else{ // draw a cirle and plus when it is not expanded
 							this.ellipse(x2, mY-indent2-5, 10, 10);
@@ -1158,7 +1177,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 					}	
 				}
 				else{
-					if (srcTaxonomy.get(indexChild).isExpanded==1)
+					if (srcTaxonomy.get(indexChild).isExpanded==1 || srcTaxonomy.get(indexChild).isLeaf)
 						this.triangle(x2, mY-indent2-10, x2-2, mY-indent2, x2+3, mY-indent2);
 					else{ // draw a cirle and plus when it is not expanded
 						this.ellipse(x2, mY-indent2-5, 10, 10);
@@ -1214,7 +1233,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				
 				if (bListY.size()>0 || bListX.size()>0){
 					if (bListY.contains(i) && bListY.contains(indexChild)){
-						if (trgTaxonomy.get(indexChild).isExpanded==1)
+						if (trgTaxonomy.get(indexChild).isExpanded==1 || trgTaxonomy.get(indexChild).isLeaf)
 							this.triangle(mX-indent2-10, y2, mX-indent2, y2-2, mX-indent2, y2+3);
 						else{ // draw a cirle and plus when it is not expanded
 							this.ellipse(mX-indent2-5, y2, 10, 10);
@@ -1226,7 +1245,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 					}	
 				}
 				else{
-					if (trgTaxonomy.get(indexChild).isExpanded==1)
+					if (trgTaxonomy.get(indexChild).isExpanded==1 || trgTaxonomy.get(indexChild).isLeaf)
 						this.triangle(mX-indent2-10, y2, mX-indent2, y2-2, mX-indent2, y2+3);
 					else{ // draw a cirle and plus when it is not expanded
 						this.ellipse(mX-indent2-5, y2, 10, 10);
@@ -1409,28 +1428,65 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 	public void mouseClicked() {
 		searchIndexSrc = textbox.mouseClicked();
 		if (searchIndexSrc>=0 && textbox.mouseOnTextList>=0){
-			 
 			// main work when clicked
 			for (int i=0; i<srcTaxonomy.size();i++){
 				srcTaxonomy.get(i).isExpanded=0;
 			}
-			/*
-			if (srcTaxonomy.get(bX).isExpanded<1)
-				srcTaxonomy.get(bX).isExpanded = 1;
-			else
-				srcTaxonomy.get(bX).isExpanded =0;
-			*/	
-			srcTaxonomy.get(searchIndexSrc).isExpanded = 1;
-			ArrayList<Integer> ancestors = this.getAncestors(searchIndexSrc, srcTaxonomy);
-			ArrayList<Integer> children = this.getSuccessors(searchIndexSrc, a1);
-			for (int i=0;i<ancestors.size();i++){
-				int index = ancestors.get(i);
-				srcTaxonomy.get(index).isExpanded = 1;
+			for (int i=0; i<trgTaxonomy.size();i++){
+				trgTaxonomy.get(i).isExpanded=0;
 			}
-			for (int i=0;i<children.size();i++){
-				int index = children.get(i);
-				srcTaxonomy.get(index).isExpanded = 1;
+			
+			if (textbox.sColumn==2){
+				ArrayList<Integer> bListX = getSubtree(searchIndexSrc,srcTaxonomy, a1);
+				for (int i=0;i<bListX.size();i++){
+					int index = bListX.get(i);
+					srcTaxonomy.get(index).isExpanded = 1;
+				}
+				
+				ArrayList<Integer> bListY = new ArrayList<Integer>();
+				for (int i=0;i<bListX.size();i++){
+					int index = bListX.get(i);
+					for (int j=0;j<trgTaxonomy.size();j++){
+						if (articulations[index][j].contains(0)) {// Equals
+							ArrayList<Integer> b = getSubtree(j,trgTaxonomy,a2); 
+							for (int k=0;k<b.size();k++){
+								int index2 = b.get(k);
+								bListY.add(index2);
+							}
+						}	
+					}	                     
+				}
+				for (int i=0;i<bListY.size();i++){
+					int index = bListY.get(i);
+					trgTaxonomy.get(index).isExpanded = 1;
+				}
 			}
+			else if (textbox.sColumn==1){
+				ArrayList<Integer> bListY = getSubtree(searchIndexSrc,trgTaxonomy, a2);
+				for (int i=0;i<bListY.size();i++){
+					int index = bListY.get(i);
+					trgTaxonomy.get(index).isExpanded = 1;
+				}
+				
+				ArrayList<Integer> bListX = new ArrayList<Integer>();
+				for (int i=0;i<bListY.size();i++){
+					int index = bListY.get(i);
+					for (int j=0;j<srcTaxonomy.size();j++){
+						if (articulations[j][index].contains(0)) {// Equals
+							ArrayList<Integer> b = getSubtree(j,srcTaxonomy,a1); 
+							for (int k=0;k<b.size();k++){
+								int index2 = b.get(k);
+								bListX.add(index2);
+							}
+						}	
+					}	                     
+				}
+				for (int i=0;i<bListX.size();i++){
+					int index = bListX.get(i);
+					srcTaxonomy.get(index).isExpanded = 1;
+				}
+			}
+			
 		}
 		else{	
 			searchIndexSrc = -10;
@@ -1478,6 +1534,19 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 					trgTaxonomy.get(index).isExpanded = trgTaxonomy.get(bY).isExpanded;
 				}
 			}
+			
+			if (buttonExpand.b){
+				buttonExpand.mouseClicked();
+				if (buttonExpand.s){
+					for (int i=0; i<srcTaxonomy.size();i++){
+						srcTaxonomy.get(i).isExpanded=1;
+					}
+					for (int i=0; i<trgTaxonomy.size();i++){
+						trgTaxonomy.get(i).isExpanded=1;
+					}
+				}
+					
+			}	
 		}
 		textbox.mouseOnTextList =-1;
 		
@@ -1600,6 +1669,20 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 						}
 					}
 				}
+				
+				// Set leaf nodes
+				for (int i=0;i<srcTaxonomy.size();i++){
+					ArrayList<Integer> children = getSuccessors(i, a1);
+					if (children.size()==0)
+						srcTaxonomy.get(i).isLeaf = true;
+				}
+				for (int i=0;i<trgTaxonomy.size();i++){
+					ArrayList<Integer> children = getSuccessors(i, a2);
+					if (children.size()==0)
+						trgTaxonomy.get(i).isLeaf = true;
+				}
+				
+				
 				articulations = new ArrayList[srcTaxonomy.size()][trgTaxonomy.size()];
 				artSources = new int[srcTaxonomy.size()][trgTaxonomy.size()];
 				String[] p = lines2[0].split(",");
