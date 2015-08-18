@@ -130,6 +130,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 									new Color(170,0,0) };
 	public static float addition = 1;
 	public static TextBox textbox;
+	public static int searchIndexSrc = -1;
 	
 	
 	
@@ -1036,7 +1037,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				if (check2.s){
 					color = colors[goodTaxonX[i]];
 				}
-				if (i==bX){
+				if (i==bX || i==searchIndexSrc){
 					sat = 55+(this.frameCount*20)%200;
 				}
 				this.fill(color.getRed(),color.getGreen(), color.getBlue(), sat);
@@ -1408,8 +1409,9 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 	}
 
 	public void mouseClicked() {
-		int s = textbox.mouseClicked();
-		if (s>=0 && textbox.mouseOnTextList>=0){
+		searchIndexSrc = textbox.mouseClicked();
+		if (searchIndexSrc>=0 && textbox.mouseOnTextList>=0){
+			 
 			// main work when clicked
 			for (int i=0; i<srcTaxonomy.size();i++){
 				srcTaxonomy.get(i).isExpanded=0;
@@ -1420,9 +1422,9 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 			else
 				srcTaxonomy.get(bX).isExpanded =0;
 			*/	
-			srcTaxonomy.get(s).isExpanded = 1;
-			ArrayList<Integer> ancestors = this.getAncestors(s, srcTaxonomy);
-			ArrayList<Integer> children = this.getSuccessors(s, a1);
+			srcTaxonomy.get(searchIndexSrc).isExpanded = 1;
+			ArrayList<Integer> ancestors = this.getAncestors(searchIndexSrc, srcTaxonomy);
+			ArrayList<Integer> children = this.getSuccessors(searchIndexSrc, a1);
 			for (int i=0;i<ancestors.size();i++){
 				int index = ancestors.get(i);
 				srcTaxonomy.get(index).isExpanded = 1;
@@ -1432,7 +1434,8 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				srcTaxonomy.get(index).isExpanded = 1;
 			}
 		}
-		else{		
+		else{	
+			searchIndexSrc = -10;
 			if (buttonBrowse.b>=0){
 				thread4=new Thread(loader4);
 				thread4.start();
@@ -1493,8 +1496,10 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		@SuppressWarnings("unchecked")
 		public void run() {
 			try{
+				isAllowedDrawing = false;
 				srcTaxonomy = new ArrayList<Taxonomy>();
 				trgTaxonomy = new ArrayList<Taxonomy>();
+				searchIndexSrc = -1;
 				/// Taxom mappings
 				String[] lines = parent.loadStrings(currentFile);// hierarchy
 				String[] lines2 = parent.loadStrings(currentFile.replace(".txt", "_mir.csv"));
