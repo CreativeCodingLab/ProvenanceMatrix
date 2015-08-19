@@ -410,6 +410,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		}
 	}
 		
+	/*
 	@SuppressWarnings("unchecked")
 	public void drawTanglegram(float mX, float mY) throws IOException {
 		// Compute lensing
@@ -686,14 +687,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				else if (0<=bY && bY<trgTaxonomy.size())
 					this.stroke(0,20);
 				
-				//if (w1>6 || w2>6){
-					this.strokeWeight(0.3f);
-					this.arc((x1+x2)/2,mY-indent2,r,r*arcRate, 0,PApplet.PI);
-				/*}
-				else{
-					this.strokeWeight(0.05f);
-					this.arc((x1+x2)/2,mY-indent2,r,r*arcRate,-PApplet.PI, 0);
-				}*/	
+			
 				
 				this.noStroke();
 				float v = PApplet.map(w2, 0, 25, 10, 255);
@@ -757,11 +751,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				//if (h1>6 || h2>6){
 					this.strokeWeight(0.3f);
 					this.arc(mX-indent2, (y1+y2)/2,r*arcRate,r, -PApplet.PI/2, PApplet.PI/2);
-				/*}	
-				else{
-					this.strokeWeight(0.05f);
-					this.arc(mX-indent2, (y1+y2)/2,r*arcRate,r, PApplet.PI/2, 3*PApplet.PI/2);
-				}	*/
+				
 				
 				this.noStroke();
 				float v = PApplet.map(h2, 0, 25, 10, 255);
@@ -866,7 +856,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 			}
 		}
 	}	
-
+*/
 	@SuppressWarnings("unchecked")
 	public void drawMatrix(float mX, float mY) throws IOException {
 		// Compute lensing
@@ -878,10 +868,20 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		ArrayList<Integer> src = new ArrayList<Integer>();
 		Map<Integer, Integer> unsortMap1 = new HashMap<Integer, Integer>();
 		for (int i=0;i<srcTaxonomy.size();i++){
-			int parentIndex = srcTaxonomy.get(i).parentIndex;
-			if (parentIndex>=0 && srcTaxonomy.get(parentIndex).isExpanded<1){
+			ArrayList<Integer> parents = srcTaxonomy.get(i).parentIndex;
+			boolean isExpaned = false;
+			if (parents.size()==0)
+				isExpaned = true;
+			for (int j=0; j<parents.size();j++){
+				int parentIndex = parents.get(j);
+				if (parentIndex>=0 && srcTaxonomy.get(parentIndex).isExpanded>=1){
+					isExpaned=true;
+				}
+			}
+			
+			if (!isExpaned){
 				// set the position as of the parent
-				float value = srcTaxonomy.get(parentIndex).iX.target;
+				float value = srcTaxonomy.get(parents.get(0)).iX.target;
 				srcTaxonomy.get(i).iX.target(value);
 			}
 			else
@@ -926,10 +926,20 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		ArrayList<Integer> trg = new ArrayList<Integer>();
 		Map<Integer, Integer> unsortMap2 = new HashMap<Integer, Integer>();
 		for (int i=0;i<trgTaxonomy.size();i++){
-			int parentIndex = trgTaxonomy.get(i).parentIndex;
-			if (parentIndex>=0 && trgTaxonomy.get(parentIndex).isExpanded<1){
+			ArrayList<Integer> parents = trgTaxonomy.get(i).parentIndex;
+			boolean isExpaned = false;
+			if (parents.size()==0)
+				isExpaned = true;
+			for (int j=0; j<parents.size();j++){
+				int parentIndex = parents.get(j);
+				if (parentIndex>=0 && trgTaxonomy.get(parentIndex).isExpanded>=1){
+					isExpaned=true;
+				}
+			}
+			
+			if (!isExpaned){
 				// set the position as of the parent
-				float value = trgTaxonomy.get(parentIndex).iY.target;
+				float value = trgTaxonomy.get(parents.get(0)).iY.target;
 				trgTaxonomy.get(i).iY.target(value);
 			}
 			else
@@ -1331,10 +1341,10 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 
 	// If not expanded, then no drawing
 	public static boolean isTaxonXDraw(int index) {
-		int parentIndex = srcTaxonomy.get(index).parentIndex;
-		if (parentIndex>=0){
+		ArrayList<Integer> parents = srcTaxonomy.get(index).parentIndex;
+		if (parents.size()>0){
 			float xx = srcTaxonomy.get(index).iX.value;
-			float xxParent = srcTaxonomy.get(parentIndex).iX.value;
+			float xxParent = srcTaxonomy.get(parents.get(0)).iX.value;
 			if (srcTaxonomy.get(index).isExpanded<0)
 				return false;
 			else if (srcTaxonomy.get(index).isExpanded==0 && PApplet.abs(xx-xxParent)<1){
@@ -1346,10 +1356,10 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 	}
 	// If not expanded, then no drawing
 	public static boolean isTaxonYDraw(int index) {
-		int parentIndex = trgTaxonomy.get(index).parentIndex;
-		if (parentIndex>=0){
+		ArrayList<Integer> parents = trgTaxonomy.get(index).parentIndex;
+		if (parents.size()>0){
 			float yy = trgTaxonomy.get(index).iY.value;
-			float yyParent = trgTaxonomy.get(parentIndex).iY.value;
+			float yyParent = trgTaxonomy.get(parents.get(0)).iY.value;
 			if (trgTaxonomy.get(index).isExpanded<0)
 				return false;
 			else if (trgTaxonomy.get(index).isExpanded==0 && PApplet.abs(yy-yyParent)<1){
@@ -1396,15 +1406,14 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 		}	
 		else if (mouseY<=marginY){
 			for (int i=0;i<srcTaxonomy.size();i++){
-				int parentIndex = srcTaxonomy.get(i).parentIndex;
-				if (parentIndex<0 || (parentIndex>=0 && srcTaxonomy.get(parentIndex).isExpanded==1)){
-					int order = srcTaxonomy.get(i).order;
-					srcTaxonomy.get(i).iW.target(size);
-					srcTaxonomy.get(i).iX.target(marginY +order*size);
-					if (srcTaxonomy.get(i).iX.value<=this.mouseX
-							&& this.mouseX<=srcTaxonomy.get(i).iX.value+size)	
-						bX=i;
-				}
+				int order = srcTaxonomy.get(i).order;
+				srcTaxonomy.get(i).iW.target(size);
+				srcTaxonomy.get(i).iX.target(marginY +order*size);
+				if (srcTaxonomy.get(i).iX.value<=this.mouseX
+						&& this.mouseX<=srcTaxonomy.get(i).iX.value+size
+						&& isTaxonXDraw(i))	
+					bX=i;
+				
 			}	
 			lX=-100;
 			lY=-100;
@@ -1416,7 +1425,8 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				trgTaxonomy.get(i).iH.target(size);
 				trgTaxonomy.get(i).iY.target(marginY +order*size);
 				if (trgTaxonomy.get(i).iY.value<=this.mouseY
-					&& this.mouseY<=trgTaxonomy.get(i).iY.value+size)	
+					&& this.mouseY<=trgTaxonomy.get(i).iY.value+size
+					&& isTaxonYDraw(i))	
 					bY = i;
 			}
 			lX=-100;
@@ -1575,7 +1585,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				int count2=0;
 				int count3=0;
 				for (int i=0;i<lines.length;i++){
-					System.out.println(lines[i]);
+					//System.out.println(lines[i]);
 					if (lines[i].contains("#"))
 						continue;
 					if (lines[i].trim().equals("")){
@@ -1650,7 +1660,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 							if (a1[indexParent]==null)
 								a1[indexParent] =  new ArrayList<Integer>();
 							a1[indexParent].add(indexChild);
-							srcTaxonomy.get(indexChild).parentIndex = indexParent;
+							srcTaxonomy.get(indexChild).parentIndex.add(indexParent);
 						}
 					}
 					else if (count==1 && count3==0){
@@ -1665,7 +1675,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 							if (a2[indexParent]==null)
 								a2[indexParent] =  new ArrayList<Integer>();
 							a2[indexParent].add(indexChild);
-							trgTaxonomy.get(indexChild).parentIndex = indexParent;
+							trgTaxonomy.get(indexChild).parentIndex.add(indexParent);
 						}
 					}
 				}
@@ -1713,6 +1723,8 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				goodTaxonY = new int[trgTaxonomy.size()];
 				for (int i1=0;i1<srcTaxonomy.size();i1++){
 					for (int j1=0;j1<trgTaxonomy.size();j1++){
+						if (articulations[i1][j1]==null)
+							articulations[i1][j1] = new ArrayList<Integer>(); 
 						if (articulations[i1][j1].contains(0)) // contains Equals
 							goodTaxonX[i1] = 1;
 					}
@@ -1723,6 +1735,8 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 							for (int i2=0;i2<bListX.size() && !found;i2++){
 								int index = bListX.get(i2);
 								for (int j2=0;j2<trgTaxonomy.size() && !found;j2++){
+									if (articulations[index][j2]==null)
+										articulations[index][j2] = new ArrayList<Integer>(); 
 									if (articulations[index][j2].contains(0)) {// Equals
 										found = true;
 									}	
@@ -1853,11 +1867,14 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 	public  ArrayList<Integer> getAncestors(int index, ArrayList<Taxonomy> onList) {
 		ArrayList<Integer> a = new ArrayList<Integer>();
 		if (index>=0){
-			int parentIndex = onList.get(index).parentIndex;
-			if (parentIndex>=0){
-				ArrayList<Integer> b = getAncestors(parentIndex, onList);
-				b.add(parentIndex);
-				a = b;
+			ArrayList<Integer> parents = onList.get(index).parentIndex;
+			for (int i=0;i<parents.size();i++){
+				ArrayList<Integer> b = getAncestors(parents.get(i), onList);
+				b.add(parents.get(i));
+				for (int j=0;j<b.size();j++){
+					if (!a.contains(b.get(j)))
+						a.add(b.get(j));
+				}
 			}	
 		}	
 		return a;

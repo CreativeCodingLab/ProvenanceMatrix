@@ -30,7 +30,7 @@ public class Taxonomy {
 	public String name = "????";
 	public Integrator iX, iY, iH,iW;
 	public int order;
-	public int parentIndex=-1;
+	public ArrayList<Integer> parentIndex = new ArrayList<Integer>();
 	ArrayList<PImage> images= new ArrayList<PImage>();
 	PApplet parent;
 	public int isExpanded = 1;

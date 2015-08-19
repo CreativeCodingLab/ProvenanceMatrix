@@ -43,7 +43,6 @@ public class Button{
 	
 	public void mouseClicked() {
 		s = !s;
-		System.out.println(s);
 	}
 		
 	 
