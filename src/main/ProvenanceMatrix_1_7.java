@@ -37,7 +37,7 @@ import javax.imageio.ImageIO;
 import edu.uic.ncdm.venn.Venn_Overview;
 import processing.core.*;
 
-public class ProvenanceMatrix_1_5 extends PApplet {
+public class ProvenanceMatrix_1_7 extends PApplet {
 	private static final long serialVersionUID = 1L;
 	public int count = 0;
 	public static int currentRelation = -1;
@@ -136,7 +136,7 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 	
 	
 	public static void main(String args[]){
-		PApplet.main(new String[] { ProvenanceMatrix_1_5.class.getName() });
+		PApplet.main(new String[] { ProvenanceMatrix_1_7.class.getName() });
 	}
  
 	public void setup() {
@@ -1314,12 +1314,16 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 						else	
 							this.fill(c.getRed(),c.getGreen(),c.getBlue(),15);
 					}
+					
+					int count = articulations[j][i].size();
+					float sat = PApplet.map((float) count, 1, 5, 255, 50); 
 					if (vennOverview.isActive[indexArt]){
-						float radius =  PApplet.min(ww,hh)+2;
-						if (check4.s)
-							radius =  PApplet.min(ww,hh)*0.75f; // Smaller sectors for showing articulation sources 
-						this.arc(xx,yy,radius,radius, PApplet.PI+artArray[indexArt]*alpha, PApplet.PI+(artArray[indexArt]+1)*alpha);
+						/*//float radius =  PApplet.min(ww,hh)+2;
+						//if (check4.s)
+						//	radius =  PApplet.min(ww,hh)*0.75f; // Smaller sectors for showing articulation sources 
 						
+						this.arc(xx,yy,radius,radius, PApplet.PI+artArray[indexArt]*alpha, PApplet.PI+(artArray[indexArt]+1)*alpha);
+						*/
 						// Draw green connections for Equals
 						if (indexArt==0 && bListX.contains(j) && bListY.contains(i)){
 							this.stroke(0,150,0,100);
@@ -1332,6 +1336,36 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 							
 							this.line(xx, mY-indentY, xx, yy);
 							this.line(mX-indentX, yy, xx, yy);
+						}
+						float radius =  PApplet.min(ww,hh);
+						if (indexArt==0){
+							this.noStroke();
+							this.fill(0,150,0, sat);
+							this.rect(xx-radius/2,yy-radius/2,radius*0.9f,radius*0.9f);
+						}
+						else if (indexArt==1){
+							this.noFill();
+							this.stroke(0,sat);
+							this.strokeWeight(1);
+							this.arc(xx-radius/2+1,yy-radius/2+1,radius+3,radius+3, -PApplet.PI*0.05f, PApplet.PI*0.55f);
+							this.fill(0,sat);
+							this.noStroke();
+							this.triangle(xx-radius, yy+2, xx-radius*0.45f, yy-radius*0.2f+2, xx-radius*0.45f, yy+radius*0.3f+2);
+						}
+						else if (indexArt==2){
+							this.noFill();
+							this.stroke(0,sat);
+							this.strokeWeight(1);
+							this.arc(xx-radius/2+1,yy-radius/2+1,radius+3,radius+3, -PApplet.PI*0.05f, PApplet.PI*0.55f);
+							this.fill(0,sat);
+							this.noStroke();
+							this.triangle(xx+2, yy-radius, xx-radius*0.2f+2, yy-radius*0.45f, xx+radius*0.3f+2, yy-radius*0.45f);
+						}
+						else if (indexArt==3){
+							this.noStroke();
+							this.fill(250,0,0,sat/2);
+							this.ellipse(xx-radius*0.15f, yy, radius*0.7f, radius*0.8f);
+							this.ellipse(xx+radius*0.15f, yy, radius*0.7f, radius*0.8f);
 						}
 					}
 				}
@@ -1631,6 +1665,11 @@ public class ProvenanceMatrix_1_5 extends PApplet {
 				}
 				textbox.listSrc = listSrc;
 				textbox.listTrg = listTrg;
+				
+				for (int i=0;i<trgTaxonomy.size();i++){
+					srcTaxonomy.add(trgTaxonomy.get(i));
+				}
+					
 				
 				
 				// Read the structure of hierarchy

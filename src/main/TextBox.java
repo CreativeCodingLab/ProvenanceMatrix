@@ -166,10 +166,10 @@ public class TextBox {
 		parent.fill(0);
 		parent.textSize(14);
 		parent.textAlign(PApplet.RIGHT);
-		parent.text(ProvenanceMatrix_1_5.taxomY, x+w+237, y+20);
+		parent.text(ProvenanceMatrix_1_7.taxomY, x+w+237, y+20);
 		
 		parent.textAlign(PApplet.LEFT);
-		parent.text(ProvenanceMatrix_1_5.taxomX, x+w+276, y+20);
+		parent.text(ProvenanceMatrix_1_7.taxomX, x+w+276, y+20);
 		
 		
 		parent.textSize(11);
