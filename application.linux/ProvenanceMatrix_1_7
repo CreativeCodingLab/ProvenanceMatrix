@@ -1,0 +1,4 @@
+#!/bin/sh
+
+APPDIR=$(dirname "$0")
+java  -Djava.library.path="$APPDIR" -cp "lib/ProvenanceMatrix_1_7.jar"main.ProvenanceMatrix_1_7
