@@ -18,3 +18,8 @@ More pictures of version 1.7:
 ![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic4.png)
 ![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic5.png)
 ![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic6.png)
+
+# Collaboration
+The project is a collaboration with:
+Nico Franz, Arizona State University, Tempe, AZ
+Bertram Lud?ascher, University of Illinois at Urbana-Champaign, IL, USA
