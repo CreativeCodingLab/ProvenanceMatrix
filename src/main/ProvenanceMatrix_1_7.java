@@ -66,7 +66,7 @@ public class ProvenanceMatrix_1_7 extends PApplet {
 	// Contains the location and size of each gene to display
 	public float size=0;
 	public static float marginX = 220;
-	public static float marginY = 270;
+	public static float marginY = 220;
 	public static String message="";
 
 	public ThreadLoader1 loader1=new ThreadLoader1(this);
@@ -977,7 +977,7 @@ public class ProvenanceMatrix_1_7 extends PApplet {
 
 				}	
 			}
-			trgTaxonomy.get(index).iY.target(value+10);
+			trgTaxonomy.get(index).iY.target(value+50);
 		}
 
 		//--------------------------------
