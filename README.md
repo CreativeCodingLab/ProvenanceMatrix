@@ -21,5 +21,7 @@ More pictures of version 1.7:
 
 # Collaboration
 The project is a collaboration with:
-Nico Franz, Arizona State University, Tempe, AZ
-Bertram Lud?ascher, University of Illinois at Urbana-Champaign, IL, USA
+
+1. Nico Franz, Arizona State University, Tempe, AZ
+2. Bertram Ludäsche, University of Illinois at Urbana-Champaign, IL, USA
+
