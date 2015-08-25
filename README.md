@@ -12,9 +12,9 @@ The demo video is available at: http://www2.cs.uic.edu/~tdang/ProvenanceMatrix/v
 This work was funded by the DARPA Big Mechanism Program under ARO contract WF911NF-14-1-0395 and the National Science Foundation through NSF DEB-1155984, DBI-1342595, NSF IIS-118088, DBI-1147273.
 
 More pictures of version 1.7:
-[![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic1.png)]
-[![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic2.png)]
-[![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic3.png)]
-[![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic4.png)]
-[![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic5.png)]
-[![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic6.png)]
+![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic1.png)
+![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic2.png)
+![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic3.png)
+![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic4.png)
+![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic5.png)
+![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic6.png)
