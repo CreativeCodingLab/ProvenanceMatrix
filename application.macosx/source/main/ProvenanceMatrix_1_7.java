@@ -1363,9 +1363,9 @@ public class ProvenanceMatrix_1_7 extends PApplet {
 						}
 						else if (indexArt==3){
 							this.noStroke();
-							this.fill(250,0,0,sat/2);
-							this.ellipse(xx-radius*0.15f, yy, radius*0.7f, radius*0.8f);
-							this.ellipse(xx+radius*0.15f, yy, radius*0.7f, radius*0.8f);
+							this.fill(250,0,0,sat);
+							this.ellipse(xx, yy, radius*0.6f, radius*0.6f);
+							//this.ellipse(xx+radius*0.15f, yy, radius*0.7f, radius*0.8f);
 						}
 					}
 				}
@@ -1666,9 +1666,6 @@ public class ProvenanceMatrix_1_7 extends PApplet {
 				textbox.listSrc = listSrc;
 				textbox.listTrg = listTrg;
 				
-				for (int i=0;i<trgTaxonomy.size();i++){
-					srcTaxonomy.add(trgTaxonomy.get(i));
-				}
 					
 				
 				
