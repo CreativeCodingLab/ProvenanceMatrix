@@ -21,7 +21,7 @@ More pictures of version 1.7:
 The project is a collaboration with:
 
 1. [Nico Franz](https://sols.asu.edu/people/nico-franz), Arizona State University, Tempe, AZ, USA
-2. [Bertram Ludäsche](https://www.lis.illinois.edu/people/faculty/ludaesch), University of Illinois at Urbana-Champaign, IL, USA
+2. [Bertram Ludäscher](https://www.lis.illinois.edu/people/faculty/ludaesch), University of Illinois at Urbana-Champaign, IL, USA
 
 We thank [Matt Yoder](http://wwx.inhs.illinois.edu/directory/show/mjyoder), [Hong Cui](http://hongcui.faculty.arizona.edu/), and [James A. Macklin](http://www.agr.gc.ca/eng/science-and-innovation/research-centres/ontario/eastern-cereal-and-oilseed-research-centre/scientific-staff-and-expertise/macklin-james-a-phd/?id=1334082357622) who provided useful insight feedback on the project.
 
