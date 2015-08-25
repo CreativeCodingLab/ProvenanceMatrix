@@ -9,8 +9,6 @@ The application (ProvenanceMatrix1_7.jar) is available in application folder.
 
 The demo video is available at: http://www2.cs.uic.edu/~tdang/ProvenanceMatrix/video.mp4.
 
-This work was funded by the DARPA Big Mechanism Program under ARO contract WF911NF-14-1-0395 and the National Science Foundation through NSF DEB-1155984, DBI-1342595, NSF IIS-118088, DBI-1147273.
-
 More pictures of version 1.7:
 ![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic1.png)
 ![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic2.png)
@@ -19,9 +17,13 @@ More pictures of version 1.7:
 ![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic5.png)
 ![ScreenShot](http://www.cs.uic.edu/~tdang/ProvenanceMatrix/pic6.png)
 
-# Collaboration
+# Acknowledgements
 The project is a collaboration with:
 
-1. Nico Franz, Arizona State University, Tempe, AZ
-2. Bertram Ludäsche, University of Illinois at Urbana-Champaign, IL, USA
+1. [Nico Franz](https://sols.asu.edu/people/nico-franz), Arizona State University, Tempe, AZ, USA
+2. [Bertram Ludäsche](https://www.lis.illinois.edu/people/faculty/ludaesch), University of Illinois at Urbana-Champaign, IL, USA
+
+We thank [Matt Yoder](http://wwx.inhs.illinois.edu/directory/show/mjyoder), [Hong Cui](http://hongcui.faculty.arizona.edu/), and [James A. Macklin](http://www.agr.gc.ca/eng/science-and-innovation/research-centres/ontario/eastern-cereal-and-oilseed-research-centre/scientific-staff-and-expertise/macklin-james-a-phd/?id=1334082357622) who provided useful insight feedback on the project.
+
+This work was funded by the DARPA Big Mechanism Program under ARO contract WF911NF-14-1-0395 and the National Science Foundation through NSF DEB-1155984, DBI-1342595, NSF IIS-118088, DBI-1147273.
 
